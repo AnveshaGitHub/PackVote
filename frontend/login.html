@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Triply — Sign In</title>
+  <link rel="stylesheet" href="style.css"/>
+  <style>
+    .auth-page {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+    .auth-left {
+      position: relative;
+      overflow: hidden;
+    }
+    .auth-left img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      filter: brightness(0.35);
+    }
+    .auth-left-content {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 60px;
+      background: linear-gradient(135deg, rgba(108,99,255,0.25), rgba(255,101,132,0.15));
+    }
+    .auth-left h2 {
+      font-family: var(--font-display);
+      font-size: 2.8rem;
+      font-weight: 800;
+      letter-spacing: -1.5px;
+      line-height: 1.1;
+      margin-bottom: 16px;
+    }
+    .auth-left p {
+      color: #ccc;
+      font-size: 1rem;
+      line-height: 1.7;
+      max-width: 380px;
+      margin-bottom: 40px;
+    }
+    .testimonial {
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      max-width: 400px;
+    }
+    .testimonial-text {
+      font-size: 0.95rem;
+      color: #ddd;
+      line-height: 1.7;
+      font-style: italic;
+      margin-bottom: 16px;
+    }
+    .testimonial-author {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .testimonial-avatar {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: white;
+      flex-shrink: 0;
+    }
+    .testimonial-name {
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+    .testimonial-role {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+    .auth-right {
+      background: var(--bg-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 48px 40px;
+    }
+    .auth-form-wrap {
+      width: 100%;
+      max-width: 420px;
+    }
+    .auth-logo {
+      font-family: var(--font-display);
+      font-size: 1.8rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 8px;
+      display: block;
+      text-decoration: none;
+    }
+    .auth-title {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      font-weight: 800;
+      margin-bottom: 6px;
+      letter-spacing: -0.5px;
+    }
+    .auth-subtitle {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      margin-bottom: 36px;
+    }
+    .auth-subtitle a {
+      color: var(--accent-1);
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .auth-subtitle a:hover { text-decoration: underline; }
+    .password-wrap { position: relative; }
+    .password-toggle {
+      position: absolute;
+      right: 14px; top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      color: var(--text-muted);
+      font-size: 1rem;
+      user-select: none;
+    }
+    .forgot-link {
+      display: block;
+      text-align: right;
+      font-size: 0.82rem;
+      color: var(--accent-1);
+      text-decoration: none;
+      margin-top: 6px;
+    }
+    .forgot-link:hover { text-decoration: underline; }
+    .welcome-back {
+      background: linear-gradient(135deg, rgba(108,99,255,0.1), rgba(255,101,132,0.08));
+      border: 1px solid rgba(108,99,255,0.2);
+      border-radius: var(--radius-md);
+      padding: 16px 20px;
+      margin-bottom: 28px;
+      display: none;
+      align-items: center;
+      gap: 12px;
+    }
+    .welcome-back-avatar {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem;
+      font-weight: 700;
+      color: white;
+      flex-shrink: 0;
+    }
+    .welcome-back-text { font-size: 0.9rem; }
+    .welcome-back-name { font-weight: 700; color: var(--text-primary); }
+    .welcome-back-sub  { color: var(--text-secondary); font-size: 0.8rem; }
+    @media (max-width: 768px) {
+      .auth-page { grid-template-columns: 1fr; }
+      .auth-left  { display: none; }
+      .auth-right { padding: 32px 20px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-grid"></div>
+
+  <div class="auth-page">
+
+    <!-- LEFT PANEL -->
+    <div class="auth-left">
+      <img src="https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=1200&q=80" alt="travel"/>
+      <div class="auth-left-content">
+        <a href="index.html" class="logo" style="margin-bottom:32px;">Triply ✈</a>
+        <h2>Welcome<br/><span style="background:linear-gradient(135deg,#6c63ff,#ff6584);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">back,<br/>explorer.</span></h2>
+        <p>Your group is waiting. Sign in and continue planning your next adventure together.</p>
+        <div class="testimonial">
+          <div class="testimonial-text">
+            "Triply solved our biggest problem — nobody could agree on where to go. Now we just vote and the AI picks the perfect spot. Our Goa trip was the best ever!"
+          </div>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">R</div>
+            <div>
+              <div class="testimonial-name">Rahul Sharma</div>
+              <div class="testimonial-role">Travelled to Goa with 8 friends</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT PANEL -->
+    <div class="auth-right">
+      <div class="auth-form-wrap">
+
+        <a href="index.html" class="auth-logo">Triply ✈</a>
+        <h1 class="auth-title">Sign in</h1>
+        <p class="auth-subtitle">
+          Don't have an account? <a href="register.html">Create one free</a>
+        </p>
+
+        <!-- Welcome back banner (shown if previously logged in) -->
+        <div class="welcome-back" id="welcomeBack">
+          <div class="welcome-back-avatar" id="wbAvatar">U</div>
+          <div class="welcome-back-text">
+            <div class="welcome-back-name" id="wbName">Welcome back!</div>
+            <div class="welcome-back-sub">Enter your password to continue</div>
+          </div>
+        </div>
+
+        <!-- Login Form -->
+        <div class="form-group">
+          <label class="form-label">Email Address</label>
+          <input type="email" id="loginEmail" class="form-input"
+                 placeholder="sammi@email.com"
+                 oninput="checkSavedUser(this.value)"/>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <div class="password-wrap">
+            <input type="password" id="loginPassword" class="form-input"
+                   placeholder="Your password"
+                   onkeypress="if(event.key==='Enter') loginUser()"/>
+            <span class="password-toggle"
+                  onclick="togglePass()">👁</span>
+          </div>
+          <a href="#" class="forgot-link" onclick="forgotPassword()">
+            Forgot password?
+          </a>
+        </div>
+
+        <button class="btn btn-primary w-full mt-8"
+                onclick="loginUser()"
+                id="loginBtn"
+                style="justify-content:center; padding: 16px;">
+          Sign In ✈
+        </button>
+
+        <div style="display:flex;align-items:center;gap:12px;margin:24px 0;color:var(--text-muted);font-size:0.8rem;">
+          <div style="flex:1;height:1px;background:var(--border);"></div>
+          or
+          <div style="flex:1;height:1px;background:var(--border);"></div>
+        </div>
+
+        <a href="register.html" class="btn btn-secondary w-full"
+           style="justify-content:center;">
+          Create New Account 🚀
+        </a>
+
+        <p style="font-size:0.75rem;color:var(--text-muted);text-align:center;margin-top:24px;">
+          Your data is stored locally and never shared 🔒
+        </p>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="toast-container" id="toastContainer"></div>
+  <script src="app.js"></script>
+  <script>
+
+    // Show welcome back if user was previously logged in
+    window.addEventListener('DOMContentLoaded', () => {
+      const saved = localStorage.getItem('triply_user');
+      if (saved) {
+        try {
+          const user = JSON.parse(saved);
+          const wb   = document.getElementById('welcomeBack');
+          wb.style.display = 'flex';
+          document.getElementById('wbAvatar').textContent = user.name?.[0]?.toUpperCase() || 'U';
+          document.getElementById('wbName').textContent   = `Welcome back, ${user.name}!`;
+          document.getElementById('loginEmail').value     = user.email || '';
+        } catch(e) {}
+      }
+    });
+
+    function checkSavedUser(email) {
+      const saved = localStorage.getItem('triply_user');
+      if (!saved) return;
+      try {
+        const user = JSON.parse(saved);
+        if (user.email === email) {
+          const wb = document.getElementById('welcomeBack');
+          wb.style.display = 'flex';
+          document.getElementById('wbAvatar').textContent = user.name?.[0]?.toUpperCase() || 'U';
+          document.getElementById('wbName').textContent   = `Welcome back, ${user.name}!`;
+        }
+      } catch(e) {}
+    }
+
+    async function loginUser() {
+      const email    = document.getElementById('loginEmail').value.trim().toLowerCase();
+      const password = document.getElementById('loginPassword').value;
+      const btn      = document.getElementById('loginBtn');
+
+      if (!email)    return showToast('Please enter your email', 'error');
+      if (!password) return showToast('Please enter your password', 'error');
+
+      btn.disabled    = true;
+      btn.textContent = 'Signing in...';
+
+      try {
+        const res  = await fetch(`${API}/auth/login`, {
+          method:  'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body:    JSON.stringify({ email, password })
+        });
+        const data = await res.json();
+
+        if (data.success) {
+          localStorage.setItem('triply_user', JSON.stringify(data));
+          showToast(`Welcome back, ${data.name}! 🎉`);
+          setTimeout(() => window.location.href = 'dashboard.html', 1200);
+        } else {
+          showToast(data.error || 'Login failed', 'error');
+          btn.disabled    = false;
+          btn.textContent = 'Sign In ✈';
+        }
+      } catch(e) {
+        showToast('Cannot connect to server. Is Flask running?', 'error');
+        btn.disabled    = false;
+        btn.textContent = 'Sign In ✈';
+      }
+    }
+
+    function togglePass() {
+      const input = document.getElementById('loginPassword');
+      const icon  = document.querySelector('.password-toggle');
+      input.type  = input.type === 'password' ? 'text' : 'password';
+      icon.textContent = input.type === 'password' ? '👁' : '🙈';
+    }
+
+    function forgotPassword() {
+      showToast('Password reset — contact your admin for now 🔑', 'error');
+    }
+  </script>
+</body>
+</html>

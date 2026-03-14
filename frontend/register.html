@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Triply — Create Account</title>
+  <link rel="stylesheet" href="style.css"/>
+  <style>
+    .auth-page {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+    .auth-left {
+      position: relative;
+      overflow: hidden;
+    }
+    .auth-left img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      filter: brightness(0.4);
+    }
+    .auth-left-content {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 60px;
+      background: linear-gradient(135deg, rgba(108,99,255,0.3), rgba(255,101,132,0.2));
+    }
+    .auth-left h2 {
+      font-family: var(--font-display);
+      font-size: 2.8rem;
+      font-weight: 800;
+      letter-spacing: -1.5px;
+      line-height: 1.1;
+      margin-bottom: 16px;
+    }
+    .auth-left p {
+      color: #ccc;
+      font-size: 1rem;
+      line-height: 1.7;
+      max-width: 380px;
+    }
+    .auth-perks {
+      margin-top: 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .auth-perk {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.9rem;
+      color: #ddd;
+    }
+    .auth-perk-icon {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: rgba(108,99,255,0.2);
+      border: 1px solid rgba(108,99,255,0.4);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+    .auth-right {
+      background: var(--bg-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 48px 40px;
+      overflow-y: auto;
+    }
+    .auth-form-wrap {
+      width: 100%;
+      max-width: 480px;
+    }
+    .auth-logo {
+      font-family: var(--font-display);
+      font-size: 1.8rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 8px;
+      display: block;
+    }
+    .auth-title {
+      font-family: var(--font-display);
+      font-size: 1.8rem;
+      font-weight: 800;
+      margin-bottom: 6px;
+      letter-spacing: -0.5px;
+    }
+    .auth-subtitle {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      margin-bottom: 32px;
+    }
+    .auth-subtitle a {
+      color: var(--accent-1);
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .auth-subtitle a:hover { text-decoration: underline; }
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .step-indicator {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 32px;
+    }
+    .step-dot {
+      height: 4px;
+      border-radius: 2px;
+      flex: 1;
+      background: var(--border);
+      transition: var(--transition);
+    }
+    .step-dot.active { background: var(--accent-1); }
+    .step-dot.done   { background: var(--accent-3); }
+    .step-label-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+    .step-title {
+      font-family: var(--font-display);
+      font-size: 1rem;
+      font-weight: 700;
+    }
+    .step-count {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+    .pref-section { margin-bottom: 20px; }
+    .pref-section h4 {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 10px;
+    }
+    .password-wrap { position: relative; }
+    .password-toggle {
+      position: absolute;
+      right: 14px; top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      color: var(--text-muted);
+      font-size: 1rem;
+      user-select: none;
+    }
+    .strength-bar {
+      height: 3px;
+      border-radius: 2px;
+      background: var(--bg-secondary);
+      margin-top: 6px;
+      overflow: hidden;
+    }
+    .strength-fill {
+      height: 100%;
+      border-radius: 2px;
+      width: 0%;
+      transition: width 0.3s ease, background 0.3s ease;
+    }
+    .strength-text {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+    .divider {
+      display: flex; align-items: center; gap: 12px;
+      margin: 24px 0;
+      color: var(--text-muted);
+      font-size: 0.8rem;
+    }
+    .divider::before, .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+    @media (max-width: 768px) {
+      .auth-page { grid-template-columns: 1fr; }
+      .auth-left  { display: none; }
+      .auth-right { padding: 32px 20px; }
+      .form-row   { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-grid"></div>
+
+  <div class="auth-page">
+
+    <!-- LEFT PANEL -->
+    <div class="auth-left">
+      <img src="https://images.unsplash.com/photo-1506929562872-bb421503ef21?w=1200&q=80" alt="travel"/>
+      <div class="auth-left-content">
+        <a href="index.html" class="logo" style="margin-bottom: 32px;">Triply ✈</a>
+        <h2>Your next<br/><span style="background:linear-gradient(135deg,#6c63ff,#ff6584);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">adventure<br/>starts here.</span></h2>
+        <p>Join thousands of groups planning their perfect trips together with AI-powered voting.</p>
+        <div class="auth-perks">
+          <div class="auth-perk">
+            <div class="auth-perk-icon">🗳️</div>
+            <span>Vote on destinations with your group</span>
+          </div>
+          <div class="auth-perk">
+            <div class="auth-perk-icon">🤖</div>
+            <span>AI builds your perfect itinerary</span>
+          </div>
+          <div class="auth-perk">
+            <div class="auth-perk-icon">🌍</div>
+            <span>100+ destinations across India & world</span>
+          </div>
+          <div class="auth-perk">
+            <div class="auth-perk-icon">💰</div>
+            <span>Real cost estimates & weather forecasts</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT PANEL — FORM -->
+    <div class="auth-right">
+      <div class="auth-form-wrap">
+
+        <span class="auth-logo">Triply ✈</span>
+        <h1 class="auth-title">Create your account</h1>
+        <p class="auth-subtitle">
+          Already have an account? <a href="login.html">Sign in here</a>
+        </p>
+
+        <!-- Step indicators -->
+        <div class="step-indicator">
+          <div class="step-dot active" id="dot1"></div>
+          <div class="step-dot" id="dot2"></div>
+          <div class="step-dot" id="dot3"></div>
+        </div>
+
+        <!-- STEP 1: Personal Info -->
+        <div id="step1">
+          <div class="step-label-row">
+            <span class="step-title">👤 Personal Info</span>
+            <span class="step-count">Step 1 of 3</span>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Full Name</label>
+              <input type="text" id="name" class="form-input" placeholder="Sammi Khan"/>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Date of Birth</label>
+              <input type="date" id="dob" class="form-input"/>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Email Address</label>
+            <input type="email" id="email" class="form-input" placeholder="sammi@email.com"/>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Phone Number</label>
+            <input type="tel" id="phone" class="form-input" placeholder="+91 98765 43210"/>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Password</label>
+            <div class="password-wrap">
+              <input type="password" id="password" class="form-input" placeholder="Min. 6 characters" oninput="checkStrength(this.value)"/>
+              <span class="password-toggle" onclick="togglePassword('password', this)">👁</span>
+            </div>
+            <div class="strength-bar"><div class="strength-fill" id="strengthFill"></div></div>
+            <div class="strength-text" id="strengthText"></div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Confirm Password</label>
+            <div class="password-wrap">
+              <input type="password" id="confirmPassword" class="form-input" placeholder="Repeat password"/>
+              <span class="password-toggle" onclick="togglePassword('confirmPassword', this)">👁</span>
+            </div>
+          </div>
+
+          <button class="btn btn-primary w-full mt-8" onclick="goStep2()" style="justify-content:center;">
+            Continue →
+          </button>
+        </div>
+
+        <!-- STEP 2: Travel Preferences -->
+        <div id="step2" style="display:none;">
+          <div class="step-label-row">
+            <span class="step-title">✈️ Travel Preferences</span>
+            <span class="step-count">Step 2 of 3</span>
+          </div>
+
+          <div class="pref-section">
+            <h4>💰 Budget Style</h4>
+            <div class="tags-container" id="budgetPref">
+              <span class="tag" data-value="low"    onclick="selectPref('budget',this)">🪙 Budget</span>
+              <span class="tag selected" data-value="medium" onclick="selectPref('budget',this)">💳 Medium</span>
+              <span class="tag" data-value="high"   onclick="selectPref('budget',this)">💎 Premium</span>
+              <span class="tag" data-value="luxury" onclick="selectPref('budget',this)">👑 Luxury</span>
+            </div>
+          </div>
+
+          <div class="pref-section">
+            <h4>🧳 Travel Styles <span style="font-weight:400;text-transform:none;letter-spacing:0;">(pick all that apply)</span></h4>
+            <div class="tags-container" id="stylesPref">
+              <span class="tag" onclick="this.classList.toggle('selected')">🏖️ Beach</span>
+              <span class="tag" onclick="this.classList.toggle('selected')">🏔️ Adventure</span>
+              <span class="tag" onclick="this.classList.toggle('selected')">🍜 Food</span>
+              <span class="tag" onclick="this.classList.toggle('selected')">🏛️ Culture</span>
+              <span class="tag" onclick="this.classList.toggle('selected')">🧘 Wellness</span>
+              <span class="tag" onclick="this.classList.toggle('selected')">🌿 Nature</span>
+              <span class="tag" onclick="this.classList.toggle('selected')">🛍️ Shopping</span>
+              <span class="tag" onclick="this.classList.toggle('selected')">🎵 Nightlife</span>
+              <span class="tag" onclick="this.classList.toggle('selected')">🦁 Wildlife</span>
+              <span class="tag" onclick="this.classList.toggle('selected')">🏰 History</span>
+              <span class="tag" onclick="this.classList.toggle('selected')">💑 Romance</span>
+              <span class="tag" onclick="this.classList.toggle('selected')">🎨 Art</span>
+            </div>
+          </div>
+
+          <div class="pref-section">
+            <h4>📅 Preferred Trip Duration</h4>
+            <div class="tags-container" id="durationPref">
+              <span class="tag" data-value="3"  onclick="selectPref('duration',this)">3 days</span>
+              <span class="tag" data-value="5"  onclick="selectPref('duration',this)">5 days</span>
+              <span class="tag selected" data-value="7"  onclick="selectPref('duration',this)">1 week</span>
+              <span class="tag" data-value="10" onclick="selectPref('duration',this)">10 days</span>
+              <span class="tag" data-value="14" onclick="selectPref('duration',this)">2 weeks</span>
+            </div>
+          </div>
+
+          <div class="pref-section">
+            <h4>🌍 Favourite Destinations <span style="font-weight:400;text-transform:none;letter-spacing:0;">(pick up to 3)</span></h4>
+            <div class="tags-container" id="destPref">
+              <span class="tag" onclick="toggleFavDest(this)">Goa</span>
+              <span class="tag" onclick="toggleFavDest(this)">Jaipur</span>
+              <span class="tag" onclick="toggleFavDest(this)">Kerala</span>
+              <span class="tag" onclick="toggleFavDest(this)">Manali</span>
+              <span class="tag" onclick="toggleFavDest(this)">Leh Ladakh</span>
+              <span class="tag" onclick="toggleFavDest(this)">Udaipur</span>
+              <span class="tag" onclick="toggleFavDest(this)">Rishikesh</span>
+              <span class="tag" onclick="toggleFavDest(this)">Bali</span>
+              <span class="tag" onclick="toggleFavDest(this)">Dubai</span>
+              <span class="tag" onclick="toggleFavDest(this)">Tokyo</span>
+              <span class="tag" onclick="toggleFavDest(this)">Paris</span>
+              <span class="tag" onclick="toggleFavDest(this)">Maldives</span>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:12px;margin-top:8px;">
+            <button class="btn btn-secondary" onclick="goStep1()" style="flex:1;justify-content:center;">← Back</button>
+            <button class="btn btn-primary"   onclick="goStep3()" style="flex:2;justify-content:center;">Continue →</button>
+          </div>
+        </div>
+
+        <!-- STEP 3: Review & Submit -->
+        <div id="step3" style="display:none;">
+          <div class="step-label-row">
+            <span class="step-title">✅ Review & Create</span>
+            <span class="step-count">Step 3 of 3</span>
+          </div>
+
+          <div class="card" style="margin-bottom:20px;padding:20px;">
+            <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px;">
+              <div style="width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--accent-1),var(--accent-2));display:flex;align-items:center;justify-content:center;font-size:1.3rem;font-weight:800;color:white;" id="reviewAvatar">S</div>
+              <div>
+                <div style="font-weight:700;font-size:1.1rem;" id="reviewName">—</div>
+                <div style="font-size:0.85rem;color:var(--text-secondary);" id="reviewEmail">—</div>
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:0.85rem;">
+              <div><span style="color:var(--text-muted);">📱 Phone</span><br/><span id="reviewPhone">—</span></div>
+              <div><span style="color:var(--text-muted);">🎂 DOB</span><br/><span id="reviewDob">—</span></div>
+              <div><span style="color:var(--text-muted);">💰 Budget</span><br/><span id="reviewBudget">—</span></div>
+              <div><span style="color:var(--text-muted);">📅 Duration</span><br/><span id="reviewDuration">—</span></div>
+            </div>
+            <div style="margin-top:12px;">
+              <span style="color:var(--text-muted);font-size:0.8rem;">🧳 Travel Styles</span>
+              <div class="tags-container mt-8" id="reviewStyles"></div>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:12px;">
+            <button class="btn btn-secondary" onclick="goStep2()" style="flex:1;justify-content:center;">← Back</button>
+            <button class="btn btn-success"   onclick="registerUser()" id="registerBtn" style="flex:2;justify-content:center;">
+              Create Account 🚀
+            </button>
+          </div>
+
+          <p style="font-size:0.75rem;color:var(--text-muted);text-align:center;margin-top:16px;">
+            By creating an account you agree to use Triply for awesome group travel 🌍
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="toast-container" id="toastContainer"></div>
+  <script src="app.js"></script>
+  <script>
+    
+    let selectedBudget   = 'medium';
+    let selectedDuration = 7;
+
+    function goStep1() {
+      show('step1'); setDots(1);
+    }
+
+    function goStep2() {
+      const name     = document.getElementById('name').value.trim();
+      const dob      = document.getElementById('dob').value;
+      const email    = document.getElementById('email').value.trim();
+      const phone    = document.getElementById('phone').value.trim();
+      const password = document.getElementById('password').value;
+      const confirm  = document.getElementById('confirmPassword').value;
+
+      if (!name)                         return showToast('Please enter your name', 'error');
+      if (!dob)                          return showToast('Please enter your date of birth', 'error');
+      if (!email || !email.includes('@')) return showToast('Please enter a valid email', 'error');
+      if (!phone || phone.length < 10)   return showToast('Please enter a valid phone number', 'error');
+      if (!password || password.length < 6) return showToast('Password must be at least 6 characters', 'error');
+      if (password !== confirm)          return showToast('Passwords do not match', 'error');
+
+      show('step2'); setDots(2);
+    }
+
+    function goStep3() {
+      // Populate review
+      const name  = document.getElementById('name').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+      const dob   = document.getElementById('dob').value;
+
+      document.getElementById('reviewAvatar').textContent = name[0]?.toUpperCase() || 'U';
+      document.getElementById('reviewName').textContent   = name;
+      document.getElementById('reviewEmail').textContent  = email;
+      document.getElementById('reviewPhone').textContent  = phone;
+      document.getElementById('reviewDob').textContent    = dob;
+      document.getElementById('reviewBudget').textContent = capitalize(selectedBudget);
+      document.getElementById('reviewDuration').textContent = selectedDuration + ' days';
+
+      const styles = getSelectedStyles();
+      const stylesEl = document.getElementById('reviewStyles');
+      stylesEl.innerHTML = styles.length > 0
+        ? styles.map(s => `<span class="tag selected" style="pointer-events:none;">${s}</span>`).join('')
+        : '<span style="color:var(--text-muted);font-size:0.85rem;">No styles selected</span>';
+
+      show('step3'); setDots(3);
+    }
+
+    function getSelectedStyles() {
+      return [...document.querySelectorAll('#stylesPref .tag.selected')]
+        .map(t => t.textContent.trim().replace(/[^\w\s]/g,'').trim().toLowerCase().split(' ').pop());
+    }
+
+    function getFavDests() {
+      return [...document.querySelectorAll('#destPref .tag.selected')]
+        .map(t => t.textContent.trim());
+    }
+
+    async function registerUser() {
+      const btn = document.getElementById('registerBtn');
+      btn.disabled = true;
+      btn.textContent = 'Creating account...';
+
+      const payload = {
+        name:     document.getElementById('name').value.trim(),
+        dob:      document.getElementById('dob').value,
+        email:    document.getElementById('email').value.trim().toLowerCase(),
+        phone:    document.getElementById('phone').value.trim(),
+        password: document.getElementById('password').value,
+        travel_preferences: {
+          budget:           selectedBudget,
+          travel_styles:    getSelectedStyles(),
+          fav_destinations: getFavDests(),
+          trip_duration:    selectedDuration
+        }
+      };
+
+      try {
+        const res  = await fetch(`${API}/auth/register`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+
+        if (data.success) {
+          localStorage.setItem('triply_user', JSON.stringify(data));
+          showToast('Account created! Welcome to Triply 🎉');
+          setTimeout(() => window.location.href = 'dashboard.html', 1200);
+        } else {
+          showToast(data.error || 'Registration failed', 'error');
+          btn.disabled = false;
+          btn.textContent = 'Create Account 🚀';
+        }
+      } catch (e) {
+        showToast('Cannot connect to server. Is Flask running?', 'error');
+        btn.disabled = false;
+        btn.textContent = 'Create Account 🚀';
+      }
+    }
+
+    function selectPref(type, el) {
+      const container = el.parentElement;
+      container.querySelectorAll('.tag').forEach(t => t.classList.remove('selected'));
+      el.classList.add('selected');
+      if (type === 'budget')   selectedBudget   = el.dataset.value;
+      if (type === 'duration') selectedDuration = parseInt(el.dataset.value);
+    }
+
+    function toggleFavDest(el) {
+      const selected = document.querySelectorAll('#destPref .tag.selected');
+      if (!el.classList.contains('selected') && selected.length >= 3) {
+        showToast('Max 3 favourite destinations', 'error'); return;
+      }
+      el.classList.toggle('selected');
+    }
+
+    function show(id) {
+      ['step1','step2','step3'].forEach(s => {
+        document.getElementById(s).style.display = s === id ? 'block' : 'none';
+      });
+    }
+
+    function setDots(step) {
+      for (let i = 1; i <= 3; i++) {
+        const dot = document.getElementById('dot' + i);
+        dot.className = 'step-dot' + (i < step ? ' done' : i === step ? ' active' : '');
+      }
+    }
+
+    function checkStrength(val) {
+      const fill = document.getElementById('strengthFill');
+      const text = document.getElementById('strengthText');
+      let strength = 0;
+      if (val.length >= 6)  strength++;
+      if (val.length >= 10) strength++;
+      if (/[A-Z]/.test(val)) strength++;
+      if (/[0-9]/.test(val)) strength++;
+      if (/[^A-Za-z0-9]/.test(val)) strength++;
+
+      const levels = [
+        { pct: '20%', color: '#ff4757', label: 'Very weak' },
+        { pct: '40%', color: '#ff6b35', label: 'Weak' },
+        { pct: '60%', color: '#ffd700', label: 'Fair' },
+        { pct: '80%', color: '#7bed9f', label: 'Strong' },
+        { pct: '100%',color: '#43e97b', label: 'Very strong' },
+      ];
+      const level = levels[Math.min(strength, 4)];
+      fill.style.width      = level.pct;
+      fill.style.background = level.color;
+      text.textContent      = val ? level.label : '';
+      text.style.color      = level.color;
+    }
+
+    function togglePassword(id, icon) {
+      const input = document.getElementById(id);
+      input.type  = input.type === 'password' ? 'text' : 'password';
+      icon.textContent = input.type === 'password' ? '👁' : '🙈';
+    }
+
+    function capitalize(s) {
+      return s ? s.charAt(0).toUpperCase() + s.slice(1) : '';
+    }
+  </script>
+</body>
+</html>

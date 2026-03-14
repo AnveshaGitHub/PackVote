@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Triply — Vote. Plan. Fly.</title>
+  <link rel="stylesheet" href="style.css"/>
+  <style>
+    .hero-bg {
+      position: absolute; inset: 0;
+      background: url('https://images.unsplash.com/photo-1488085061387-422e29b40080?w=1600&q=80') center/cover no-repeat;
+      filter: brightness(0.3);
+      z-index: 0;
+    }
+    .hero { position: relative; min-height: 100vh; display: flex; align-items: center; }
+    .hero .container { position: relative; z-index: 2; }
+    .dest-img-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 48px;
+    }
+    .dest-img-card {
+      position: relative;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      height: 200px;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .dest-img-card:first-child {
+      grid-column: span 2;
+      height: 260px;
+    }
+    .dest-img-card img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+      filter: brightness(0.7);
+    }
+    .dest-img-card:hover img { transform: scale(1.06); filter: brightness(0.85); }
+    .dest-img-info {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      padding: 20px;
+      background: linear-gradient(transparent, rgba(0,0,0,0.85));
+    }
+    .dest-img-name { font-family: var(--font-display); font-size: 1.3rem; font-weight: 800; }
+    .dest-img-sub  { font-size: 0.8rem; color: #ccc; margin-top: 2px; }
+    .dest-img-badge {
+      position: absolute; top: 12px; right: 12px;
+      background: rgba(108,99,255,0.85);
+      border-radius: 50px;
+      padding: 4px 12px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: white;
+    }
+    .how-section { padding: 100px 0; }
+    .how-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-top: 48px;
+    }
+    .how-step {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      transition: var(--transition);
+    }
+    .how-step:hover {
+      border-color: var(--border-hover);
+      transform: translateY(-6px);
+      box-shadow: var(--shadow-glow);
+    }
+    .how-number {
+      font-family: var(--font-display);
+      font-size: 4rem;
+      font-weight: 800;
+      color: rgba(108,99,255,0.15);
+      line-height: 1;
+      margin-bottom: 16px;
+    }
+    .how-step h3 { font-family: var(--font-display); font-size: 1.2rem; font-weight: 700; margin-bottom: 10px; }
+    .how-step p  { font-size: 0.9rem; color: var(--text-secondary); line-height: 1.7; }
+    .group-form-wrap {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      align-items: center;
+    }
+    .group-form-img {
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      height: 500px;
+    }
+    .group-form-img img { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.7); }
+    .members-list { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; min-height: 40px; }
+    .footer {
+      border-top: 1px solid var(--border);
+      padding: 40px 0;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+    .footer .logo { font-size: 1.4rem; margin-bottom: 8px; display: block; }
+    .trending-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(255,215,0,0.1);
+      border: 1px solid rgba(255,215,0,0.3);
+      border-radius: 50px;
+      padding: 4px 12px;
+      font-size: 0.7rem;
+      color: var(--accent-gold);
+      font-weight: 700;
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-grid"></div>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="container">
+      <a href="index.html" class="logo">Triply ✈</a>
+      <ul class="nav-links">
+        <li><a href="#how">How it works</a></li>
+        <li><a href="#destinations">Destinations</a></li>
+        <li><a href="vote.html">Vote</a></li>
+        <li><a href="results.html">Results</a></li>
+      </ul>
+      <a href="#create-group" class="btn btn-primary btn-sm">Start a Trip</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="bg-animation"></div>
+    <div class="container">
+      <div class="hero-content">
+        <div class="hero-badge">✦ AI-Powered Group Travel</div>
+        <h1>
+          Travel together,<br/>
+          <span class="gradient-text">decide smarter.</span>
+        </h1>
+        <p>Triply uses AI and group voting to find the perfect destination everyone actually wants. No more endless WhatsApp debates.</p>
+        <div class="hero-buttons">
+          <a href="#create-group" class="btn btn-primary btn-lg">Start a Trip ✈</a>
+          <a href="vote.html" class="btn btn-secondary btn-lg">See How Voting Works</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DESTINATIONS GRID -->
+  <section id="destinations" style="padding: 100px 0;">
+    <div class="container">
+      <div class="trending-badge">🔥 Trending Now</div>
+      <h2 class="section-title mt-16">Top destinations<br/>this season</h2>
+      <p class="section-subtitle">Hand-picked based on thousands of group votes across India and beyond.</p>
+      <div class="dest-img-grid stagger">
+        <div class="dest-img-card" onclick="window.location.href='vote.html'">
+          <img src="https://images.unsplash.com/photo-1524492412937-b28074a5d7da?w=900&q=80" alt="Jaipur"/>
+          <div class="dest-img-badge">🏆 #1 Voted</div>
+          <div class="dest-img-info">
+            <div class="dest-img-name">Jaipur, Rajasthan</div>
+            <div class="dest-img-sub">History · Culture · Food · ₹3,500/day</div>
+          </div>
+        </div>
+        <div class="dest-img-card" onclick="window.location.href='vote.html'">
+          <img src="https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?w=600&q=80" alt="Kerala"/>
+          <div class="dest-img-info">
+            <div class="dest-img-name">Kerala</div>
+            <div class="dest-img-sub">Nature · Wellness · ₹4,000/day</div>
+          </div>
+        </div>
+        <div class="dest-img-card" onclick="window.location.href='vote.html'">
+          <img src="https://images.unsplash.com/photo-1477587458883-47145ed94245?w=600&q=80" alt="Goa"/>
+          <div class="dest-img-info">
+            <div class="dest-img-name">Goa</div>
+            <div class="dest-img-sub">Beach · Nightlife · ₹5,000/day</div>
+          </div>
+        </div>
+        <div class="dest-img-card" onclick="window.location.href='vote.html'">
+          <img src="https://images.unsplash.com/photo-1587474260584-136574528ed5?w=600&q=80" alt="Delhi"/>
+          <div class="dest-img-info">
+            <div class="dest-img-name">Delhi</div>
+            <div class="dest-img-sub">History · Food · ₹3,000/day</div>
+          </div>
+        </div>
+        <div class="dest-img-card" onclick="window.location.href='vote.html'">
+          <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&q=80" alt="Manali"/>
+          <div class="dest-img-info">
+            <div class="dest-img-name">Manali</div>
+            <div class="dest-img-sub">Adventure · Nature · ₹4,500/day</div>
+          </div>
+        </div>
+        <div class="dest-img-card" onclick="window.location.href='vote.html'">
+          <img src="https://images.unsplash.com/photo-1548013146-72479768bada?w=600&q=80" alt="Agra"/>
+          <div class="dest-img-info">
+            <div class="dest-img-name">Agra</div>
+            <div class="dest-img-sub">History · Romance · ₹2,500/day</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="how-section" id="how">
+    <div class="container">
+      <div class="hero-badge">✦ Simple Process</div>
+      <h2 class="section-title mt-16">How Triply works</h2>
+      <p class="section-subtitle">From group chaos to perfect itinerary in 3 steps.</p>
+      <div class="how-grid stagger">
+        <div class="how-step">
+          <div class="how-number">01</div>
+          <h3>🧑‍🤝‍🧑 Create your group</h3>
+          <p>Add your travel crew, set a group name, and share the link. Everyone joins and submits their dream destinations.</p>
+        </div>
+        <div class="how-step">
+          <div class="how-number">02</div>
+          <h3>🗳️ Everyone votes</h3>
+          <p>Swipe through destination cards. Rank your picks, set your budget, choose your travel style. Takes under 2 minutes.</p>
+        </div>
+        <div class="how-step">
+          <div class="how-number">03</div>
+          <h3>✨ AI builds the plan</h3>
+          <p>Our AI crunches all votes using the Borda Count algorithm and builds a full day-by-day itinerary with weather and costs.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CREATE GROUP -->
+  <section style="padding: 80px 0;" id="create-group">
+    <div class="container">
+      <div class="group-form-wrap">
+        <div class="group-form-img">
+          <img src="https://images.unsplash.com/photo-1539635278303-d4002c07eae3?w=800&q=80" alt="travel group"/>
+        </div>
+        <div>
+          <div class="hero-badge">✦ Step 1</div>
+          <h2 class="section-title mt-16">Create your<br/>travel group</h2>
+          <p class="section-subtitle">Start here — add your group name and members.</p>
+          <div class="card" style="margin-top: 32px;">
+            <div class="form-group">
+              <label class="form-label">Group Name</label>
+              <input type="text" id="groupName" class="form-input" placeholder="e.g. Squad Trip 2025 🔥"/>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Add Members</label>
+              <div style="display: flex; gap: 8px;">
+                <input type="text" id="memberInput" class="form-input" placeholder="Enter name and press Enter"/>
+                <button class="btn btn-secondary" onclick="addMember()">Add</button>
+              </div>
+              <div class="members-list" id="membersList"></div>
+            </div>
+            <button class="btn btn-primary w-full mt-16" onclick="createGroup()" style="justify-content: center;">
+              Create Group & Start Voting ✈
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <span class="logo gradient-text">Triply ✈</span>
+      <p>Vote. Plan. Fly. — Built with ❤️ for group travellers</p>
+      <p class="mt-8" style="font-size: 0.75rem;">Powered by AI · Free to use · No signup required</p>
+    </div>
+  </footer>
+
+  <div class="toast-container" id="toastContainer"></div>
+  <script src="app.js"></script>
+  <script>
+    document.getElementById('memberInput').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') addMember();
+    });
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0)';
+        }
+      });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.how-step, .dest-img-card').forEach(el => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(30px)';
+      el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+      observer.observe(el);
+    });
+  </script>
+</body>
+</html>

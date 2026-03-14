@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Triply — Results</title>
+  <link rel="stylesheet" href="style.css"/>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <style>
+    .results-page { padding-top: 80px; }
+    .winner-bg {
+      position: relative;
+      min-height: 70vh;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+    }
+    .winner-bg-img {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+      filter: brightness(0.25);
+      z-index: 0;
+      transition: opacity 1s ease;
+    }
+    .winner-content {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      width: 100%;
+      padding: 80px 24px;
+    }
+    .confetti-emoji {
+      font-size: 3rem;
+      margin-bottom: 16px;
+      display: block;
+      animation: bounce 1s ease infinite alternate;
+    }
+    @keyframes bounce {
+      from { transform: translateY(0); }
+      to   { transform: translateY(-12px); }
+    }
+    .winner-subtitle {
+      font-size: 1rem;
+      color: #ccc;
+      margin-top: 12px;
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .results-body { padding: 80px 0; }
+    .results-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      margin-bottom: 64px;
+    }
+    .weather-card {
+      background: linear-gradient(135deg,
+        rgba(67,233,123,0.08),
+        rgba(108,99,255,0.08));
+      border: 1px solid rgba(67,233,123,0.2);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+    .weather-main {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+    .weather-temp {
+      font-family: var(--font-display);
+      font-size: 3rem;
+      font-weight: 800;
+      color: var(--accent-3);
+    }
+    .weather-info h4 { font-size: 1rem; font-weight: 600; }
+    .weather-info p  { font-size: 0.85rem; color: var(--text-secondary); }
+    .forecast-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .forecast-day {
+      background: var(--bg-glass);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 10px 14px;
+      text-align: center;
+      font-size: 0.8rem;
+      flex: 1;
+      min-width: 80px;
+    }
+    .forecast-day .date { color: var(--text-muted); margin-bottom: 4px; }
+    .forecast-day .temp { font-weight: 700; color: var(--accent-3); }
+    .cost-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .cost-item {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 16px;
+    }
+    .cost-item-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
+    }
+    .cost-item-value {
+      font-family: var(--font-display);
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--accent-gold);
+    }
+    .conflict-section { margin-bottom: 32px; }
+    .share-section {
+      text-align: center;
+      padding: 60px 0;
+      border-top: 1px solid var(--border);
+    }
+    .share-btns {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 24px;
+    }
+    @media (max-width: 768px) {
+      .results-grid { grid-template-columns: 1fr; }
+      .cost-grid    { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-grid"></div>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="container">
+      <a href="index.html" class="logo">Triply ✈</a>
+      <ul class="nav-links">
+        <li><a href="dashboard.html">Dashboard</a></li>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="vote.html">Vote</a></li>
+      </ul>
+      <button class="btn btn-secondary btn-sm" onclick="window.print()">
+        📄 Export PDF
+      </button>
+    </div>
+  </nav>
+
+  <div class="results-page">
+
+    <!-- WINNER HERO -->
+    <div class="winner-bg">
+      <img id="winnerBgImg"
+           src="https://images.unsplash.com/photo-1524492412937-b28074a5d7da?w=1600&q=80"
+           class="winner-bg-img" alt="destination"/>
+      <div class="winner-content">
+        <span class="confetti-emoji">🎉</span>
+        <div class="winner-label">Your group is going to</div>
+        <div class="winner-destination" id="winnerName">Loading...</div>
+        <p class="winner-subtitle" id="winnerDesc">Finding your perfect destination...</p>
+        <div class="stats-grid mt-32"
+             style="max-width:600px;margin:32px auto 0;">
+          <div class="stat-card">
+            <div class="stat-value" id="statVoters">—</div>
+            <div class="stat-label">Voters</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="statDays">—</div>
+            <div class="stat-label">Days</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="statBudget">—</div>
+            <div class="stat-label">Budget</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="statMonth">—</div>
+            <div class="stat-label">Month</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="results-body">
+      <div class="container">
+
+        <!-- Steps -->
+        <div class="steps mb-32">
+          <div class="step done">
+            <div class="step-circle">✓</div>
+            <span class="step-label">Create Group</span>
+          </div>
+          <div class="step-line done"></div>
+          <div class="step done">
+            <div class="step-circle">✓</div>
+            <span class="step-label">Vote</span>
+          </div>
+          <div class="step-line done"></div>
+          <div class="step active">
+            <div class="step-circle">3</div>
+            <span class="step-label">Results</span>
+          </div>
+        </div>
+
+        <!-- Conflicts -->
+        <div class="conflict-section"
+             id="conflictSection" style="display:none;">
+          <h3 class="section-title"
+              style="font-size:1.4rem;margin-bottom:16px;">
+            ⚠️ Group conflicts detected
+          </h3>
+          <div id="conflictList"></div>
+        </div>
+
+        <div class="results-grid">
+
+          <!-- LEFT: Scores + Recs -->
+          <div>
+            <h2 class="section-title"
+                style="font-size:1.6rem;margin-bottom:8px;">
+              Vote breakdown
+            </h2>
+            <p class="text-muted mb-24">
+              How your group ranked the destinations
+            </p>
+            <div id="scoreList"></div>
+
+            <h2 class="section-title mt-48"
+                style="font-size:1.6rem;margin-bottom:8px;">
+              AI Recommendations
+            </h2>
+            <p class="text-muted mb-24">
+              Based on your group's travel style
+            </p>
+            <div id="recList"></div>
+          </div>
+
+          <!-- RIGHT: Weather + Cost -->
+          <div>
+            <h2 class="section-title"
+                style="font-size:1.6rem;margin-bottom:24px;">
+              🌤️ Weather forecast
+            </h2>
+            <div class="weather-card">
+              <div class="weather-main">
+                <div class="weather-temp" id="weatherTemp">—°C</div>
+                <div class="weather-info">
+                  <h4 id="weatherDesc">Loading weather...</h4>
+                  <p  id="weatherHumidity">Humidity: —</p>
+                </div>
+              </div>
+              <div class="forecast-row" id="forecastRow"></div>
+            </div>
+
+            <h2 class="section-title mt-32"
+                style="font-size:1.6rem;margin-bottom:24px;">
+              💰 Cost estimate
+            </h2>
+            <div class="cost-grid" id="costGrid"></div>
+          </div>
+        </div>
+
+        <!-- Map -->
+        <div style="margin-bottom:64px;">
+          <h2 class="section-title"
+              style="font-size:1.6rem;margin-bottom:8px;">
+            📍 Destination map
+          </h2>
+          <p class="text-muted mb-24">Your winning destination on the map</p>
+          <div id="map"></div>
+        </div>
+
+        <!-- Itinerary -->
+        <div style="margin-bottom:80px;">
+          <h2 class="section-title"
+              style="font-size:1.6rem;margin-bottom:8px;">
+            📅 Your itinerary
+          </h2>
+          <p class="text-muted mb-24">AI-generated day-by-day plan</p>
+          <div id="itineraryList"></div>
+        </div>
+
+        <!-- Share -->
+        <div class="share-section">
+          <h2 class="section-title">Share with your group! 🚀</h2>
+          <p class="text-muted mt-8">
+            Send the itinerary to everyone
+          </p>
+          <div class="share-btns">
+            <button class="btn btn-primary"
+                    onclick="shareWhatsApp()">
+              📱 Share on WhatsApp
+            </button>
+            <button class="btn btn-secondary"
+                    onclick="window.print()">
+              📄 Export as PDF
+            </button>
+            <button class="btn btn-secondary"
+                    onclick="copyLink()">
+              🔗 Copy Link
+            </button>
+            <a href="dashboard.html"
+               class="btn btn-secondary">
+              🏠 Back to Dashboard
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="toast-container" id="toastContainer"></div>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
