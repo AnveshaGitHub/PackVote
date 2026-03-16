@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Triply — Sign In</title>
+  <title>PackVote — Sign In</title>
   <link rel="stylesheet" href="style.css"/>
   <style>
     .auth-page {
@@ -178,19 +178,27 @@
 
     <!-- LEFT PANEL -->
     <div class="auth-left">
-      <img src="https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=1200&q=80" alt="travel"/>
+      <video autoplay muted loop style="
+position: fixed;
+left: 0;
+top: 0;
+width: 50%;
+height: 100%;
+object-fit: cover;">
+    <source src="5329613-uhd_2160_4096_25fps.mp4" type="video/mp4">
+</video>
       <div class="auth-left-content">
-        <a href="index.html" class="logo" style="margin-bottom:32px;">Triply ✈</a>
-        <h2>Welcome<br/><span style="background:linear-gradient(135deg,#6c63ff,#ff6584);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">back,<br/>explorer.</span></h2>
+        <a href="index.html" class="logo" style="margin-bottom:32px;">PackVote ✈</a>
+        <h2>Welcome<br/><span style="background:linear-gradient(135deg,#6c63ff,#ff6584);background-clip:text;-webkit-background-clip:text;color:transparent;-webkit-text-fill-color:transparent;">back,<br/>explorer.</span></h2>
         <p>Your group is waiting. Sign in and continue planning your next adventure together.</p>
         <div class="testimonial">
           <div class="testimonial-text">
-            "Triply solved our biggest problem — nobody could agree on where to go. Now we just vote and the AI picks the perfect spot. Our Goa trip was the best ever!"
+            "PackVote solved our biggest problem — nobody could agree on where to go. Now we just vote and the AI picks the perfect spot. Our Goa trip was the best ever!"
           </div>
           <div class="testimonial-author">
-            <div class="testimonial-avatar">R</div>
+            <div class="testimonial-avatar">K</div>
             <div>
-              <div class="testimonial-name">Rahul Sharma</div>
+              <div class="testimonial-name">Kabir</div>
               <div class="testimonial-role">Travelled to Goa with 8 friends</div>
             </div>
           </div>
@@ -202,7 +210,7 @@
     <div class="auth-right">
       <div class="auth-form-wrap">
 
-        <a href="index.html" class="auth-logo">Triply ✈</a>
+        <a href="index.html" class="auth-logo">PackVote ✈</a>
         <h1 class="auth-title">Sign in</h1>
         <p class="auth-subtitle">
           Don't have an account? <a href="register.html">Create one free</a>
@@ -221,7 +229,7 @@
         <div class="form-group">
           <label class="form-label">Email Address</label>
           <input type="email" id="loginEmail" class="form-input"
-                 placeholder="sammi@email.com"
+                 placeholder="xyz@email.com"
                  oninput="checkSavedUser(this.value)"/>
         </div>
 
@@ -254,11 +262,11 @@
 
         <a href="register.html" class="btn btn-secondary w-full"
            style="justify-content:center;">
-          Create New Account 🚀
+          Create New Account 
         </a>
 
         <p style="font-size:0.75rem;color:var(--text-muted);text-align:center;margin-top:24px;">
-          Your data is stored locally and never shared 🔒
+          Your data is stored locally and never shared without your consent. We use it only to personalize your experience and make trip planning easier. If you have any concerns, please contact us at <a href="mailto:support@packvote.com">support@packvote.com</a> <a href="privacy.html" target="_blank">Privacy Policy</a> | <a href="terms.html" target="_blank">Terms of Service</a>
         </p>
 
       </div>
@@ -271,7 +279,7 @@
 
     // Show welcome back if user was previously logged in
     window.addEventListener('DOMContentLoaded', () => {
-      const saved = localStorage.getItem('triply_user');
+      const saved = localStorage.getItem('PackVote_user');
       if (saved) {
         try {
           const user = JSON.parse(saved);
@@ -285,7 +293,7 @@
     });
 
     function checkSavedUser(email) {
-      const saved = localStorage.getItem('triply_user');
+      const saved = localStorage.getItem('PackVote_user');
       if (!saved) return;
       try {
         const user = JSON.parse(saved);
@@ -318,7 +326,7 @@
         const data = await res.json();
 
         if (data.success) {
-          localStorage.setItem('triply_user', JSON.stringify(data));
+          localStorage.setItem('PackVote_user', JSON.stringify(data));
           showToast(`Welcome back, ${data.name}! 🎉`);
           setTimeout(() => window.location.href = 'dashboard.html', 1200);
         } else {

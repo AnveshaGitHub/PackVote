@@ -3,10 +3,17 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Triply — Results</title>
+  <title>PackVote — Results</title>
   <link rel="stylesheet" href="style.css"/>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
   <style>
+     .winner-content .stat-value {
+      font-size: clamp(1.2rem, 3vw, 2rem);
+      word-break: break-word;
+    }
+    .winner-content .stat-card {
+      padding: 16px 8px;
+    }
     .results-page { padding-top: 80px; }
     .winner-bg {
       position: relative;
@@ -144,7 +151,7 @@
   <!-- NAVBAR -->
   <nav class="navbar">
     <div class="container">
-      <a href="index.html" class="logo">Triply ✈</a>
+      <a href="index.html" class="logo">PackVote ✈</a>
       <ul class="nav-links">
         <li><a href="dashboard.html">Dashboard</a></li>
         <li><a href="index.html">Home</a></li>
@@ -169,8 +176,8 @@
         <div class="winner-destination" id="winnerName">Loading...</div>
         <p class="winner-subtitle" id="winnerDesc">Finding your perfect destination...</p>
         <div class="stats-grid mt-32"
-             style="max-width:600px;margin:32px auto 0;">
-          <div class="stat-card">
+             style="max-width:600px;margin:32px auto 0;">   
+         <div class="stat-card">
             <div class="stat-value" id="statVoters">—</div>
             <div class="stat-label">Voters</div>
           </div>

@@ -70,7 +70,7 @@ def results_page():
 
 @app.route('/api/status', methods=['GET'])
 def status():
-    return jsonify({'status': 'Triply backend running!', 'version': '2.0'})
+    return jsonify({'status': 'PackVote backend running!', 'version': '2.0'})
 
 # ═══════════════════════════════════════════════════════
 # AUTH ROUTES
@@ -339,7 +339,7 @@ def build_day_plan(places, duration):
 
 if __name__ == '__main__':
 
-    print("🌍 Triply backend starting...")
+    print("🌍 PackVote backend starting...")
     print("📍 Running at: http://127.0.0.1:5000")
 
     app.run(debug=True, port=5000)

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Triply — Create Account</title>
+  <title>PackVote — Create Account</title>
   <link rel="stylesheet" href="style.css"/>
   <style>
     .auth-page {
@@ -206,8 +206,8 @@
     <div class="auth-left">
       <img src="https://images.unsplash.com/photo-1506929562872-bb421503ef21?w=1200&q=80" alt="travel"/>
       <div class="auth-left-content">
-        <a href="index.html" class="logo" style="margin-bottom: 32px;">Triply ✈</a>
-        <h2>Your next<br/><span style="background:linear-gradient(135deg,#6c63ff,#ff6584);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">adventure<br/>starts here.</span></h2>
+        <a href="index.html" class="logo" style="margin-bottom: 32px;">PackVote ✈</a>
+        <h2>Your next<br/><span style="background:linear-gradient(135deg,#6c63ff,#ff6584);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;">adventure<br/>starts here.</span></h2>
         <p>Join thousands of groups planning their perfect trips together with AI-powered voting.</p>
         <div class="auth-perks">
           <div class="auth-perk">
@@ -234,7 +234,7 @@
     <div class="auth-right">
       <div class="auth-form-wrap">
 
-        <span class="auth-logo">Triply ✈</span>
+        <span class="auth-logo">PackVote ✈</span>
         <h1 class="auth-title">Create your account</h1>
         <p class="auth-subtitle">
           Already have an account? <a href="login.html">Sign in here</a>
@@ -257,7 +257,7 @@
           <div class="form-row">
             <div class="form-group">
               <label class="form-label">Full Name</label>
-              <input type="text" id="name" class="form-input" placeholder="Sammi Khan"/>
+              <input type="text" id="name" class="form-input" placeholder="Full Name"/>
             </div>
             <div class="form-group">
               <label class="form-label">Date of Birth</label>
@@ -267,12 +267,12 @@
 
           <div class="form-group">
             <label class="form-label">Email Address</label>
-            <input type="email" id="email" class="form-input" placeholder="sammi@email.com"/>
+            <input type="email" id="email" class="form-input" placeholder="xyz@email.com"/>
           </div>
 
           <div class="form-group">
             <label class="form-label">Phone Number</label>
-            <input type="tel" id="phone" class="form-input" placeholder="+91 98765 43210"/>
+            <input type="tel" id="phone" class="form-input" placeholder="+91 xxxxx xxxxx"/>
           </div>
 
           <div class="form-group">
@@ -306,7 +306,7 @@
           </div>
 
           <div class="pref-section">
-            <h4>💰 Budget Style</h4>
+            <h4>Budget Style</h4>
             <div class="tags-container" id="budgetPref">
               <span class="tag" data-value="low"    onclick="selectPref('budget',this)">🪙 Budget</span>
               <span class="tag selected" data-value="medium" onclick="selectPref('budget',this)">💳 Medium</span>
@@ -316,7 +316,7 @@
           </div>
 
           <div class="pref-section">
-            <h4>🧳 Travel Styles <span style="font-weight:400;text-transform:none;letter-spacing:0;">(pick all that apply)</span></h4>
+            <h4>Travel Styles <span style="font-weight:400;text-transform:none;letter-spacing:0;">(pick all that apply)</span></h4>
             <div class="tags-container" id="stylesPref">
               <span class="tag" onclick="this.classList.toggle('selected')">🏖️ Beach</span>
               <span class="tag" onclick="this.classList.toggle('selected')">🏔️ Adventure</span>
@@ -334,7 +334,7 @@
           </div>
 
           <div class="pref-section">
-            <h4>📅 Preferred Trip Duration</h4>
+            <h4>Preferred Trip Duration</h4>
             <div class="tags-container" id="durationPref">
               <span class="tag" data-value="3"  onclick="selectPref('duration',this)">3 days</span>
               <span class="tag" data-value="5"  onclick="selectPref('duration',this)">5 days</span>
@@ -345,7 +345,7 @@
           </div>
 
           <div class="pref-section">
-            <h4>🌍 Favourite Destinations <span style="font-weight:400;text-transform:none;letter-spacing:0;">(pick up to 3)</span></h4>
+            <h4>Favourite Destinations <span style="font-weight:400;text-transform:none;letter-spacing:0;">(pick up to 3)</span></h4>
             <div class="tags-container" id="destPref">
               <span class="tag" onclick="toggleFavDest(this)">Goa</span>
               <span class="tag" onclick="toggleFavDest(this)">Jaipur</span>
@@ -371,7 +371,7 @@
         <!-- STEP 3: Review & Submit -->
         <div id="step3" style="display:none;">
           <div class="step-label-row">
-            <span class="step-title">✅ Review & Create</span>
+            <span class="step-title"> Review & Create</span>
             <span class="step-count">Step 3 of 3</span>
           </div>
 
@@ -384,13 +384,13 @@
               </div>
             </div>
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:0.85rem;">
-              <div><span style="color:var(--text-muted);">📱 Phone</span><br/><span id="reviewPhone">—</span></div>
-              <div><span style="color:var(--text-muted);">🎂 DOB</span><br/><span id="reviewDob">—</span></div>
-              <div><span style="color:var(--text-muted);">💰 Budget</span><br/><span id="reviewBudget">—</span></div>
-              <div><span style="color:var(--text-muted);">📅 Duration</span><br/><span id="reviewDuration">—</span></div>
+              <div><span style="color:var(--text-muted);"> Phone</span><br/><span id="reviewPhone">—</span></div>
+              <div><span style="color:var(--text-muted);"> DOB</span><br/><span id="reviewDob">—</span></div>
+              <div><span style="color:var(--text-muted);"> Budget</span><br/><span id="reviewBudget">—</span></div>
+              <div><span style="color:var(--text-muted);"> Duration</span><br/><span id="reviewDuration">—</span></div>
             </div>
             <div style="margin-top:12px;">
-              <span style="color:var(--text-muted);font-size:0.8rem;">🧳 Travel Styles</span>
+              <span style="color:var(--text-muted);font-size:0.8rem;">Travel Styles</span>
               <div class="tags-container mt-8" id="reviewStyles"></div>
             </div>
           </div>
@@ -398,12 +398,12 @@
           <div style="display:flex;gap:12px;">
             <button class="btn btn-secondary" onclick="goStep2()" style="flex:1;justify-content:center;">← Back</button>
             <button class="btn btn-success"   onclick="registerUser()" id="registerBtn" style="flex:2;justify-content:center;">
-              Create Account 🚀
+              Create Account 
             </button>
           </div>
 
           <p style="font-size:0.75rem;color:var(--text-muted);text-align:center;margin-top:16px;">
-            By creating an account you agree to use Triply for awesome group travel 🌍
+            By creating an account you agree to use PackVote for awesome group travel 🌍
           </p>
         </div>
 
@@ -413,172 +413,152 @@
 
   <div class="toast-container" id="toastContainer"></div>
   <script src="app.js"></script>
-  <script>
-    
-    let selectedBudget   = 'medium';
-    let selectedDuration = 7;
+<script>
 
-    function goStep1() {
-      show('step1'); setDots(1);
-    }
+  function goStep1() { show('step1'); setDots(1); }
 
-    function goStep2() {
-      const name     = document.getElementById('name').value.trim();
-      const dob      = document.getElementById('dob').value;
-      const email    = document.getElementById('email').value.trim();
-      const phone    = document.getElementById('phone').value.trim();
-      const password = document.getElementById('password').value;
-      const confirm  = document.getElementById('confirmPassword').value;
+  function goStep2() {
+    const name     = document.getElementById('name').value.trim();
+    const dob      = document.getElementById('dob').value;
+    const email    = document.getElementById('email').value.trim();
+    const phone    = document.getElementById('phone').value.trim();
+    const password = document.getElementById('password').value;
+    const confirm  = document.getElementById('confirmPassword').value;
+    if (!name)                          return showToast('Please enter your name', 'error');
+    if (!dob)                           return showToast('Please enter your date of birth', 'error');
+    if (!email || !email.includes('@')) return showToast('Please enter a valid email', 'error');
+    if (!phone || phone.length < 10)    return showToast('Please enter a valid phone number', 'error');
+    if (!password || password.length < 6) return showToast('Password must be at least 6 characters', 'error');
+    if (password !== confirm)           return showToast('Passwords do not match', 'error');
+    show('step2'); setDots(2);
+  }
 
-      if (!name)                         return showToast('Please enter your name', 'error');
-      if (!dob)                          return showToast('Please enter your date of birth', 'error');
-      if (!email || !email.includes('@')) return showToast('Please enter a valid email', 'error');
-      if (!phone || phone.length < 10)   return showToast('Please enter a valid phone number', 'error');
-      if (!password || password.length < 6) return showToast('Password must be at least 6 characters', 'error');
-      if (password !== confirm)          return showToast('Passwords do not match', 'error');
+  function goStep3() {
+    const name  = document.getElementById('name').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const phone = document.getElementById('phone').value.trim();
+    const dob   = document.getElementById('dob').value;
+    document.getElementById('reviewAvatar').textContent   = name[0]?.toUpperCase() || 'U';
+    document.getElementById('reviewName').textContent     = name;
+    document.getElementById('reviewEmail').textContent    = email;
+    document.getElementById('reviewPhone').textContent    = phone;
+    document.getElementById('reviewDob').textContent      = dob;
+    document.getElementById('reviewBudget').textContent   = capitalize(selectedBudget);
+    document.getElementById('reviewDuration').textContent = selectedDuration + ' days';
+    const styles   = getSelectedStyles();
+    const stylesEl = document.getElementById('reviewStyles');
+    stylesEl.innerHTML = styles.length > 0
+      ? styles.map(s => `<span class="tag selected" style="pointer-events:none;">${s}</span>`).join('')
+      : '<span style="color:var(--text-muted);font-size:0.85rem;">No styles selected</span>';
+    show('step3'); setDots(3);
+  }
 
-      show('step2'); setDots(2);
-    }
+  function getSelectedStyles() {
+    return [...document.querySelectorAll('#stylesPref .tag.selected')]
+      .map(t => t.textContent.trim().replace(/[^\w\s]/g,'').trim().toLowerCase().split(' ').pop());
+  }
 
-    function goStep3() {
-      // Populate review
-      const name  = document.getElementById('name').value.trim();
-      const email = document.getElementById('email').value.trim();
-      const phone = document.getElementById('phone').value.trim();
-      const dob   = document.getElementById('dob').value;
+  function getFavDests() {
+    return [...document.querySelectorAll('#destPref .tag.selected')]
+      .map(t => t.textContent.trim());
+  }
 
-      document.getElementById('reviewAvatar').textContent = name[0]?.toUpperCase() || 'U';
-      document.getElementById('reviewName').textContent   = name;
-      document.getElementById('reviewEmail').textContent  = email;
-      document.getElementById('reviewPhone').textContent  = phone;
-      document.getElementById('reviewDob').textContent    = dob;
-      document.getElementById('reviewBudget').textContent = capitalize(selectedBudget);
-      document.getElementById('reviewDuration').textContent = selectedDuration + ' days';
-
-      const styles = getSelectedStyles();
-      const stylesEl = document.getElementById('reviewStyles');
-      stylesEl.innerHTML = styles.length > 0
-        ? styles.map(s => `<span class="tag selected" style="pointer-events:none;">${s}</span>`).join('')
-        : '<span style="color:var(--text-muted);font-size:0.85rem;">No styles selected</span>';
-
-      show('step3'); setDots(3);
-    }
-
-    function getSelectedStyles() {
-      return [...document.querySelectorAll('#stylesPref .tag.selected')]
-        .map(t => t.textContent.trim().replace(/[^\w\s]/g,'').trim().toLowerCase().split(' ').pop());
-    }
-
-    function getFavDests() {
-      return [...document.querySelectorAll('#destPref .tag.selected')]
-        .map(t => t.textContent.trim());
-    }
-
-    async function registerUser() {
-      const btn = document.getElementById('registerBtn');
-      btn.disabled = true;
-      btn.textContent = 'Creating account...';
-
-      const payload = {
-        name:     document.getElementById('name').value.trim(),
-        dob:      document.getElementById('dob').value,
-        email:    document.getElementById('email').value.trim().toLowerCase(),
-        phone:    document.getElementById('phone').value.trim(),
-        password: document.getElementById('password').value,
-        travel_preferences: {
-          budget:           selectedBudget,
-          travel_styles:    getSelectedStyles(),
-          fav_destinations: getFavDests(),
-          trip_duration:    selectedDuration
-        }
-      };
-
-      try {
-        const res  = await fetch(`${API}/auth/register`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
-        const data = await res.json();
-
-        if (data.success) {
-          localStorage.setItem('triply_user', JSON.stringify(data));
-          showToast('Account created! Welcome to Triply 🎉');
-          setTimeout(() => window.location.href = 'dashboard.html', 1200);
-        } else {
-          showToast(data.error || 'Registration failed', 'error');
-          btn.disabled = false;
-          btn.textContent = 'Create Account 🚀';
-        }
-      } catch (e) {
-        showToast('Cannot connect to server. Is Flask running?', 'error');
-        btn.disabled = false;
-        btn.textContent = 'Create Account 🚀';
+  async function registerUser() {
+    const btn = document.getElementById('registerBtn');
+    btn.disabled    = true;
+    btn.textContent = 'Creating account...';
+    const payload = {
+      name:     document.getElementById('name').value.trim(),
+      dob:      document.getElementById('dob').value,
+      email:    document.getElementById('email').value.trim().toLowerCase(),
+      phone:    document.getElementById('phone').value.trim(),
+      password: document.getElementById('password').value,
+      travel_preferences: {
+        budget:           selectedBudget,
+        travel_styles:    getSelectedStyles(),
+        fav_destinations: getFavDests(),
+        trip_duration:    selectedDuration
       }
-    }
-
-    function selectPref(type, el) {
-      const container = el.parentElement;
-      container.querySelectorAll('.tag').forEach(t => t.classList.remove('selected'));
-      el.classList.add('selected');
-      if (type === 'budget')   selectedBudget   = el.dataset.value;
-      if (type === 'duration') selectedDuration = parseInt(el.dataset.value);
-    }
-
-    function toggleFavDest(el) {
-      const selected = document.querySelectorAll('#destPref .tag.selected');
-      if (!el.classList.contains('selected') && selected.length >= 3) {
-        showToast('Max 3 favourite destinations', 'error'); return;
-      }
-      el.classList.toggle('selected');
-    }
-
-    function show(id) {
-      ['step1','step2','step3'].forEach(s => {
-        document.getElementById(s).style.display = s === id ? 'block' : 'none';
+    };
+    try {
+      const res  = await fetch(`${API}/auth/register`, {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify(payload)
       });
-    }
-
-    function setDots(step) {
-      for (let i = 1; i <= 3; i++) {
-        const dot = document.getElementById('dot' + i);
-        dot.className = 'step-dot' + (i < step ? ' done' : i === step ? ' active' : '');
+      const data = await res.json();
+      if (data.success) {
+        localStorage.setItem('triply_user', JSON.stringify(data));
+        showToast('Account created! Welcome to PackVote 🎉');
+        setTimeout(() => window.location.href = 'dashboard.html', 1200);
+      } else {
+        showToast(data.error || 'Registration failed', 'error');
+        btn.disabled    = false;
+        btn.textContent = 'Create Account';
       }
+    } catch(e) {
+      showToast('Cannot connect to server. Is Flask running?', 'error');
+      btn.disabled    = false;
+      btn.textContent = 'Create Account';
     }
+  }
 
-    function checkStrength(val) {
-      const fill = document.getElementById('strengthFill');
-      const text = document.getElementById('strengthText');
-      let strength = 0;
-      if (val.length >= 6)  strength++;
-      if (val.length >= 10) strength++;
-      if (/[A-Z]/.test(val)) strength++;
-      if (/[0-9]/.test(val)) strength++;
-      if (/[^A-Za-z0-9]/.test(val)) strength++;
+  function selectPref(type, el) {
+  el.parentElement.querySelectorAll('.tag').forEach(t => t.classList.remove('selected'));
+  el.classList.add('selected');
+  if (type === 'budget')   selectedBudget   = el.dataset.value;
+  if (type === 'duration') selectedDuration = parseInt(el.dataset.value);
+}
 
-      const levels = [
-        { pct: '20%', color: '#ff4757', label: 'Very weak' },
-        { pct: '40%', color: '#ff6b35', label: 'Weak' },
-        { pct: '60%', color: '#ffd700', label: 'Fair' },
-        { pct: '80%', color: '#7bed9f', label: 'Strong' },
-        { pct: '100%',color: '#43e97b', label: 'Very strong' },
-      ];
-      const level = levels[Math.min(strength, 4)];
-      fill.style.width      = level.pct;
-      fill.style.background = level.color;
-      text.textContent      = val ? level.label : '';
-      text.style.color      = level.color;
+  function toggleFavDest(el) {
+    const selected = document.querySelectorAll('#destPref .tag.selected');
+    if (!el.classList.contains('selected') && selected.length >= 3) {
+      showToast('Max 3 favourite destinations', 'error'); return;
     }
+    el.classList.toggle('selected');
+  }
 
-    function togglePassword(id, icon) {
-      const input = document.getElementById(id);
-      input.type  = input.type === 'password' ? 'text' : 'password';
-      icon.textContent = input.type === 'password' ? '👁' : '🙈';
-    }
+  function show(id) {
+    ['step1','step2','step3'].forEach(s => {
+      document.getElementById(s).style.display = s === id ? 'block' : 'none';
+    });
+  }
 
-    function capitalize(s) {
-      return s ? s.charAt(0).toUpperCase() + s.slice(1) : '';
+  function setDots(step) {
+    for (let i = 1; i <= 3; i++) {
+      const dot = document.getElementById('dot' + i);
+      dot.className = 'step-dot' + (i < step ? ' done' : i === step ? ' active' : '');
     }
-  </script>
+  }
+
+  function checkStrength(val) {
+    const fill = document.getElementById('strengthFill');
+    const text = document.getElementById('strengthText');
+    let strength = 0;
+    if (val.length >= 6)          strength++;
+    if (val.length >= 10)         strength++;
+    if (/[A-Z]/.test(val))        strength++;
+    if (/[0-9]/.test(val))        strength++;
+    if (/[^A-Za-z0-9]/.test(val)) strength++;
+    const levels = [
+      { pct:'20%', color:'#ff4757', label:'Very weak'   },
+      { pct:'40%', color:'#ff6b35', label:'Weak'        },
+      { pct:'60%', color:'#ffd700', label:'Fair'        },
+      { pct:'80%', color:'#7bed9f', label:'Strong'      },
+      { pct:'100%',color:'#43e97b', label:'Very strong' },
+    ];
+    const level = levels[Math.min(strength, 4)];
+    fill.style.width      = level.pct;
+    fill.style.background = level.color;
+    text.textContent      = val ? level.label : '';
+    text.style.color      = level.color;
+  }
+
+  function togglePassword(id, icon) {
+    const input  = document.getElementById(id);
+    input.type   = input.type === 'password' ? 'text' : 'password';
+    icon.textContent = input.type === 'password' ? '👁' : '🙈';
+  }
+</script>
 </body>
 </html>
