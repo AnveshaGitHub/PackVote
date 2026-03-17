@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Triply — Expense Tracker</title>
+  <link rel="stylesheet" href="style.css"/>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+  <style>
+    .expenses-page { padding-top: 80px; min-height: 100vh; }
+    .expenses-header {
+      background: linear-gradient(135deg, rgba(255,215,0,0.08), rgba(108,99,255,0.08));
+      border-bottom: 1px solid var(--border);
+      padding: 40px 0;
+      margin-bottom: 40px;
+    }
+    .expenses-layout {
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 32px;
+      align-items: start;
+    }
+    .stat-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+    .expense-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 20px 24px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 12px;
+      transition: var(--transition);
+      position: relative;
+    }
+    .expense-card:hover { border-color: var(--border-hover); transform: translateX(4px); }
+    .expense-icon { width: 48px; height: 48px; border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; flex-shrink: 0; }
+    .cat-food       { background: rgba(255,107,53,0.15); }
+    .cat-transport  { background: rgba(108,99,255,0.15); }
+    .cat-hotel      { background: rgba(67,233,123,0.15); }
+    .cat-activities { background: rgba(255,215,0,0.15);  }
+    .cat-shopping   { background: rgba(255,101,132,0.15);}
+    .cat-other      { background: rgba(160,160,184,0.15);}
+    .expense-info   { flex: 1; }
+    .expense-name   { font-weight: 700; font-size: 0.95rem; margin-bottom: 3px; }
+    .expense-meta   { font-size: 0.8rem; color: var(--text-muted); }
+    .expense-amount { font-family: var(--font-display); font-size: 1.3rem; font-weight: 800; color: var(--accent-gold); }
+    .expense-delete {
+      position: absolute; top: 12px; right: 12px;
+      background: none; border: none;
+      color: var(--text-muted); cursor: pointer;
+      font-size: 0.9rem; opacity: 0;
+      transition: var(--transition);
+    }
+    .expense-card:hover .expense-delete { opacity: 1; }
+    .expense-delete:hover { color: var(--accent-2); }
+    .add-expense-form {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+    .add-expense-form h3 { font-family: var(--font-display); font-size: 1.1rem; font-weight: 700; margin-bottom: 20px; }
+    .category-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 16px; }
+    .cat-btn {
+      background: var(--bg-glass);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 10px; text-align: center;
+      cursor: pointer; transition: var(--transition);
+      font-size: 0.8rem; color: var(--text-secondary);
+    }
+    .cat-btn:hover { border-color: var(--border-hover); }
+    .cat-btn.active { border-color: var(--accent-gold); background: rgba(255,215,0,0.1); color: var(--accent-gold); font-weight: 600; }
+    .cat-btn-icon { font-size: 1.2rem; display: block; margin-bottom: 3px; }
+    .members-check { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+    .member-check {
+      display: flex; align-items: center; gap: 6px;
+      background: var(--bg-glass); border: 1px solid var(--border);
+      border-radius: 50px; padding: 6px 12px;
+      cursor: pointer; transition: var(--transition);
+      font-size: 0.85rem; user-select: none;
+    }
+    .member-check.checked { border-color: var(--accent-1); background: rgba(108,99,255,0.15); color: var(--accent-1); }
+    .member-check input { display: none; }
+    .settlement-card {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); padding: 16px 20px;
+      margin-bottom: 10px; display: flex; align-items: center;
+      gap: 12px; transition: var(--transition);
+    }
+    .settlement-card:hover { border-color: var(--accent-3); }
+    .settlement-from   { font-weight: 700; color: var(--accent-2); font-size: 0.9rem; }
+    .settlement-to     { font-weight: 700; color: var(--accent-3); font-size: 0.9rem; }
+    .settlement-amount { font-family: var(--font-display); font-size: 1.2rem; font-weight: 800; color: var(--accent-gold); margin-left: auto; }
+    .settlement-arrow  { color: var(--text-muted); font-size: 1rem; }
+    .chart-wrap { position: relative; height: 220px; margin: 20px 0; }
+    .balance-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 0.88rem; }
+    .balance-row:last-child { border-bottom: none; }
+    .balance-positive { color: var(--accent-3); font-weight: 700; }
+    .balance-negative { color: var(--accent-2); font-weight: 700; }
+    .empty-expenses { text-align: center; padding: 60px 24px; color: var(--text-muted); }
+    .empty-expenses .empty-emoji { font-size: 3rem; display: block; margin-bottom: 12px; }
+    .group-setup { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 24px; margin-bottom: 24px; }
+    .group-setup h3 { font-family: var(--font-display); font-size: 1rem; font-weight: 700; margin-bottom: 16px; }
+    .add-member-row { display: flex; gap: 8px; margin-bottom: 12px; }
+    .group-info-bar {
+      background: rgba(108,99,255,0.1);
+      border: 1px solid rgba(108,99,255,0.2);
+      border-radius: var(--radius-md);
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      font-size: 0.85rem;
+    }
+    .group-info-bar span { color: var(--text-secondary); }
+    .group-info-bar strong { color: var(--accent-1); }
+    .switch-group-btn {
+      background: none; border: 1px solid var(--border);
+      border-radius: var(--radius-sm); padding: 4px 10px;
+      color: var(--text-muted); cursor: pointer;
+      font-size: 0.75rem; transition: var(--transition);
+    }
+    .switch-group-btn:hover { border-color: var(--accent-2); color: var(--accent-2); }
+    @media (max-width: 768px) {
+      .expenses-layout { grid-template-columns: 1fr; }
+      .stat-row        { grid-template-columns: 1fr 1fr; }
+      .category-grid   { grid-template-columns: repeat(3, 1fr); }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-grid"></div>
+
+  <nav class="navbar">
+    <div class="container">
+      <a href="index.html" class="logo">Triply ✈</a>
+      <ul class="nav-links">
+        <li><a href="dashboard.html">Dashboard</a></li>
+        <li><a href="results.html">Results</a></li>
+        <li><a href="vote.html">Vote</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="expenses-page">
+    <div class="expenses-header">
+      <div class="container">
+        <div class="hero-badge">💰 Group Finance</div>
+        <h1 class="section-title mt-16">Expense <span class="gradient-text">Tracker</span></h1>
+        <p class="section-subtitle">Split costs, track spending and settle up — all in one place.</p>
+        <div class="stat-row">
+          <div class="stat-card"><div class="stat-value" id="statTotal">₹0</div><div class="stat-label">Total Spent</div></div>
+          <div class="stat-card"><div class="stat-value" id="statPerPerson">₹0</div><div class="stat-label">Per Person</div></div>
+          <div class="stat-card"><div class="stat-value" id="statCount">0</div><div class="stat-label">Expenses</div></div>
+          <div class="stat-card"><div class="stat-value" id="statSettlements">0</div><div class="stat-label">Settlements</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container" style="padding-bottom:80px;">
+      <div class="expenses-layout">
+        <div>
+
+          <!-- Group Setup -->
+          <div class="group-setup" id="groupSetup">
+            <h3>👥 Setup your group</h3>
+            <p class="text-muted mb-16" style="font-size:0.85rem;">
+              Each group ID keeps its own separate expenses — never mixed!
+            </p>
+            <div class="form-group">
+              <label class="form-label">Group ID</label>
+              <input type="text" id="expGroupId" class="form-input" placeholder="Paste your group ID"/>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Add Members</label>
+              <div class="add-member-row">
+                <input type="text" id="expMemberInput" class="form-input" placeholder="Enter member name"/>
+                <button class="btn btn-secondary" onclick="addExpMember()">Add</button>
+              </div>
+              <div id="expMembersList" class="members-check"></div>
+            </div>
+            <button class="btn btn-primary w-full mt-8" onclick="setupGroup()" style="justify-content:center;">
+              Start Tracking 💰
+            </button>
+          </div>
+
+          <!-- Active Group Info Bar -->
+          <div class="group-info-bar" id="groupInfoBar" style="display:none;">
+            <span>Group: <strong id="activeGroupLabel">—</strong> &nbsp;·&nbsp; Members: <strong id="activeMembersLabel">—</strong></span>
+            <button class="switch-group-btn" onclick="switchGroup()">Switch Group</button>
+          </div>
+
+          <!-- Add Expense Form -->
+          <div class="add-expense-form" id="addExpenseForm" style="display:none;">
+            <h3>➕ Add Expense</h3>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+              <div class="form-group">
+                <label class="form-label">Description</label>
+                <input type="text" id="expDesc" class="form-input" placeholder="e.g. Hotel booking"/>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Amount (₹)</label>
+                <input type="number" id="expAmount" class="form-input" placeholder="0.00" min="0" step="0.01"/>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Paid By</label>
+              <select id="expPaidBy" class="form-input">
+                <option value="">Select who paid</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Category</label>
+              <div class="category-grid">
+                <div class="cat-btn active" data-cat="food"       onclick="selectCat(this)"><span class="cat-btn-icon">🍜</span>Food</div>
+                <div class="cat-btn"        data-cat="transport"  onclick="selectCat(this)"><span class="cat-btn-icon">🚗</span>Transport</div>
+                <div class="cat-btn"        data-cat="hotel"      onclick="selectCat(this)"><span class="cat-btn-icon">🏨</span>Hotel</div>
+                <div class="cat-btn"        data-cat="activities" onclick="selectCat(this)"><span class="cat-btn-icon">🎟️</span>Activities</div>
+                <div class="cat-btn"        data-cat="shopping"   onclick="selectCat(this)"><span class="cat-btn-icon">🛍️</span>Shopping</div>
+                <div class="cat-btn"        data-cat="other"      onclick="selectCat(this)"><span class="cat-btn-icon">📦</span>Other</div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Split Among</label>
+              <div class="members-check" id="splitMembers"></div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Split Type</label>
+              <div class="tags-container">
+                <span class="tag selected" id="splitEqual"  onclick="setSplitType('equal')">⚖️ Equal Split</span>
+                <span class="tag"          id="splitCustom" onclick="setSplitType('custom')">✏️ Custom Split</span>
+              </div>
+            </div>
+            <div id="customSplitArea" style="display:none;">
+              <label class="form-label">Custom Amounts (₹)</label>
+              <div id="customSplitInputs"></div>
+            </div>
+            <button class="btn btn-success w-full mt-16" onclick="submitExpense()" style="justify-content:center;">
+              Add Expense ➕
+            </button>
+          </div>
+
+          <!-- Expenses List -->
+          <div id="expensesList">
+            <div class="empty-expenses">
+              <span class="empty-emoji">🧾</span>
+              <p>No expenses yet — set up your group above to start tracking!</p>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- RIGHT SIDEBAR -->
+        <div>
+          <div class="card mb-24" id="chartCard" style="display:none;">
+            <h3 style="font-family:var(--font-display);font-size:1rem;font-weight:700;margin-bottom:8px;">📊 Spending Breakdown</h3>
+            <div class="chart-wrap"><canvas id="expenseChart"></canvas></div>
+          </div>
+          <div class="card mb-24" id="balancesCard" style="display:none;">
+            <h3 style="font-family:var(--font-display);font-size:1rem;font-weight:700;margin-bottom:16px;">⚖️ Balances</h3>
+            <div id="balancesList"></div>
+          </div>
+          <div class="card" id="settlementsCard" style="display:none;">
+            <h3 style="font-family:var(--font-display);font-size:1rem;font-weight:700;margin-bottom:8px;">🤝 Settle Up</h3>
+            <p style="font-size:0.8rem;color:var(--text-muted);margin-bottom:16px;">Minimum transactions to settle all debts</p>
+            <div id="settlementsList"></div>
+          </div>
+          <div class="card mt-24" id="shareCard" style="display:none;">
+            <h3 style="font-family:var(--font-display);font-size:1rem;font-weight:700;margin-bottom:16px;">📤 Share Summary</h3>
+            <button class="btn btn-primary w-full mb-8" onclick="shareExpenses()" style="justify-content:center;">📱 Share on WhatsApp</button>
+            <button class="btn btn-secondary w-full"   onclick="window.print()"  style="justify-content:center;">📄 Export PDF</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast-container" id="toastContainer"></div>
+  <script src="app.js"></script>
+  <script>
+    let expGroupId   = '';
+    let expMembers   = [];
+    let selectedCat  = 'food';
+    let splitType    = 'equal';
+    let expenseChart = null;
+
+    // ── On load — restore ONLY if same group ──────────────────────────
+    window.addEventListener('DOMContentLoaded', () => {
+      const savedGroup = loadData('triply_group_id');
+      if (savedGroup) {
+        document.getElementById('expGroupId').value = savedGroup;
+        // Only auto-restore members saved for THIS specific group
+        const savedMembers = loadData('triply_exp_members_' + savedGroup);
+        if (savedMembers && savedMembers.length >= 2) {
+          expMembers = savedMembers;
+          renderExpMembersList();
+          setupGroupDirect(savedGroup, savedMembers);
+        }
+      }
+    });
+
+    // ── Switch group — resets everything ─────────────────────────────
+    function switchGroup() {
+      // Reset all state
+      expGroupId   = '';
+      expMembers   = [];
+      expenseChart = null;
+
+      // Hide active UI
+      document.getElementById('groupInfoBar').style.display    = 'none';
+      document.getElementById('addExpenseForm').style.display  = 'none';
+      document.getElementById('chartCard').style.display       = 'none';
+      document.getElementById('balancesCard').style.display    = 'none';
+      document.getElementById('settlementsCard').style.display = 'none';
+      document.getElementById('shareCard').style.display       = 'none';
+
+      // Reset stats
+      setText('statTotal',       '₹0');
+      setText('statPerPerson',   '₹0');
+      setText('statCount',       '0');
+      setText('statSettlements', '0');
+
+      // Reset expense list
+      document.getElementById('expensesList').innerHTML = `
+        <div class="empty-expenses">
+          <span class="empty-emoji">🧾</span>
+          <p>No expenses yet — set up your group above to start tracking!</p>
+        </div>`;
+
+      // Clear member list UI
+      document.getElementById('expMembersList').innerHTML = '';
+      document.getElementById('expGroupId').value = '';
+
+      // Show setup form again
+      document.getElementById('groupSetup').style.display = 'block';
+
+      showToast('Switched! Enter new group details 🔄');
+    }
+
+    // ── Add member ────────────────────────────────────────────────────
+    function addExpMember() {
+      const input = document.getElementById('expMemberInput');
+      const name  = input.value.trim();
+      if (!name)                     { showToast('Enter a name', 'error'); return; }
+      if (expMembers.includes(name)) { showToast('Already added', 'error'); return; }
+      expMembers.push(name);
+      input.value = '';
+      renderExpMembersList();
+      showToast(`${name} added!`);
+    }
+
+    function renderExpMembersList() {
+      const list = document.getElementById('expMembersList');
+      list.innerHTML = expMembers.map(m => `
+        <div class="member-check checked">
+          <div class="member-avatar" style="width:20px;height:20px;font-size:0.65rem;">
+            ${m[0].toUpperCase()}
+          </div>
+          ${m}
+        </div>`).join('');
+    }
+
+    // ── Setup group ───────────────────────────────────────────────────
+    function setupGroup() {
+      const groupId = document.getElementById('expGroupId').value.trim();
+      if (!groupId)              { showToast('Enter a group ID', 'error'); return; }
+      if (expMembers.length < 2) { showToast('Add at least 2 members', 'error'); return; }
+
+      // Full reset before loading new group
+      expGroupId   = '';
+      expenseChart = null;
+      document.getElementById('chartCard').style.display       = 'none';
+      document.getElementById('balancesCard').style.display    = 'none';
+      document.getElementById('settlementsCard').style.display = 'none';
+      document.getElementById('shareCard').style.display       = 'none';
+      setText('statTotal', '₹0'); setText('statPerPerson', '₹0');
+      setText('statCount', '0');  setText('statSettlements', '0');
+
+      setupGroupDirect(groupId, expMembers);
+    }
+
+    function setupGroupDirect(groupId, members) {
+      expGroupId = groupId;
+      expMembers = members;
+
+      // Save members KEYED to this specific group ID
+      saveData('triply_exp_members_' + groupId, members);
+      saveData('triply_group_id', groupId);
+
+      // Hide setup, show active bar + form
+      document.getElementById('groupSetup').style.display    = 'none';
+      document.getElementById('groupInfoBar').style.display  = 'flex';
+      document.getElementById('addExpenseForm').style.display = 'block';
+
+      // Update info bar
+      setText('activeGroupLabel',   groupId);
+      setText('activeMembersLabel', members.join(', '));
+
+      // Populate paid by dropdown
+      const select = document.getElementById('expPaidBy');
+      select.innerHTML = '<option value="">Select who paid</option>' +
+        members.map(m => `<option value="${m}">${m}</option>`).join('');
+
+      // Populate split members
+      renderSplitMembers(members);
+
+      // Load THIS group's expenses from backend
+      loadExpenses();
+    }
+
+    function renderSplitMembers(members) {
+      document.getElementById('splitMembers').innerHTML = members.map(m => `
+        <div class="member-check checked" onclick="toggleSplitMember(this)" data-member="${m}">
+          <div class="member-avatar" style="width:20px;height:20px;font-size:0.65rem;">
+            ${m[0].toUpperCase()}
+          </div>
+          ${m}
+        </div>`).join('');
+    }
+
+    function toggleSplitMember(el) {
+      el.classList.toggle('checked');
+      if (splitType === 'custom') renderCustomSplitInputs();
+    }
+
+    function selectCat(el) {
+      document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+      el.classList.add('active');
+      selectedCat = el.dataset.cat;
+    }
+
+    function setSplitType(type) {
+      splitType = type;
+      document.getElementById('splitEqual').classList.toggle('selected',  type === 'equal');
+      document.getElementById('splitCustom').classList.toggle('selected', type === 'custom');
+      document.getElementById('customSplitArea').style.display = type === 'custom' ? 'block' : 'none';
+      if (type === 'custom') renderCustomSplitInputs();
+    }
+
+    function renderCustomSplitInputs() {
+      const checked   = [...document.querySelectorAll('#splitMembers .member-check.checked')];
+      const amount    = parseFloat(document.getElementById('expAmount').value) || 0;
+      const perPerson = checked.length > 0 ? (amount / checked.length).toFixed(2) : 0;
+      document.getElementById('customSplitInputs').innerHTML = checked.map(el => {
+        const member = el.dataset.member;
+        return `
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+            <span style="min-width:100px;font-size:0.85rem;">${member}</span>
+            <input type="number" class="form-input" id="custom_${member}"
+                   value="${perPerson}" step="0.01" min="0" style="flex:1;" placeholder="0.00"/>
+          </div>`;
+      }).join('');
+    }
+
+    async function submitExpense() {
+      const desc    = document.getElementById('expDesc').value.trim();
+      const amount  = parseFloat(document.getElementById('expAmount').value);
+      const paidBy  = document.getElementById('expPaidBy').value;
+      const checked = [...document.querySelectorAll('#splitMembers .member-check.checked')]
+                        .map(el => el.dataset.member);
+
+      if (!desc)                { showToast('Enter a description', 'error'); return; }
+      if (!amount || amount<=0) { showToast('Enter a valid amount', 'error'); return; }
+      if (!paidBy)              { showToast('Select who paid', 'error'); return; }
+      if (checked.length === 0) { showToast('Select at least 1 member to split', 'error'); return; }
+
+      let splitAmong = checked;
+      if (splitType === 'custom') {
+        const customSplits = {};
+        let total = 0;
+        for (const member of checked) {
+          const val = parseFloat(document.getElementById(`custom_${member}`)?.value || 0);
+          customSplits[member] = val;
+          total += val;
+        }
+        if (Math.abs(total - amount) > 0.5) {
+          showToast(`Custom split total (₹${total}) must equal amount (₹${amount})`, 'error');
+          return;
+        }
+        splitAmong = customSplits;
+      }
+
+      try {
+        const res  = await fetch(`${API}/expenses/add`, {
+          method:  'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            group_id:    expGroupId,
+            paid_by:     paidBy,
+            amount,
+            description: desc,
+            category:    selectedCat,
+            split_among: splitAmong,
+            split_type:  splitType
+          })
+        });
+        const data = await res.json();
+        if (data.success) {
+          showToast(`₹${amount} added! 💰`);
+          document.getElementById('expDesc').value   = '';
+          document.getElementById('expAmount').value = '';
+          loadExpenses();
+        } else {
+          showToast(data.error || 'Failed to add expense', 'error');
+        }
+      } catch(e) {
+        showToast('Cannot connect to server', 'error');
+      }
+    }
+
+    async function loadExpenses() {
+      if (!expGroupId) return;
+      try {
+        const res  = await fetch(`${API}/expenses/${expGroupId}`);
+        const data = await res.json();
+        renderExpenses(data.expenses    || []);
+        renderSummary(data.summary      || {});
+        renderSettlements(data.settlements || []);
+      } catch(e) {
+        showToast('Could not load expenses', 'error');
+      }
+    }
+
+    function renderExpenses(expenses) {
+      const list = document.getElementById('expensesList');
+      if (expenses.length === 0) {
+        list.innerHTML = `
+          <div class="empty-expenses">
+            <span class="empty-emoji">🧾</span>
+            <p>No expenses yet for this group — add your first one above!</p>
+          </div>`;
+        return;
+      }
+      const catIcons = { food:'🍜', transport:'🚗', hotel:'🏨', activities:'🎟️', shopping:'🛍️', other:'📦' };
+      list.innerHTML = `
+        <h3 style="font-family:var(--font-display);font-size:1rem;font-weight:700;margin-bottom:16px;">
+          🧾 All Expenses (${expenses.length})
+        </h3>` +
+        expenses.slice().reverse().map(exp => `
+          <div class="expense-card">
+            <div class="expense-icon cat-${exp.category}">${catIcons[exp.category]||'📦'}</div>
+            <div class="expense-info">
+              <div class="expense-name">${exp.description}</div>
+              <div class="expense-meta">
+                Paid by <strong>${exp.paid_by}</strong> ·
+                Split: ${exp.split_among.join(', ')} · ${exp.date}
+              </div>
+            </div>
+            <div class="expense-amount">₹${exp.amount.toLocaleString()}</div>
+            <button class="expense-delete" onclick="deleteExp('${exp.id}')">✕</button>
+          </div>`).join('');
+    }
+
+    function renderSummary(summary) {
+      if (!summary.total_spent) return;
+      setText('statTotal',       '₹' + (summary.total_spent||0).toLocaleString());
+      setText('statPerPerson',   '₹' + (summary.per_person_avg||0).toLocaleString());
+      setText('statCount',       summary.total_expenses||0);
+      setText('statSettlements', Object.keys(summary.balances||{}).length);
+
+      const balancesCard = document.getElementById('balancesCard');
+      const balancesList = document.getElementById('balancesList');
+      if (summary.balances && Object.keys(summary.balances).length > 0) {
+        balancesCard.style.display = 'block';
+        balancesList.innerHTML = Object.entries(summary.balances).map(([person, bal]) => `
+          <div class="balance-row">
+            <span>${person}</span>
+            <span class="${bal>=0?'balance-positive':'balance-negative'}">
+              ${bal>=0?'+':''}₹${Math.abs(bal).toLocaleString()}
+              ${bal>=0?' (gets back)':' (owes)'}
+            </span>
+          </div>`).join('');
+      }
+
+      if (summary.by_category && Object.keys(summary.by_category).length > 0) {
+        document.getElementById('chartCard').style.display = 'block';
+        renderChart(summary.by_category);
+      }
+
+      document.getElementById('shareCard').style.display = 'block';
+    }
+
+    function renderSettlements(settlements) {
+      const card = document.getElementById('settlementsCard');
+      const list = document.getElementById('settlementsList');
+      if (settlements.length === 0) { card.style.display = 'none'; return; }
+      card.style.display = 'block';
+      list.innerHTML = settlements.map(s => `
+        <div class="settlement-card">
+          <span class="settlement-from">${s.from}</span>
+          <span class="settlement-arrow">→ pays →</span>
+          <span class="settlement-to">${s.to}</span>
+          <span class="settlement-amount">₹${s.amount.toLocaleString()}</span>
+        </div>`).join('');
+    }
+
+    function renderChart(byCategory) {
+      const ctx    = document.getElementById('expenseChart').getContext('2d');
+      const labels = Object.keys(byCategory);
+      const values = Object.values(byCategory);
+      const colors = ['#ff6b35','#6c63ff','#43e97b','#ffd700','#ff6584','#a0a0b8'];
+      if (expenseChart) expenseChart.destroy();
+      expenseChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels,
+          datasets: [{ data: values, backgroundColor: colors.slice(0, labels.length), borderWidth: 0, hoverOffset: 8 }]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          plugins: {
+            legend: { position:'bottom', labels:{ color:'#a0a0b8', font:{size:12}, boxWidth:12, padding:16 } },
+            tooltip: { callbacks: { label: ctx => ` ₹${ctx.raw.toLocaleString()}` } }
+          }
+        }
+      });
+    }
+
+    async function deleteExp(expenseId) {
+      if (!confirm('Delete this expense?')) return;
+      try {
+        const res  = await fetch(`${API}/expenses/delete/${expGroupId}/${expenseId}`, { method:'DELETE' });
+        const data = await res.json();
+        if (data.success) { showToast('Expense deleted'); loadExpenses(); }
+      } catch(e) { showToast('Could not delete', 'error'); }
+    }
+
+    function shareExpenses() {
+      const total = document.getElementById('statTotal').textContent;
+      const count = document.getElementById('statCount').textContent;
+      window.open(`https://wa.me/?text=${encodeURIComponent(
+        `💰 *Triply Expense Summary*\nGroup: ${expGroupId}\nTotal: ${total} across ${count} expenses\nSplit tracked with Triply ✈`
+      )}`, '_blank');
+    }
+
+    document.getElementById('expMemberInput')
+      .addEventListener('keypress', e => { if (e.key==='Enter') addExpMember(); });
+  </script>
+</body>
+</html>
