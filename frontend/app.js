@@ -1,6 +1,5 @@
 const API = 'http://127.0.0.1:5000/api';
 
-// ── Destination images (Unsplash — free) ──────────────────────────────────
 const DEST_IMAGES = {
   'Mumbai':      'https://images.unsplash.com/photo-1570168007204-dfb528c6958f?w=800&q=80',
   'Delhi':       'https://images.unsplash.com/photo-1587474260584-136574528ed5?w=800&q=80',
@@ -110,14 +109,13 @@ function showToast(message, type = 'success') {
   }, 3000);
 }
 
-// ── Auth guard ────────────────────────────────────────────────────────────
+// ── Auth ──────────────────────────────────────────────────────────────────
 function requireAuth() {
   const user = loadData('triply_user');
   if (!user) { window.location.href = 'login.html'; return null; }
   return user;
 }
 
-// ── Logout ────────────────────────────────────────────────────────────────
 function logout() {
   localStorage.removeItem('triply_user');
   localStorage.removeItem('triply_group_id');
@@ -128,7 +126,7 @@ function logout() {
 }
 
 // ══════════════════════════════════════════════════════════════════════════
-// INDEX PAGE — Group creation
+// INDEX PAGE
 // ══════════════════════════════════════════════════════════════════════════
 let members = [];
 
@@ -169,11 +167,7 @@ async function createGroup() {
     const res  = await fetch(`${API}/group/create`, {
       method:  'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        group_name: groupName,
-        members,
-        user_id: user?.user_id || ''
-      })
+      body: JSON.stringify({ group_name: groupName, members, user_id: user?.user_id || '' })
     });
     const data = await res.json();
     if (data.success) {
@@ -181,19 +175,13 @@ async function createGroup() {
       saveData('triply_group_name', data.group_name);
       if (user) {
         if (!user.groups) user.groups = [];
-        user.groups.push({
-          group_id:   data.group_id,
-          group_name: data.group_name,
-          joined_at:  new Date().toISOString()
-        });
+        user.groups.push({ group_id: data.group_id, group_name: data.group_name, joined_at: new Date().toISOString() });
         saveData('triply_user', user);
       }
       showToast(`"${groupName}" created! 🎉`);
       setTimeout(() => window.location.href = 'vote.html', 1200);
     }
-  } catch(e) {
-    showToast('Cannot connect to server. Is Flask running?', 'error');
-  }
+  } catch(e) { showToast('Cannot connect to server. Is Flask running?', 'error'); }
 }
 
 // ══════════════════════════════════════════════════════════════════════════
@@ -263,10 +251,7 @@ function renderCards() {
 
 function initDrag(card) {
   let startX = 0, currentX = 0, isDragging = false;
-  card.addEventListener('mousedown', e => {
-    isDragging = true; startX = e.clientX;
-    card.style.transition = 'none';
-  });
+  card.addEventListener('mousedown', e => { isDragging = true; startX = e.clientX; card.style.transition = 'none'; });
   document.addEventListener('mousemove', e => {
     if (!isDragging) return;
     currentX = e.clientX - startX;
@@ -382,9 +367,7 @@ async function submitVote() {
     } else {
       showToast(data.error || 'Error submitting vote', 'error');
     }
-  } catch(e) {
-    showToast('Cannot connect to server', 'error');
-  }
+  } catch(e) { showToast('Cannot connect to server', 'error'); }
 }
 
 // ══════════════════════════════════════════════════════════════════════════
@@ -437,14 +420,14 @@ function renderResults(data) {
   setText('winnerName', c.winner || 'Your Destination');
   setText('winnerDesc', getDestDesc(c.winner));
   const bgImg = document.getElementById('winnerBgImg');
-if (bgImg) {
-  bgImg.style.opacity = '0';
-  bgImg.src = getDestImage(c.winner);
-  bgImg.onload = () => {
-    bgImg.style.transition = 'opacity 1.5s ease';
-    bgImg.style.opacity    = '1';
-  };
-}
+  if (bgImg) {
+    bgImg.style.opacity = '0';
+    bgImg.src = getDestImage(c.winner);
+    bgImg.onload = () => {
+      bgImg.style.transition = 'opacity 1.5s ease';
+      bgImg.style.opacity    = '1';
+    };
+  }
   setText('statVoters', data.total_votes);
   setText('statDays',   (c.avg_duration||'—') + (c.avg_duration ? 'd' : ''));
   setText('statBudget', capitalize(c.consensus_budget));
@@ -580,10 +563,10 @@ function renderItinerary(itinerary) {
 
 function renderFallbackItinerary(destination) {
   renderItinerary({ destination, days: [
-    { day:1, title:'Arrival & Exploration',  activities:[{name:'Check in & freshen up',type:'accommodation'},{name:'Evening walk around city centre',type:'sightseeing'},{name:'Welcome dinner',type:'food'}] },
-    { day:2, title:'Main Attractions',       activities:[{name:'Visit top historical sites',type:'sightseeing'},{name:'Local market tour',type:'shopping'},{name:'Street food lunch',type:'food'}] },
+    { day:1, title:'Arrival & Exploration',  activities:[{name:'Check in & freshen up',type:'accommodation'},{name:'Evening walk',type:'sightseeing'},{name:'Welcome dinner',type:'food'}] },
+    { day:2, title:'Main Attractions',       activities:[{name:'Top historical sites',type:'sightseeing'},{name:'Local market',type:'shopping'},{name:'Street food lunch',type:'food'}] },
     { day:3, title:'Culture & Heritage',     activities:[{name:'Museum visit',type:'culture'},{name:'Art gallery',type:'art'},{name:'Traditional dinner',type:'food'}] },
-    { day:4, title:'Adventure Day',          activities:[{name:'Guided city tour',type:'tour'},{name:'Adventure activity',type:'adventure'},{name:'Rooftop dinner',type:'food'}] },
+    { day:4, title:'Adventure Day',          activities:[{name:'Guided tour',type:'tour'},{name:'Adventure activity',type:'adventure'},{name:'Rooftop dinner',type:'food'}] },
     { day:5, title:'Leisure & Departure',    activities:[{name:'Morning at leisure',type:'relaxation'},{name:'Last minute shopping',type:'shopping'},{name:'Farewell dinner',type:'food'}] },
   ]});
 }
@@ -623,16 +606,580 @@ function copyLink() {
 }
 
 // ══════════════════════════════════════════════════════════════════════════
+// EXPENSES PAGE
+// ══════════════════════════════════════════════════════════════════════════
+let expGroupId   = '';
+let expMembers   = [];
+let selectedCat  = 'food';
+let splitType    = 'equal';
+let expenseChart = null;
+
+function initExpensesPage() {
+  if (!document.getElementById('expGroupId')) return;
+  const savedGroup   = loadData('triply_group_id');
+  if (savedGroup) {
+    document.getElementById('expGroupId').value = savedGroup;
+    const savedMembers = loadData('triply_exp_members_' + savedGroup);
+    if (savedMembers && savedMembers.length >= 2) {
+      expMembers = savedMembers;
+      renderExpMembersList();
+      setupGroupDirect(savedGroup, savedMembers);
+    }
+  }
+}
+
+function addExpMember() {
+  const input = document.getElementById('expMemberInput');
+  const name  = input.value.trim();
+  if (!name)                     { showToast('Enter a name', 'error'); return; }
+  if (expMembers.includes(name)) { showToast('Already added', 'error'); return; }
+  expMembers.push(name);
+  input.value = '';
+  renderExpMembersList();
+  showToast(`${name} added!`);
+}
+
+function renderExpMembersList() {
+  const list = document.getElementById('expMembersList');
+  if (!list) return;
+  list.innerHTML = expMembers.map(m => `
+    <div class="member-check checked">
+      <div class="member-avatar" style="width:20px;height:20px;font-size:0.65rem;">${m[0].toUpperCase()}</div>
+      ${m}
+    </div>`).join('');
+}
+
+function setupGroup() {
+  const groupId = document.getElementById('expGroupId').value.trim();
+  if (!groupId)              { showToast('Enter a group ID', 'error'); return; }
+  if (expMembers.length < 2) { showToast('Add at least 2 members', 'error'); return; }
+  expGroupId   = '';
+  expenseChart = null;
+  ['chartCard','balancesCard','settlementsCard','shareCard'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = 'none';
+  });
+  setText('statTotal', '₹0'); setText('statPerPerson', '₹0');
+  setText('statCount', '0');  setText('statSettlements', '0');
+  setupGroupDirect(groupId, expMembers);
+}
+
+function setupGroupDirect(groupId, members) {
+  expGroupId = groupId;
+  expMembers = members;
+  saveData('triply_exp_members_' + groupId, members);
+  saveData('triply_group_id', groupId);
+  const setupEl = document.getElementById('groupSetup');
+  const formEl  = document.getElementById('addExpenseForm');
+  const barEl   = document.getElementById('groupInfoBar');
+  if (setupEl) setupEl.style.display   = 'none';
+  if (formEl)  formEl.style.display    = 'block';
+  if (barEl)   barEl.style.display     = 'flex';
+  setText('activeGroupLabel',   groupId);
+  setText('activeMembersLabel', members.join(', '));
+  const select = document.getElementById('expPaidBy');
+  if (select) {
+    select.innerHTML = '<option value="">Select who paid</option>' +
+      members.map(m => `<option value="${m}">${m}</option>`).join('');
+  }
+  renderSplitMembers(members);
+  loadExpenses();
+}
+
+function switchGroup() {
+  expGroupId = ''; expMembers = []; expenseChart = null;
+  ['groupInfoBar','addExpenseForm','chartCard','balancesCard','settlementsCard','shareCard'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = 'none';
+  });
+  setText('statTotal','₹0'); setText('statPerPerson','₹0');
+  setText('statCount','0');  setText('statSettlements','0');
+  const expList = document.getElementById('expensesList');
+  if (expList) expList.innerHTML = `<div class="empty-expenses"><span class="empty-emoji">🧾</span><p>Set up your group above to start tracking!</p></div>`;
+  const membersListEl = document.getElementById('expMembersList');
+  const groupIdEl     = document.getElementById('expGroupId');
+  if (membersListEl) membersListEl.innerHTML = '';
+  if (groupIdEl)     groupIdEl.value = '';
+  const setupEl = document.getElementById('groupSetup');
+  if (setupEl) setupEl.style.display = 'block';
+  showToast('Switched! Enter new group details 🔄');
+}
+
+function renderSplitMembers(members) {
+  const container = document.getElementById('splitMembers');
+  if (!container) return;
+  container.innerHTML = members.map(m => `
+    <div class="member-check checked" onclick="toggleSplitMember(this)" data-member="${m}">
+      <div class="member-avatar" style="width:20px;height:20px;font-size:0.65rem;">${m[0].toUpperCase()}</div>
+      ${m}
+    </div>`).join('');
+}
+
+function toggleSplitMember(el) {
+  el.classList.toggle('checked');
+  if (splitType === 'custom') renderCustomSplitInputs();
+}
+
+function selectCat(el) {
+  document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  selectedCat = el.dataset.cat;
+}
+
+function setSplitType(type) {
+  splitType = type;
+  const equalEl  = document.getElementById('splitEqual');
+  const customEl = document.getElementById('splitCustom');
+  const areaEl   = document.getElementById('customSplitArea');
+  if (equalEl)  equalEl.classList.toggle('selected',  type === 'equal');
+  if (customEl) customEl.classList.toggle('selected', type === 'custom');
+  if (areaEl)   areaEl.style.display = type === 'custom' ? 'block' : 'none';
+  if (type === 'custom') renderCustomSplitInputs();
+}
+
+function renderCustomSplitInputs() {
+  const checked   = [...document.querySelectorAll('#splitMembers .member-check.checked')];
+  const amount    = parseFloat(document.getElementById('expAmount')?.value) || 0;
+  const perPerson = checked.length > 0 ? (amount / checked.length).toFixed(2) : 0;
+  const container = document.getElementById('customSplitInputs');
+  if (!container) return;
+  container.innerHTML = checked.map(el => {
+    const member = el.dataset.member;
+    return `<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+      <span style="min-width:100px;font-size:0.85rem;">${member}</span>
+      <input type="number" class="form-input" id="custom_${member}" value="${perPerson}" step="0.01" min="0" style="flex:1;" placeholder="0.00"/>
+    </div>`;
+  }).join('');
+}
+
+async function submitExpense() {
+  const desc    = document.getElementById('expDesc')?.value.trim();
+  const amount  = parseFloat(document.getElementById('expAmount')?.value);
+  const paidBy  = document.getElementById('expPaidBy')?.value;
+  const checked = [...document.querySelectorAll('#splitMembers .member-check.checked')]
+                    .map(el => el.dataset.member);
+  if (!desc)                { showToast('Enter a description', 'error'); return; }
+  if (!amount || amount<=0) { showToast('Enter a valid amount', 'error'); return; }
+  if (!paidBy)              { showToast('Select who paid', 'error'); return; }
+  if (checked.length === 0) { showToast('Select at least 1 member to split', 'error'); return; }
+  let splitAmong = checked;
+  if (splitType === 'custom') {
+    const customSplits = {};
+    let total = 0;
+    for (const member of checked) {
+      const val = parseFloat(document.getElementById(`custom_${member}`)?.value || 0);
+      customSplits[member] = val;
+      total += val;
+    }
+    if (Math.abs(total - amount) > 0.5) {
+      showToast(`Custom split total (₹${total}) must equal amount (₹${amount})`, 'error');
+      return;
+    }
+    splitAmong = customSplits;
+  }
+  try {
+    const res  = await fetch(`${API}/expenses/add`, {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ group_id: expGroupId, paid_by: paidBy, amount, description: desc, category: selectedCat, split_among: splitAmong, split_type: splitType })
+    });
+    const data = await res.json();
+    if (data.success) {
+      showToast(`₹${amount} added! 💰`);
+      const descEl   = document.getElementById('expDesc');
+      const amountEl = document.getElementById('expAmount');
+      if (descEl)   descEl.value   = '';
+      if (amountEl) amountEl.value = '';
+      loadExpenses();
+    } else {
+      showToast(data.error || 'Failed to add expense', 'error');
+    }
+  } catch(e) { showToast('Cannot connect to server', 'error'); }
+}
+
+async function loadExpenses() {
+  if (!expGroupId) return;
+  try {
+    const res  = await fetch(`${API}/expenses/${expGroupId}`);
+    const data = await res.json();
+    renderExpenses(data.expenses    || []);
+    renderExpSummary(data.summary   || {});
+    renderSettlements(data.settlements || []);
+  } catch(e) { showToast('Could not load expenses', 'error'); }
+}
+
+function renderExpenses(expenses) {
+  const list = document.getElementById('expensesList');
+  if (!list) return;
+  if (expenses.length === 0) {
+    list.innerHTML = `<div class="empty-expenses"><span class="empty-emoji">🧾</span><p>No expenses yet — add your first one above!</p></div>`;
+    return;
+  }
+  const catIcons = { food:'🍜', transport:'🚗', hotel:'🏨', activities:'🎟️', shopping:'🛍️', other:'📦' };
+  list.innerHTML = `<h3 style="font-family:var(--font-display);font-size:1rem;font-weight:700;margin-bottom:16px;">🧾 All Expenses (${expenses.length})</h3>` +
+    expenses.slice().reverse().map(exp => `
+      <div class="expense-card">
+        <div class="expense-icon cat-${exp.category}">${catIcons[exp.category]||'📦'}</div>
+        <div class="expense-info">
+          <div class="expense-name">${exp.description}</div>
+          <div class="expense-meta">Paid by <strong>${exp.paid_by}</strong> · Split: ${exp.split_among.join(', ')} · ${exp.date}</div>
+        </div>
+        <div class="expense-amount">₹${exp.amount.toLocaleString()}</div>
+        <button class="expense-delete" onclick="deleteExp('${exp.id}')">✕</button>
+      </div>`).join('');
+}
+
+function renderExpSummary(summary) {
+  if (!summary.total_spent) return;
+  setText('statTotal',       '₹' + (summary.total_spent||0).toLocaleString());
+  setText('statPerPerson',   '₹' + (summary.per_person_avg||0).toLocaleString());
+  setText('statCount',       summary.total_expenses||0);
+  setText('statSettlements', Object.keys(summary.balances||{}).length);
+  const balancesCard = document.getElementById('balancesCard');
+  const balancesList = document.getElementById('balancesList');
+  if (summary.balances && Object.keys(summary.balances).length > 0 && balancesCard && balancesList) {
+    balancesCard.style.display = 'block';
+    balancesList.innerHTML = Object.entries(summary.balances).map(([person, bal]) => `
+      <div class="balance-row">
+        <span>${person}</span>
+        <span class="${bal>=0?'balance-positive':'balance-negative'}">${bal>=0?'+':''}₹${Math.abs(bal).toLocaleString()} ${bal>=0?'(gets back)':'(owes)'}</span>
+      </div>`).join('');
+  }
+  if (summary.by_category && Object.keys(summary.by_category).length > 0) {
+    const chartCard = document.getElementById('chartCard');
+    if (chartCard) {
+      chartCard.style.display = 'block';
+      renderExpChart(summary.by_category);
+    }
+  }
+  const shareCard = document.getElementById('shareCard');
+  if (shareCard) shareCard.style.display = 'block';
+}
+
+function renderSettlements(settlements) {
+  const card = document.getElementById('settlementsCard');
+  const list = document.getElementById('settlementsList');
+  if (!card || !list) return;
+  if (settlements.length === 0) { card.style.display = 'none'; return; }
+  card.style.display = 'block';
+  list.innerHTML = settlements.map(s => `
+    <div class="settlement-card">
+      <span class="settlement-from">${s.from}</span>
+      <span class="settlement-arrow">→ pays →</span>
+      <span class="settlement-to">${s.to}</span>
+      <span class="settlement-amount">₹${s.amount.toLocaleString()}</span>
+    </div>`).join('');
+}
+
+function renderExpChart(byCategory) {
+  if (!window.Chart) return;
+  const ctx    = document.getElementById('expenseChart');
+  if (!ctx) return;
+  const labels = Object.keys(byCategory);
+  const values = Object.values(byCategory);
+  const colors = ['#ff6b35','#6c63ff','#43e97b','#ffd700','#ff6584','#a0a0b8'];
+  if (expenseChart) expenseChart.destroy();
+  expenseChart = new Chart(ctx.getContext('2d'), {
+    type: 'doughnut',
+    data: { labels, datasets: [{ data: values, backgroundColor: colors.slice(0, labels.length), borderWidth: 0, hoverOffset: 8 }] },
+    options: { responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { position:'bottom', labels:{ color:'#a0a0b8', font:{size:12}, boxWidth:12, padding:16 } },
+        tooltip: { callbacks: { label: ctx => ` ₹${ctx.raw.toLocaleString()}` } } } }
+  });
+}
+
+async function deleteExp(expenseId) {
+  if (!confirm('Delete this expense?')) return;
+  try {
+    const res  = await fetch(`${API}/expenses/delete/${expGroupId}/${expenseId}`, { method:'DELETE' });
+    const data = await res.json();
+    if (data.success) { showToast('Expense deleted'); loadExpenses(); }
+  } catch(e) { showToast('Could not delete', 'error'); }
+}
+
+function shareExpenses() {
+  const total = document.getElementById('statTotal')?.textContent || '₹0';
+  const count = document.getElementById('statCount')?.textContent || '0';
+  window.open(`https://wa.me/?text=${encodeURIComponent(`💰 *PackVote Expense Summary*\nGroup: ${expGroupId}\nTotal: ${total} across ${count} expenses\nSplit tracked with PackVote ✈`)}`, '_blank');
+}
+
+// ══════════════════════════════════════════════════════════════════════════
+// PLANNER PAGE
+// ══════════════════════════════════════════════════════════════════════════
+let planGroupId  = '';
+let planMembers  = [];
+let allTasks     = [];
+let activeFilter = 'all';
+let activePerson = 'all';
+
+const CAT_ICONS = { documents:'📄', bookings:'🎫', packing:'🧳', activities:'🎯', other:'📦' };
+
+function initPlannerPage() {
+  if (!document.getElementById('planGroupId')) return;
+  const savedGroup = loadData('triply_group_id');
+  const savedDest  = loadData('triply_winner') || '';
+  if (savedGroup) {
+    const planGroupEl = document.getElementById('planGroupId');
+    const planDestEl  = document.getElementById('planDestination');
+    if (planGroupEl) planGroupEl.value = savedGroup;
+    if (planDestEl)  planDestEl.value  = savedDest;
+    loadPlanner();
+  }
+}
+
+async function loadPlanner() {
+  const groupIdEl = document.getElementById('planGroupId');
+  const groupId   = groupIdEl?.value.trim();
+  if (!groupId) { showToast('Enter a group ID', 'error'); return; }
+  planGroupId = groupId;
+  saveData('triply_group_id', groupId);
+  planMembers = loadData('triply_exp_members_' + groupId) || [];
+  try {
+    const res  = await fetch(`${API}/planner/${groupId}`);
+    const data = await res.json();
+    allTasks   = data.tasks || [];
+    const generateWrap = document.getElementById('generateWrap');
+    const addTaskForm  = document.getElementById('addTaskForm');
+    const shareSection = document.getElementById('shareSection');
+    if (generateWrap) generateWrap.style.display = 'block';
+    if (addTaskForm)  addTaskForm.style.display   = 'block';
+    if (shareSection) shareSection.style.display  = 'block';
+    populatePlannerAssignees();
+    renderTasks();
+    updatePlannerStats(data.stats || {});
+    renderPersonFilters();
+    showToast(`Planner loaded! ${allTasks.length} tasks 📋`);
+  } catch(e) { showToast('Cannot connect to server', 'error'); }
+}
+
+function populatePlannerAssignees() {
+  const select = document.getElementById('taskAssignee');
+  if (!select) return;
+  select.innerHTML = '<option value="Unassigned">Unassigned</option>' +
+    planMembers.map(m => `<option value="${m}">${m}</option>`).join('');
+}
+
+async function generateTasks() {
+  const destination = document.getElementById('planDestination')?.value.trim() || 'your destination';
+  const duration    = parseInt(document.getElementById('planDuration')?.value) || 7;
+  if (!planGroupId) { showToast('Load planner first', 'error'); return; }
+  if (allTasks.length > 0 && !confirm('Add default tasks to existing list?')) return;
+  try {
+    const res  = await fetch(`${API}/planner/generate`, {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ group_id: planGroupId, destination, duration, members: planMembers })
+    });
+    const data = await res.json();
+    allTasks   = data.tasks || [];
+    renderTasks();
+    updatePlannerStats(data.stats || {});
+    renderPersonFilters();
+    showToast(`✨ ${allTasks.length} tasks generated!`);
+  } catch(e) { showToast('Cannot connect to server', 'error'); }
+}
+
+async function addTask() {
+  const title    = document.getElementById('taskTitle')?.value.trim();
+  const desc     = document.getElementById('taskDesc')?.value.trim();
+  const category = document.getElementById('taskCategory')?.value;
+  const assignee = document.getElementById('taskAssignee')?.value;
+  const priority = document.getElementById('taskPriority')?.value;
+  const dueDate  = document.getElementById('taskDueDate')?.value;
+  if (!title) { showToast('Enter a task title', 'error'); return; }
+  try {
+    const res  = await fetch(`${API}/planner/add`, {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ group_id: planGroupId, title, description: desc, category, assigned_to: assignee, priority, due_date: dueDate })
+    });
+    const data = await res.json();
+    if (data.success) {
+      allTasks.push(data.task);
+      const titleEl = document.getElementById('taskTitle');
+      const descEl  = document.getElementById('taskDesc');
+      const dueEl   = document.getElementById('taskDueDate');
+      if (titleEl) titleEl.value = '';
+      if (descEl)  descEl.value  = '';
+      if (dueEl)   dueEl.value   = '';
+      renderTasks();
+      refreshPlannerStats();
+      showToast('Task added! ✅');
+    }
+  } catch(e) { showToast('Cannot connect to server', 'error'); }
+}
+
+async function toggleTask(taskId) {
+  try {
+    const res  = await fetch(`${API}/planner/toggle/${planGroupId}/${taskId}`, { method:'PUT' });
+    const data = await res.json();
+    if (data.success) {
+      const task = allTasks.find(t => t.id === taskId);
+      if (task) task.completed = data.completed;
+      renderTasks();
+      refreshPlannerStats();
+    }
+  } catch(e) { showToast('Cannot connect to server', 'error'); }
+}
+
+async function deleteTask(taskId) {
+  if (!confirm('Delete this task?')) return;
+  try {
+    const res  = await fetch(`${API}/planner/delete/${planGroupId}/${taskId}`, { method:'DELETE' });
+    const data = await res.json();
+    if (data.success) {
+      allTasks = allTasks.filter(t => t.id !== taskId);
+      renderTasks();
+      refreshPlannerStats();
+      showToast('Task deleted');
+    }
+  } catch(e) { showToast('Cannot connect to server', 'error'); }
+}
+
+function renderTasks() {
+  const list = document.getElementById('taskList');
+  if (!list) return;
+  let filtered = allTasks;
+  if (activeFilter !== 'all') filtered = filtered.filter(t => t.category    === activeFilter);
+  if (activePerson !== 'all') filtered = filtered.filter(t => t.assigned_to === activePerson);
+  if (filtered.length === 0) {
+    list.innerHTML = `<div class="empty-tasks"><span class="empty-emoji">✅</span><p>${allTasks.length===0?'No tasks yet — generate or add tasks above!':'No tasks match this filter.'}</p></div>`;
+    return;
+  }
+  const categories = activeFilter === 'all' ? ['documents','bookings','packing','activities','other'] : [activeFilter];
+  let html = '';
+  for (const cat of categories) {
+    const catTasks = filtered.filter(t => t.category === cat);
+    if (catTasks.length === 0) continue;
+    const done = catTasks.filter(t => t.completed).length;
+    html += `
+      <div class="task-category">
+        <div class="task-category-header">
+          <span class="task-category-icon">${CAT_ICONS[cat]||'📦'}</span>
+          <span class="task-category-title">${capitalize(cat)}</span>
+          <span class="task-category-progress">${done}/${catTasks.length}</span>
+        </div>
+        ${catTasks.map(task => {
+          const pClass = `priority-${task.priority}`;
+          const pLabel = task.priority==='high'?'🔴 High':task.priority==='medium'?'🟡 Medium':'🟢 Low';
+          return `
+            <div class="task-item ${task.completed?'completed':''}" id="task_${task.id}">
+              <div class="task-check" onclick="toggleTask('${task.id}')">${task.completed?'✓':''}</div>
+              <div class="task-content">
+                <div class="task-title">${task.title}</div>
+                ${task.description?`<div class="task-desc">${task.description}</div>`:''}
+                <div class="task-meta">
+                  <span class="task-assignee">👤 ${task.assigned_to}</span>
+                  <span class="task-priority ${pClass}">${pLabel}</span>
+                  ${task.due_date?`<span class="task-due">📅 ${task.due_date}</span>`:''}
+                </div>
+              </div>
+              <button class="task-delete" onclick="deleteTask('${task.id}')">✕</button>
+            </div>`;
+        }).join('')}
+      </div>`;
+  }
+  list.innerHTML = html;
+  updatePlannerCounts();
+}
+
+function filterTasks(filter, btn) {
+  activeFilter = filter; activePerson = 'all';
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.person-filter-btn').forEach(b => b.classList.remove('active'));
+  renderTasks();
+}
+
+function filterByPerson(person, btn) {
+  activePerson = person; activeFilter = 'all';
+  document.querySelectorAll('.filter-btn,.person-filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderTasks();
+}
+
+async function refreshPlannerStats() {
+  try {
+    const res  = await fetch(`${API}/planner/${planGroupId}`);
+    const data = await res.json();
+    updatePlannerStats(data.stats || {});
+    renderPersonFilters();
+  } catch(e) {}
+}
+
+function updatePlannerStats(stats) {
+  const pct = stats.percentage || 0;
+  setText('progressPct',   pct + '%');
+  setText('progressLabel', `${stats.completed||0} of ${stats.total||0} tasks done`);
+  const mainFill = document.getElementById('mainProgressFill');
+  if (mainFill) mainFill.style.width = pct + '%';
+  const section = document.getElementById('personStatsSection');
+  const psDiv   = document.getElementById('personStats');
+  if (stats.by_person && Object.keys(stats.by_person).length > 0 && section && psDiv) {
+    section.style.display = 'block';
+    psDiv.innerHTML = Object.entries(stats.by_person).map(([person, data]) => {
+      const pct = data.total > 0 ? Math.round((data.completed/data.total)*100) : 0;
+      return `<div class="person-stat">
+        <span style="font-size:0.85rem;">${person}</span>
+        <div class="person-stat-bar"><div class="person-stat-fill" style="width:${pct}%"></div></div>
+        <span style="font-size:0.78rem;color:var(--text-muted);">${data.completed}/${data.total}</span>
+      </div>`;
+    }).join('');
+  }
+  updatePlannerCounts();
+}
+
+function updatePlannerCounts() {
+  const cats = ['documents','bookings','packing','activities','other'];
+  setText('countAll', allTasks.length);
+  cats.forEach(cat => {
+    const el = document.getElementById('count' + capitalize(cat));
+    if (el) el.textContent = allTasks.filter(t => t.category === cat).length;
+  });
+}
+
+function renderPersonFilters() {
+  const container = document.getElementById('personFilters');
+  if (!container) return;
+  const people = [...new Set(allTasks.map(t => t.assigned_to))];
+  if (people.length === 0) {
+    container.innerHTML = '<p style="font-size:0.82rem;color:var(--text-muted);">No tasks assigned yet</p>';
+    return;
+  }
+  container.innerHTML = `
+    <button class="filter-btn person-filter-btn active" onclick="filterByPerson('all', this)">
+      👥 Everyone <span class="filter-count">${allTasks.length}</span>
+    </button>` +
+    people.map(p => `
+      <button class="filter-btn person-filter-btn" onclick="filterByPerson('${p}', this)">
+        👤 ${p} <span class="filter-count">${allTasks.filter(t=>t.assigned_to===p).length}</span>
+      </button>`).join('');
+}
+
+function sharePlanner() {
+  const done    = allTasks.filter(t => t.completed).length;
+  const total   = allTasks.length;
+  const pending = allTasks.filter(t => !t.completed).slice(0,5).map(t => `• ${t.title} (${t.assigned_to})`).join('\n');
+  window.open(`https://wa.me/?text=${encodeURIComponent(`✅ *PackVote Trip Planner*\nProgress: ${done}/${total} tasks done\n\n*Pending:*\n${pending}\n\nPlanned with PackVote ✈`)}`, '_blank');
+}
+
+// ══════════════════════════════════════════════════════════════════════════
 // AUTO INIT
 // ══════════════════════════════════════════════════════════════════════════
 document.addEventListener('DOMContentLoaded', () => {
   initVotePage();
   initResultsPage();
+  initExpensesPage();
+  initPlannerPage();
 
   const memberInput = document.getElementById('memberInput');
-  if (memberInput) {
-    memberInput.addEventListener('keypress', e => { if (e.key === 'Enter') addMember(); });
-  }
+  if (memberInput) memberInput.addEventListener('keypress', e => { if (e.key==='Enter') addMember(); });
+
+  const expMemberInput = document.getElementById('expMemberInput');
+  if (expMemberInput) expMemberInput.addEventListener('keypress', e => { if (e.key==='Enter') addExpMember(); });
+
+  const taskTitleInput = document.getElementById('taskTitle');
+  if (taskTitleInput) taskTitleInput.addEventListener('keypress', e => { if (e.key==='Enter') addTask(); });
 
   const observer = new IntersectionObserver(entries => {
     entries.forEach(entry => {
