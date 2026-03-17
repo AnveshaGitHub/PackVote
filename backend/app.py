@@ -1,4 +1,5 @@
-
+from expenses import add_expense, get_expenses, delete_expense, get_expense_stats
+from planner import add_task, get_tasks, toggle_task, delete_task, update_task, generate_default_tasks
 from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 import json
@@ -70,7 +71,7 @@ def results_page():
 
 @app.route('/api/status', methods=['GET'])
 def status():
-    return jsonify({'status': 'PackVote backend running!', 'version': '2.0'})
+    return jsonify({'status': 'Triply backend running!', 'version': '2.0'})
 
 # ═══════════════════════════════════════════════════════
 # AUTH ROUTES
@@ -336,10 +337,88 @@ def build_day_plan(places, duration):
     return days
 
 # ── run ───────────────────────────────────────────────
+# ══════════════════════════════════════════════════════════════════════════
+# EXPENSE ROUTES
+# ══════════════════════════════════════════════════════════════════════════
+
+@app.route('/api/expenses/<group_id>', methods=['GET'])
+def get_group_expenses(group_id):
+    return jsonify(get_expenses(group_id))
+
+@app.route('/api/expenses/add', methods=['POST'])
+def add_group_expense():
+    data        = request.json
+    group_id    = data.get('group_id')
+    paid_by     = data.get('paid_by')
+    amount      = data.get('amount')
+    description = data.get('description')
+    category    = data.get('category', 'other')
+    split_among = data.get('split_among', [])
+    split_type  = data.get('split_type', 'equal')
+
+    if not all([group_id, paid_by, amount, description, split_among]):
+        return jsonify({'success': False, 'error': 'Missing required fields'}), 400
+
+    result = add_expense(group_id, paid_by, amount, description, category, split_among, split_type)
+    return jsonify(result)
+
+@app.route('/api/expenses/delete/<group_id>/<expense_id>', methods=['DELETE'])
+def delete_group_expense(group_id, expense_id):
+    return jsonify(delete_expense(group_id, expense_id))
+
+@app.route('/api/expenses/stats/<group_id>', methods=['GET'])
+def expense_stats(group_id):
+    return jsonify(get_expense_stats(group_id))
+
+# ══════════════════════════════════════════════════════════════════════════
+# PLANNER ROUTES
+# ══════════════════════════════════════════════════════════════════════════
+
+@app.route('/api/planner/<group_id>', methods=['GET'])
+def get_group_tasks(group_id):
+    return jsonify(get_tasks(group_id))
+
+@app.route('/api/planner/add', methods=['POST'])
+def add_group_task():
+    data     = request.json
+    group_id = data.get('group_id')
+    title    = data.get('title', '').strip()
+    if not group_id or not title:
+        return jsonify({'success': False, 'error': 'Group ID and title required'}), 400
+    result = add_task(
+        group_id    = group_id,
+        title       = title,
+        description = data.get('description', ''),
+        category    = data.get('category', 'other'),
+        assigned_to = data.get('assigned_to', 'Unassigned'),
+        priority    = data.get('priority', 'medium'),
+        due_date    = data.get('due_date', '')
+    )
+    return jsonify(result)
+
+@app.route('/api/planner/toggle/<group_id>/<task_id>', methods=['PUT'])
+def toggle_group_task(group_id, task_id):
+    return jsonify(toggle_task(group_id, task_id))
+
+@app.route('/api/planner/delete/<group_id>/<task_id>', methods=['DELETE'])
+def delete_group_task(group_id, task_id):
+    return jsonify(delete_task(group_id, task_id))
+
+@app.route('/api/planner/generate', methods=['POST'])
+def generate_tasks():
+    data        = request.json
+    group_id    = data.get('group_id')
+    destination = data.get('destination', 'your destination')
+    duration    = data.get('duration', 7)
+    members     = data.get('members', [])
+    if not group_id:
+        return jsonify({'success': False, 'error': 'Group ID required'}), 400
+    result = generate_default_tasks(group_id, destination, duration, members)
+    return jsonify(result)
 
 if __name__ == '__main__':
 
-    print("🌍 PackVote backend starting...")
+    print("🌍 Triply backend starting...")
     print("📍 Running at: http://127.0.0.1:5000")
 
     app.run(debug=True, port=5000)
