@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Triply — Expense Tracker</title>
+  <title>PackVote — Expense Tracker</title>
   <link rel="stylesheet" href="style.css"/>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
   <style>
@@ -142,11 +142,12 @@
 
   <nav class="navbar">
     <div class="container">
-      <a href="index.html" class="logo">Triply ✈</a>
+      <a href="index.html" class="logo">PackVote ✈</a>
       <ul class="nav-links">
-        <li><a href="dashboard.html">Dashboard</a></li>
-        <li><a href="results.html">Results</a></li>
+        <li><a href="index.html">Home</a></li>
         <li><a href="vote.html">Vote</a></li>
+        <li><a href="results.html">Results</a></li>
+        <li><a href="planner.html">Planner</a></li>
       </ul>
     </div>
   </nav>
@@ -154,7 +155,7 @@
   <div class="expenses-page">
     <div class="expenses-header">
       <div class="container">
-        <div class="hero-badge">💰 Group Finance</div>
+        <div class="hero-badge">Group Finance</div>
         <h1 class="section-title mt-16">Expense <span class="gradient-text">Tracker</span></h1>
         <p class="section-subtitle">Split costs, track spending and settle up — all in one place.</p>
         <div class="stat-row">
@@ -181,7 +182,7 @@
               <input type="text" id="expGroupId" class="form-input" placeholder="Paste your group ID"/>
             </div>
             <div class="form-group">
-              <label class="form-label">Add Members</label>
+              <label class="form-label">Add Members To Split Between</label>
               <div class="add-member-row">
                 <input type="text" id="expMemberInput" class="form-input" placeholder="Enter member name"/>
                 <button class="btn btn-secondary" onclick="addExpMember()">Add</button>
@@ -295,11 +296,11 @@
 
     // ── On load — restore ONLY if same group ──────────────────────────
     window.addEventListener('DOMContentLoaded', () => {
-      const savedGroup = loadData('triply_group_id');
+      const savedGroup = loadData('PackVote_group_id');
       if (savedGroup) {
         document.getElementById('expGroupId').value = savedGroup;
         // Only auto-restore members saved for THIS specific group
-        const savedMembers = loadData('triply_exp_members_' + savedGroup);
+        const savedMembers = loadData('PackVote_exp_members_' + savedGroup);
         if (savedMembers && savedMembers.length >= 2) {
           expMembers = savedMembers;
           renderExpMembersList();
@@ -393,8 +394,8 @@
       expMembers = members;
 
       // Save members KEYED to this specific group ID
-      saveData('triply_exp_members_' + groupId, members);
-      saveData('triply_group_id', groupId);
+      saveData('PackVote_exp_members_' + groupId, members);
+      saveData('PackVote_group_id', groupId);
 
       // Hide setup, show active bar + form
       document.getElementById('groupSetup').style.display    = 'none';
@@ -638,7 +639,7 @@
       const total = document.getElementById('statTotal').textContent;
       const count = document.getElementById('statCount').textContent;
       window.open(`https://wa.me/?text=${encodeURIComponent(
-        `💰 *Triply Expense Summary*\nGroup: ${expGroupId}\nTotal: ${total} across ${count} expenses\nSplit tracked with Triply ✈`
+        `💰 *PackVote Expense Summary*\nGroup: ${expGroupId}\nTotal: ${total} across ${count} expenses\nSplit tracked with PackVote ✈`
       )}`, '_blank');
     }
 

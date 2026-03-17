@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Triply — Trip Planner</title>
+  <title>PackVote — Trip Planner</title>
   <link rel="stylesheet" href="style.css"/>
   <style>
     .planner-page { padding-top: 80px; min-height: 100vh; }
@@ -277,11 +277,12 @@
 
   <nav class="navbar">
     <div class="container">
-      <a href="index.html" class="logo">Triply ✈</a>
+      <a href="index.html" class="logo">PackVote ✈</a>
       <ul class="nav-links">
-        <li><a href="dashboard.html">Dashboard</a></li>
-        <li><a href="expenses.html">Expenses</a></li>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="vote.html">Vote</a></li>
         <li><a href="results.html">Results</a></li>
+        <li><a href="expenses.html">Expenses</a></li>
       </ul>
     </div>
   </nav>
@@ -291,7 +292,7 @@
     <!-- HEADER -->
     <div class="planner-header">
       <div class="container">
-        <div class="hero-badge">✅ Trip Planning</div>
+        <div class="hero-badge">Trip Planning</div>
         <h1 class="section-title mt-16">
           Trip <span class="gradient-text">Planner</span>
         </h1>
@@ -479,8 +480,8 @@
 
     // ── Load on page open ─────────────────────────────────────────────
     window.addEventListener('DOMContentLoaded', () => {
-      const savedGroup = loadData('triply_group_id');
-      const savedDest  = loadData('triply_winner') || '';
+      const savedGroup = loadData('PackVote_group_id');
+      const savedDest  = loadData('PackVote_winner') || '';
       if (savedGroup) {
         document.getElementById('planGroupId').value    = savedGroup;
         document.getElementById('planDestination').value= savedDest;
@@ -494,10 +495,10 @@
       if (!groupId) { showToast('Enter a group ID', 'error'); return; }
 
       planGroupId = groupId;
-      saveData('triply_group_id', groupId);
+      saveData('PackVote_group_id', groupId);
 
       // Load members from saved expenses members or set empty
-      const savedMembers = loadData('triply_exp_members_' + groupId) || [];
+      const savedMembers = loadData('PackVote_exp_members_' + groupId) || [];
       planMembers = savedMembers;
 
       try {
@@ -791,10 +792,10 @@
                               .map(t => `• ${t.title} (${t.assigned_to})`)
                               .join('\n');
       window.open(`https://wa.me/?text=${encodeURIComponent(
-        `✅ *Triply Trip Planner*\n` +
+        `✅ *PackVote Trip Planner*\n` +
         `Progress: ${done}/${total} tasks done\n\n` +
         `*Pending tasks:*\n${pending}\n\n` +
-        `Planned with Triply ✈`
+        `Planned with PackVote ✈`
       )}`, '_blank');
     }
 
