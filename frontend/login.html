@@ -328,7 +328,7 @@ object-fit: cover;">
         if (data.success) {
           localStorage.setItem('PackVote_user', JSON.stringify(data));
           showToast(`Welcome back, ${data.name}! 🎉`);
-          setTimeout(() => window.location.href = 'dashboard.html', 1200);
+          setTimeout(() => window.location.href = 'index.html', 1200);
         } else {
           showToast(data.error || 'Login failed', 'error');
           btn.disabled    = false;

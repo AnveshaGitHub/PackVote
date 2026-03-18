@@ -4088,6 +4088,1278 @@
         }
       ],
       "generated_at": "2026-03-14T13:55:54.037418"
+    },
+    {
+      "destination": "Jaipur",
+      "duration": 7,
+      "budget": "medium",
+      "month": "December",
+      "weather": {
+        "destination": "Jaipur",
+        "temperature_c": "N/A",
+        "humidity": "N/A",
+        "description": "Weather data unavailable",
+        "forecast": []
+      },
+      "estimated_cost": {
+        "currency": "INR",
+        "per_person": {
+          "flights": 8000,
+          "accommodation": 28000,
+          "food": 14000,
+          "transport": 10500,
+          "activities": 10500,
+          "total": 71000
+        },
+        "daily_average": 9000,
+        "duration_days": 7,
+        "budget_level": "medium",
+        "note": "Estimates based on average costs. Actual prices may vary."
+      },
+      "days": [
+        {
+          "day": 1,
+          "title": "Day 1",
+          "activities": [
+            {
+              "name": "City Museum",
+              "type": "museum",
+              "description": "Local heritage museum",
+              "lat": 0,
+              "lon": 0
+            },
+            {
+              "name": "Central Park",
+              "type": "park",
+              "description": "Main city park",
+              "lat": 0,
+              "lon": 0
+            },
+            {
+              "name": "Historic Fort",
+              "type": "ruins",
+              "description": "Ancient fortification",
+              "lat": 0,
+              "lon": 0
+            }
+          ]
+        },
+        {
+          "day": 2,
+          "title": "Day 2",
+          "activities": []
+        },
+        {
+          "day": 3,
+          "title": "Day 3",
+          "activities": []
+        },
+        {
+          "day": 4,
+          "title": "Day 4",
+          "activities": []
+        },
+        {
+          "day": 5,
+          "title": "Day 5",
+          "activities": []
+        },
+        {
+          "day": 6,
+          "title": "Day 6",
+          "activities": []
+        },
+        {
+          "day": 7,
+          "title": "Day 7",
+          "activities": []
+        }
+      ],
+      "generated_at": "2026-03-19T00:17:56.562343"
+    },
+    {
+      "destination": "Jaipur",
+      "duration": 7,
+      "budget": "medium",
+      "month": "December",
+      "weather": {
+        "destination": "Jaipur",
+        "temperature_c": "N/A",
+        "humidity": "N/A",
+        "description": "Weather data unavailable",
+        "forecast": []
+      },
+      "estimated_cost": {
+        "currency": "INR",
+        "per_person": {
+          "flights": 8000,
+          "accommodation": 28000,
+          "food": 14000,
+          "transport": 10500,
+          "activities": 10500,
+          "total": 71000
+        },
+        "daily_average": 9000,
+        "duration_days": 7,
+        "budget_level": "medium",
+        "note": "Estimates based on average costs. Actual prices may vary."
+      },
+      "days": [
+        {
+          "day": 1,
+          "title": "Day 1",
+          "activities": [
+            {
+              "name": "City Museum",
+              "type": "museum",
+              "description": "Local heritage museum",
+              "lat": 0,
+              "lon": 0
+            },
+            {
+              "name": "Central Park",
+              "type": "park",
+              "description": "Main city park",
+              "lat": 0,
+              "lon": 0
+            },
+            {
+              "name": "Historic Fort",
+              "type": "ruins",
+              "description": "Ancient fortification",
+              "lat": 0,
+              "lon": 0
+            }
+          ]
+        },
+        {
+          "day": 2,
+          "title": "Day 2",
+          "activities": [
+            {
+              "name": "Chitra Caf\u00e9",
+              "type": "cafe",
+              "lat": 26.9206156,
+              "lon": 75.8041948,
+              "description": "Inside Hotel Arya Niwas",
+              "opening_hours": "Check locally"
+            },
+            {
+              "name": "Nibs",
+              "type": "cafe",
+              "lat": 26.915555,
+              "lon": 75.7949393,
+              "description": "",
+              "opening_hours": "Check locally"
+            },
+            {
+              "name": "McDonald's",
+              "type": "fast_food",
+              "lat": 26.9159839,
+              "lon": 75.8098987,
+              "description": "",
+              "opening_hours": "Check locally"
+            }
+          ]
+        },
+        {
+          "day": 3,
+          "title": "Day 3",
+          "activities": [
+            {
+              "name": "Shree Ganesh Namkeen Bhandar",
+              "type": "fast_food",
+              "lat": 26.9311763,
+              "lon": 75.8004455,
+              "description": "",
+              "opening_hours": "Check locally"
+            },
+            {
+              "name": "Corner 10",
+              "type": "cafe",
+              "lat": 26.9170881,
+              "lon": 75.743631,
+              "description": "",
+              "opening_hours": "Check locally"
+            }
+          ]
+        },
+        {
+          "day": 4,
+          "title": "Day 4",
+          "activities": []
+        },
+        {
+          "day": 5,
+          "title": "Day 5",
+          "activities": []
+        },
+        {
+          "day": 6,
+          "title": "Day 6",
+          "activities": []
+        },
+        {
+          "day": 7,
+          "title": "Day 7",
+          "activities": []
+        }
+      ],
+      "generated_at": "2026-03-19T00:18:23.019230"
+    },
+    {
+      "destination": "Jaipur",
+      "duration": 7,
+      "budget": "medium",
+      "month": "December",
+      "weather": {
+        "destination": "Jaipur",
+        "temperature_c": "N/A",
+        "humidity": "N/A",
+        "description": "Weather data unavailable",
+        "forecast": []
+      },
+      "estimated_cost": {
+        "currency": "INR",
+        "per_person": {
+          "flights": 8000,
+          "accommodation": 28000,
+          "food": 14000,
+          "transport": 10500,
+          "activities": 10500,
+          "total": 71000
+        },
+        "daily_average": 9000,
+        "duration_days": 7,
+        "budget_level": "medium",
+        "note": "Estimates based on average costs. Actual prices may vary."
+      },
+      "days": [
+        {
+          "day": 1,
+          "title": "Day 1",
+          "activities": [
+            {
+              "name": "City Museum",
+              "type": "museum",
+              "description": "Local heritage museum",
+              "lat": 0,
+              "lon": 0
+            },
+            {
+              "name": "Central Park",
+              "type": "park",
+              "description": "Main city park",
+              "lat": 0,
+              "lon": 0
+            },
+            {
+              "name": "Historic Fort",
+              "type": "ruins",
+              "description": "Ancient fortification",
+              "lat": 0,
+              "lon": 0
+            }
+          ]
+        },
+        {
+          "day": 2,
+          "title": "Day 2",
+          "activities": [
+            {
+              "name": "Local Restaurant",
+              "type": "restaurant",
+              "description": "Authentic local cuisine",
+              "lat": 0,
+              "lon": 0
+            },
+            {
+              "name": "Street Food Market",
+              "type": "market",
+              "description": "Best local street food",
+              "lat": 0,
+              "lon": 0
+            }
+          ]
+        },
+        {
+          "day": 3,
+          "title": "Day 3",
+          "activities": []
+        },
+        {
+          "day": 4,
+          "title": "Day 4",
+          "activities": []
+        },
+        {
+          "day": 5,
+          "title": "Day 5",
+          "activities": []
+        },
+        {
+          "day": 6,
+          "title": "Day 6",
+          "activities": []
+        },
+        {
+          "day": 7,
+          "title": "Day 7",
+          "activities": []
+        }
+      ],
+      "generated_at": "2026-03-19T00:18:54.583655"
+    },
+    {
+      "destination": "Jaipur",
+      "duration": 7,
+      "budget": "medium",
+      "month": "December",
+      "weather": {
+        "destination": "Jaipur",
+        "temperature_c": "N/A",
+        "humidity": "N/A",
+        "description": "Weather data unavailable",
+        "forecast": []
+      },
+      "estimated_cost": {
+        "currency": "INR",
+        "per_person": {
+          "flights": 8000,
+          "accommodation": 28000,
+          "food": 14000,
+          "transport": 10500,
+          "activities": 10500,
+          "total": 71000
+        },
+        "daily_average": 9000,
+        "duration_days": 7,
+        "budget_level": "medium",
+        "note": "Estimates based on average costs. Actual prices may vary."
+      },
+      "days": [
+        {
+          "day": 1,
+          "title": "Day 1",
+          "activities": [
+            {
+              "name": "Iswari Minar Swarga Sali",
+              "type": "viewpoint",
+              "lat": 26.9244425,
+              "lon": 75.8208167,
+              "description": "",
+              "opening_hours": "Mo-Su 09:00-17:00"
+            },
+            {
+              "name": "Ashok Vihar, Jagatpura",
+              "type": "viewpoint",
+              "lat": 26.8296105,
+              "lon": 75.8425582,
+              "description": "",
+              "opening_hours": "Check locally"
+            },
+            {
+              "name": "Lake Palace Viewpoint , JAIPUR",
+              "type": "viewpoint",
+              "lat": 26.9556144,
+              "lon": 75.8432692,
+              "description": "",
+              "opening_hours": "Check locally"
+            }
+          ]
+        },
+        {
+          "day": 2,
+          "title": "Day 2",
+          "activities": [
+            {
+              "name": "Amber Fort",
+              "type": "viewpoint",
+              "lat": 26.9828328,
+              "lon": 75.8529004,
+              "description": "",
+              "opening_hours": "Check locally"
+            },
+            {
+              "name": "Local Restaurant",
+              "type": "restaurant",
+              "description": "Authentic local cuisine",
+              "lat": 0,
+              "lon": 0
+            },
+            {
+              "name": "Street Food Market",
+              "type": "market",
+              "description": "Best local street food",
+              "lat": 0,
+              "lon": 0
+            }
+          ]
+        },
+        {
+          "day": 3,
+          "title": "Day 3",
+          "activities": []
+        },
+        {
+          "day": 4,
+          "title": "Day 4",
+          "activities": []
+        },
+        {
+          "day": 5,
+          "title": "Day 5",
+          "activities": []
+        },
+        {
+          "day": 6,
+          "title": "Day 6",
+          "activities": []
+        },
+        {
+          "day": 7,
+          "title": "Day 7",
+          "activities": []
+        }
+      ],
+      "generated_at": "2026-03-19T00:19:06.393513"
+    },
+    {
+      "destination": "Jaipur",
+      "duration": 7,
+      "budget": "medium",
+      "month": "December",
+      "weather": {
+        "destination": "Jaipur",
+        "temperature_c": "N/A",
+        "humidity": "N/A",
+        "description": "Weather data unavailable",
+        "forecast": []
+      },
+      "estimated_cost": {
+        "currency": "INR",
+        "per_person": {
+          "flights": 8000,
+          "accommodation": 28000,
+          "food": 14000,
+          "transport": 10500,
+          "activities": 10500,
+          "total": 71000
+        },
+        "daily_average": 9000,
+        "duration_days": 7,
+        "budget_level": "medium",
+        "note": "Estimates based on average costs. Actual prices may vary."
+      },
+      "days": [
+        {
+          "day": 1,
+          "title": "Day 1",
+          "activities": [
+            {
+              "name": "City Museum",
+              "type": "museum",
+              "description": "Local heritage museum",
+              "lat": 0,
+              "lon": 0
+            },
+            {
+              "name": "Central Park",
+              "type": "park",
+              "description": "Main city park",
+              "lat": 0,
+              "lon": 0
+            },
+            {
+              "name": "Historic Fort",
+              "type": "ruins",
+              "description": "Ancient fortification",
+              "lat": 0,
+              "lon": 0
+            }
+          ]
+        },
+        {
+          "day": 2,
+          "title": "Day 2",
+          "activities": [
+            {
+              "name": "Local Restaurant",
+              "type": "restaurant",
+              "description": "Authentic local cuisine",
+              "lat": 0,
+              "lon": 0
+            },
+            {
+              "name": "Street Food Market",
+              "type": "market",
+              "description": "Best local street food",
+              "lat": 0,
+              "lon": 0
+            }
+          ]
+        },
+        {
+          "day": 3,
+          "title": "Day 3",
+          "activities": []
+        },
+        {
+          "day": 4,
+          "title": "Day 4",
+          "activities": []
+        },
+        {
+          "day": 5,
+          "title": "Day 5",
+          "activities": []
+        },
+        {
+          "day": 6,
+          "title": "Day 6",
+          "activities": []
+        },
+        {
+          "day": 7,
+          "title": "Day 7",
+          "activities": []
+        }
+      ],
+      "generated_at": "2026-03-19T00:19:28.617187"
+    },
+    {
+      "destination": "Jaipur",
+      "duration": 7,
+      "budget": "medium",
+      "month": "December",
+      "weather": {
+        "destination": "Jaipur",
+        "temperature_c": "N/A",
+        "humidity": "N/A",
+        "description": "Weather data unavailable",
+        "forecast": []
+      },
+      "estimated_cost": {
+        "currency": "INR",
+        "per_person": {
+          "flights": 8000,
+          "accommodation": 28000,
+          "food": 14000,
+          "transport": 10500,
+          "activities": 10500,
+          "total": 71000
+        },
+        "daily_average": 9000,
+        "duration_days": 7,
+        "budget_level": "medium",
+        "note": "Estimates based on average costs. Actual prices may vary."
+      },
+      "days": [
+        {
+          "day": 1,
+          "title": "Day 1",
+          "activities": [
+            {
+              "name": "Iswari Minar Swarga Sali",
+              "type": "viewpoint",
+              "lat": 26.9244425,
+              "lon": 75.8208167,
+              "description": "",
+              "opening_hours": "Mo-Su 09:00-17:00"
+            },
+            {
+              "name": "Ashok Vihar, Jagatpura",
+              "type": "viewpoint",
+              "lat": 26.8296105,
+              "lon": 75.8425582,
+              "description": "",
+              "opening_hours": "Check locally"
+            },
+            {
+              "name": "Lake Palace Viewpoint , JAIPUR",
+              "type": "viewpoint",
+              "lat": 26.9556144,
+              "lon": 75.8432692,
+              "description": "",
+              "opening_hours": "Check locally"
+            }
+          ]
+        },
+        {
+          "day": 2,
+          "title": "Day 2",
+          "activities": [
+            {
+              "name": "Amber Fort",
+              "type": "viewpoint",
+              "lat": 26.9828328,
+              "lon": 75.8529004,
+              "description": "",
+              "opening_hours": "Check locally"
+            },
+            {
+              "name": "Local Restaurant",
+              "type": "restaurant",
+              "description": "Authentic local cuisine",
+              "lat": 0,
+              "lon": 0
+            },
+            {
+              "name": "Street Food Market",
+              "type": "market",
+              "description": "Best local street food",
+              "lat": 0,
+              "lon": 0
+            }
+          ]
+        },
+        {
+          "day": 3,
+          "title": "Day 3",
+          "activities": []
+        },
+        {
+          "day": 4,
+          "title": "Day 4",
+          "activities": []
+        },
+        {
+          "day": 5,
+          "title": "Day 5",
+          "activities": []
+        },
+        {
+          "day": 6,
+          "title": "Day 6",
+          "activities": []
+        },
+        {
+          "day": 7,
+          "title": "Day 7",
+          "activities": []
+        }
+      ],
+      "generated_at": "2026-03-19T00:19:42.440472"
+    },
+    {
+      "destination": "Jaipur",
+      "duration": 7,
+      "budget": "medium",
+      "month": "December",
+      "weather": {
+        "destination": "Jaipur",
+        "temperature_c": "28",
+        "feels_like_c": "30",
+        "humidity": "60",
+        "description": "Pleasant weather expected",
+        "forecast": [
+          {
+            "date": "2026-03-19",
+            "max_temp": "32",
+            "min_temp": "22",
+            "description": "Partly cloudy"
+          },
+          {
+            "date": "2026-03-20",
+            "max_temp": "32",
+            "min_temp": "22",
+            "description": "Partly cloudy"
+          },
+          {
+            "date": "2026-03-21",
+            "max_temp": "32",
+            "min_temp": "22",
+            "description": "Partly cloudy"
+          }
+        ]
+      },
+      "estimated_cost": {
+        "currency": "INR",
+        "per_person": {
+          "flights": 8000,
+          "accommodation": 28000,
+          "food": 14000,
+          "transport": 10500,
+          "activities": 10500,
+          "total": 71000
+        },
+        "daily_average": 9000,
+        "duration_days": 7,
+        "budget_level": "medium",
+        "note": "Estimates based on average costs. Actual prices may vary."
+      },
+      "days": [
+        {
+          "day": 1,
+          "title": "Day 1 \u2014 Arrival & Exploration",
+          "activities": [
+            {
+              "name": "Iswari Minar Swarga Sali",
+              "type": "viewpoint",
+              "lat": 26.9244425,
+              "lon": 75.8208167,
+              "description": "",
+              "opening_hours": "Mo-Su 09:00-17:00"
+            },
+            {
+              "name": "Ashok Vihar, Jagatpura",
+              "type": "viewpoint",
+              "lat": 26.8296105,
+              "lon": 75.8425582,
+              "description": "",
+              "opening_hours": "Check locally"
+            },
+            {
+              "name": "Lake Palace Viewpoint , JAIPUR",
+              "type": "viewpoint",
+              "lat": 26.9556144,
+              "lon": 75.8432692,
+              "description": "",
+              "opening_hours": "Check locally"
+            }
+          ]
+        },
+        {
+          "day": 2,
+          "title": "Day 2 \u2014 Main Attractions",
+          "activities": [
+            {
+              "name": "Amber Fort",
+              "type": "viewpoint",
+              "lat": 26.9828328,
+              "lon": 75.8529004,
+              "description": "",
+              "opening_hours": "Check locally"
+            },
+            {
+              "name": "Natraj vegetarian Restaurant",
+              "type": "restaurant",
+              "lat": 26.9161855,
+              "lon": 75.8109776,
+              "description": "",
+              "opening_hours": "Check locally"
+            },
+            {
+              "name": "Anokhi Cafe",
+              "type": "restaurant",
+              "lat": 26.9106803,
+              "lon": 75.7985655,
+              "description": "",
+              "opening_hours": "Check locally"
+            }
+          ]
+        },
+        {
+          "day": 3,
+          "title": "Day 3 \u2014 Culture & Heritage",
+          "activities": [
+            {
+              "name": "Ganesh Restaurant",
+              "type": "restaurant",
+              "lat": 26.9168711,
+              "lon": 75.8201955,
+              "description": "",
+              "opening_hours": "Check locally"
+            },
+            {
+              "name": "Spice Court",
+              "type": "restaurant",
+              "lat": 26.9108905,
+              "lon": 75.7889678,
+              "description": "",
+              "opening_hours": "Check locally"
+            },
+            {
+              "name": "Laxmi Mishthan Bhandar",
+              "type": "restaurant",
+              "lat": 26.9196343,
+              "lon": 75.8254983,
+              "description": "",
+              "opening_hours": "Check locally"
+            }
+          ]
+        },
+        {
+          "day": 4,
+          "title": "Day 4 \u2014 Adventure Day",
+          "activities": []
+        },
+        {
+          "day": 5,
+          "title": "Day 5 \u2014 Food & Markets",
+          "activities": []
+        },
+        {
+          "day": 6,
+          "title": "Day 6 \u2014 Leisure & Local Life",
+          "activities": []
+        },
+        {
+          "day": 7,
+          "title": "Day 7 \u2014 Departure Day",
+          "activities": []
+        }
+      ],
+      "generated_at": "2026-03-19T01:10:48.664194"
+    },
+    {
+      "destination": "Jaipur",
+      "duration": 7,
+      "budget": "medium",
+      "month": "December",
+      "weather": {
+        "destination": "Jaipur",
+        "temperature_c": "28",
+        "feels_like_c": "30",
+        "humidity": "60",
+        "description": "Pleasant weather expected",
+        "forecast": [
+          {
+            "date": "2026-03-19",
+            "max_temp": "32",
+            "min_temp": "22",
+            "description": "Partly cloudy"
+          },
+          {
+            "date": "2026-03-20",
+            "max_temp": "32",
+            "min_temp": "22",
+            "description": "Partly cloudy"
+          },
+          {
+            "date": "2026-03-21",
+            "max_temp": "32",
+            "min_temp": "22",
+            "description": "Partly cloudy"
+          }
+        ]
+      },
+      "estimated_cost": {
+        "currency": "INR",
+        "per_person": {
+          "flights": 8000,
+          "accommodation": 28000,
+          "food": 14000,
+          "transport": 10500,
+          "activities": 10500,
+          "total": 71000
+        },
+        "daily_average": 9000,
+        "duration_days": 7,
+        "budget_level": "medium",
+        "note": "Estimates based on average costs. Actual prices may vary."
+      },
+      "days": [
+        {
+          "day": 1,
+          "title": "Day 1 \u2014 Arrival & Exploration",
+          "activities": [
+            {
+              "name": "City Museum",
+              "type": "museum",
+              "description": "Local heritage museum",
+              "lat": 0,
+              "lon": 0,
+              "opening_hours": "10am-6pm"
+            },
+            {
+              "name": "Central Park",
+              "type": "park",
+              "description": "Main city park",
+              "lat": 0,
+              "lon": 0,
+              "opening_hours": "Always open"
+            },
+            {
+              "name": "Historic Fort",
+              "type": "ruins",
+              "description": "Ancient fortification",
+              "lat": 0,
+              "lon": 0,
+              "opening_hours": "9am-5pm"
+            }
+          ]
+        },
+        {
+          "day": 2,
+          "title": "Day 2 \u2014 Main Attractions",
+          "activities": [
+            {
+              "name": "Art Gallery",
+              "type": "gallery",
+              "description": "Local and national art",
+              "lat": 0,
+              "lon": 0,
+              "opening_hours": "10am-7pm"
+            },
+            {
+              "name": "Viewpoint",
+              "type": "viewpoint",
+              "description": "Panoramic city views",
+              "lat": 0,
+              "lon": 0,
+              "opening_hours": "Sunrise-Sunset"
+            },
+            {
+              "name": "Local Restaurant",
+              "type": "restaurant",
+              "description": "Authentic local cuisine",
+              "lat": 0,
+              "lon": 0,
+              "opening_hours": "12pm-11pm"
+            }
+          ]
+        },
+        {
+          "day": 3,
+          "title": "Day 3 \u2014 Culture & Heritage",
+          "activities": [
+            {
+              "name": "Street Food Market",
+              "type": "market",
+              "description": "Best local street food",
+              "lat": 0,
+              "lon": 0,
+              "opening_hours": "6pm-11pm"
+            },
+            {
+              "name": "Rooftop Cafe",
+              "type": "cafe",
+              "description": "Coffee with a view",
+              "lat": 0,
+              "lon": 0,
+              "opening_hours": "8am-10pm"
+            }
+          ]
+        },
+        {
+          "day": 4,
+          "title": "Day 4 \u2014 Adventure Day",
+          "activities": []
+        },
+        {
+          "day": 5,
+          "title": "Day 5 \u2014 Food & Markets",
+          "activities": []
+        },
+        {
+          "day": 6,
+          "title": "Day 6 \u2014 Leisure & Local Life",
+          "activities": []
+        },
+        {
+          "day": 7,
+          "title": "Day 7 \u2014 Departure Day",
+          "activities": []
+        }
+      ],
+      "generated_at": "2026-03-19T01:11:06.481930"
+    },
+    {
+      "destination": "Jaipur",
+      "duration": 7,
+      "budget": "medium",
+      "month": "December",
+      "weather": {
+        "destination": "Jaipur",
+        "temperature_c": "28",
+        "feels_like_c": "30",
+        "humidity": "60",
+        "description": "Pleasant weather expected",
+        "forecast": [
+          {
+            "date": "2026-03-19",
+            "max_temp": "32",
+            "min_temp": "22",
+            "description": "Partly cloudy"
+          },
+          {
+            "date": "2026-03-20",
+            "max_temp": "32",
+            "min_temp": "22",
+            "description": "Partly cloudy"
+          },
+          {
+            "date": "2026-03-21",
+            "max_temp": "32",
+            "min_temp": "22",
+            "description": "Partly cloudy"
+          }
+        ]
+      },
+      "estimated_cost": {
+        "currency": "INR",
+        "per_person": {
+          "flights": 8000,
+          "accommodation": 28000,
+          "food": 14000,
+          "transport": 10500,
+          "activities": 10500,
+          "total": 71000
+        },
+        "daily_average": 9000,
+        "duration_days": 7,
+        "budget_level": "medium",
+        "note": "Estimates based on average costs. Actual prices may vary."
+      },
+      "days": [
+        {
+          "day": 1,
+          "title": "Day 1 \u2014 Arrival & Exploration",
+          "activities": [
+            {
+              "name": "City Museum",
+              "type": "museum",
+              "description": "Local heritage museum",
+              "lat": 0,
+              "lon": 0,
+              "opening_hours": "10am-6pm"
+            },
+            {
+              "name": "Central Park",
+              "type": "park",
+              "description": "Main city park",
+              "lat": 0,
+              "lon": 0,
+              "opening_hours": "Always open"
+            },
+            {
+              "name": "Historic Fort",
+              "type": "ruins",
+              "description": "Ancient fortification",
+              "lat": 0,
+              "lon": 0,
+              "opening_hours": "9am-5pm"
+            }
+          ]
+        },
+        {
+          "day": 2,
+          "title": "Day 2 \u2014 Main Attractions",
+          "activities": [
+            {
+              "name": "Art Gallery",
+              "type": "gallery",
+              "description": "Local and national art",
+              "lat": 0,
+              "lon": 0,
+              "opening_hours": "10am-7pm"
+            },
+            {
+              "name": "Viewpoint",
+              "type": "viewpoint",
+              "description": "Panoramic city views",
+              "lat": 0,
+              "lon": 0,
+              "opening_hours": "Sunrise-Sunset"
+            },
+            {
+              "name": "Local Restaurant",
+              "type": "restaurant",
+              "description": "Authentic local cuisine",
+              "lat": 0,
+              "lon": 0,
+              "opening_hours": "12pm-11pm"
+            }
+          ]
+        },
+        {
+          "day": 3,
+          "title": "Day 3 \u2014 Culture & Heritage",
+          "activities": [
+            {
+              "name": "Street Food Market",
+              "type": "market",
+              "description": "Best local street food",
+              "lat": 0,
+              "lon": 0,
+              "opening_hours": "6pm-11pm"
+            },
+            {
+              "name": "Rooftop Cafe",
+              "type": "cafe",
+              "description": "Coffee with a view",
+              "lat": 0,
+              "lon": 0,
+              "opening_hours": "8am-10pm"
+            }
+          ]
+        },
+        {
+          "day": 4,
+          "title": "Day 4 \u2014 Adventure Day",
+          "activities": []
+        },
+        {
+          "day": 5,
+          "title": "Day 5 \u2014 Food & Markets",
+          "activities": []
+        },
+        {
+          "day": 6,
+          "title": "Day 6 \u2014 Leisure & Local Life",
+          "activities": []
+        },
+        {
+          "day": 7,
+          "title": "Day 7 \u2014 Departure Day",
+          "activities": []
+        }
+      ],
+      "generated_at": "2026-03-19T01:11:27.417781"
+    },
+    {
+      "destination": "Jaipur",
+      "duration": 7,
+      "budget": "medium",
+      "month": "December",
+      "weather": {
+        "destination": "Jaipur",
+        "temperature_c": "28",
+        "feels_like_c": "30",
+        "humidity": "60",
+        "description": "Pleasant weather expected",
+        "forecast": [
+          {
+            "date": "2026-03-19",
+            "max_temp": "32",
+            "min_temp": "22",
+            "description": "Partly cloudy"
+          },
+          {
+            "date": "2026-03-20",
+            "max_temp": "32",
+            "min_temp": "22",
+            "description": "Partly cloudy"
+          },
+          {
+            "date": "2026-03-21",
+            "max_temp": "32",
+            "min_temp": "22",
+            "description": "Partly cloudy"
+          }
+        ]
+      },
+      "estimated_cost": {
+        "currency": "INR",
+        "per_person": {
+          "flights": 8000,
+          "accommodation": 28000,
+          "food": 14000,
+          "transport": 10500,
+          "activities": 10500,
+          "total": 71000
+        },
+        "daily_average": 9000,
+        "duration_days": 7,
+        "budget_level": "medium",
+        "note": "Estimates based on average costs. Actual prices may vary."
+      },
+      "days": [
+        {
+          "day": 1,
+          "title": "Day 1 \u2014 Arrival & Exploration",
+          "activities": [
+            {
+              "name": "City Museum",
+              "type": "museum",
+              "description": "Local heritage museum",
+              "lat": 0,
+              "lon": 0,
+              "opening_hours": "10am-6pm"
+            },
+            {
+              "name": "Central Park",
+              "type": "park",
+              "description": "Main city park",
+              "lat": 0,
+              "lon": 0,
+              "opening_hours": "Always open"
+            },
+            {
+              "name": "Historic Fort",
+              "type": "ruins",
+              "description": "Ancient fortification",
+              "lat": 0,
+              "lon": 0,
+              "opening_hours": "9am-5pm"
+            }
+          ]
+        },
+        {
+          "day": 2,
+          "title": "Day 2 \u2014 Main Attractions",
+          "activities": [
+            {
+              "name": "Art Gallery",
+              "type": "gallery",
+              "description": "Local and national art",
+              "lat": 0,
+              "lon": 0,
+              "opening_hours": "10am-7pm"
+            },
+            {
+              "name": "Viewpoint",
+              "type": "viewpoint",
+              "description": "Panoramic city views",
+              "lat": 0,
+              "lon": 0,
+              "opening_hours": "Sunrise-Sunset"
+            },
+            {
+              "name": "Local Restaurant",
+              "type": "restaurant",
+              "description": "Authentic local cuisine",
+              "lat": 0,
+              "lon": 0,
+              "opening_hours": "12pm-11pm"
+            }
+          ]
+        },
+        {
+          "day": 3,
+          "title": "Day 3 \u2014 Culture & Heritage",
+          "activities": [
+            {
+              "name": "Street Food Market",
+              "type": "market",
+              "description": "Best local street food",
+              "lat": 0,
+              "lon": 0,
+              "opening_hours": "6pm-11pm"
+            },
+            {
+              "name": "Rooftop Cafe",
+              "type": "cafe",
+              "description": "Coffee with a view",
+              "lat": 0,
+              "lon": 0,
+              "opening_hours": "8am-10pm"
+            }
+          ]
+        },
+        {
+          "day": 4,
+          "title": "Day 4 \u2014 Adventure Day",
+          "activities": []
+        },
+        {
+          "day": 5,
+          "title": "Day 5 \u2014 Food & Markets",
+          "activities": []
+        },
+        {
+          "day": 6,
+          "title": "Day 6 \u2014 Leisure & Local Life",
+          "activities": []
+        },
+        {
+          "day": 7,
+          "title": "Day 7 \u2014 Departure Day",
+          "activities": []
+        }
+      ],
+      "generated_at": "2026-03-19T01:11:45.577692"
     }
   ]
 }

@@ -143,6 +143,46 @@
       .results-grid { grid-template-columns: 1fr; }
       .cost-grid    { grid-template-columns: 1fr; }
     }
+
+    .booking-category {
+  margin-bottom: 28px;
+}
+.booking-cat-title {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: var(--text-secondary);
+}
+.booking-links-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.booking-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 12px 18px;
+  text-decoration: none;
+  color: var(--text-primary);
+  font-size: 0.85rem;
+  transition: var(--transition);
+  cursor: pointer;
+  min-width: 160px;
+}
+.booking-btn:hover {
+  border-color: var(--border-hover);
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-glow);
+}
+.booking-btn-logo { font-size: 1.2rem; }
+.booking-btn-info { display: flex; flex-direction: column; }
+.booking-btn-name { font-weight: 700; font-size: 0.85rem; }
+.booking-btn-note { font-size: 0.72rem; color: var(--text-muted); margin-top: 1px; }
   </style>
 </head>
 <body>
@@ -317,10 +357,55 @@
                     onclick="copyLink()">
               🔗 Copy Link
             </button>
-            <a href="dashboard.html"
+            <a href="index.html"
                class="btn btn-secondary">
               🏠 Back to Dashboard
             </a>
+            <!-- BOOKING DEEP LINKS SECTION -->
+<div style="margin-bottom: 64px;" id="bookingSection">
+  <h2 class="section-title" style="font-size:1.6rem;margin-bottom:8px;">
+    🎟️ Book your trip
+  </h2>
+  <p class="text-muted mb-24">
+    Everything you need — flights, trains, hotels, food and activities
+  </p>
+
+  <!-- Flights -->
+  <div class="booking-category" id="bookFlights">
+    <div class="booking-cat-title">✈️ Flights</div>
+    <div class="booking-links-row" id="linksFlights"></div>
+  </div>
+
+  <!-- Trains -->
+  <div class="booking-category" id="bookTrains">
+    <div class="booking-cat-title">🚆 Trains</div>
+    <div class="booking-links-row" id="linksTrains"></div>
+  </div>
+
+  <!-- Buses -->
+  <div class="booking-category" id="bookBuses">
+    <div class="booking-cat-title">🚌 Buses</div>
+    <div class="booking-links-row" id="linksBuses"></div>
+  </div>
+
+  <!-- Hotels -->
+  <div class="booking-category" id="bookHotels">
+    <div class="booking-cat-title">🏨 Hotels</div>
+    <div class="booking-links-row" id="linksHotels"></div>
+  </div>
+
+  <!-- Food -->
+  <div class="booking-category" id="bookFood">
+    <div class="booking-cat-title">🍽️ Food & Restaurants</div>
+    <div class="booking-links-row" id="linksFood"></div>
+  </div>
+
+  <!-- Activities -->
+  <div class="booking-category" id="bookActivities">
+    <div class="booking-cat-title">🎯 Activities & Tours</div>
+    <div class="booking-links-row" id="linksActivities"></div>
+  </div>
+</div>
           </div>
         </div>
 

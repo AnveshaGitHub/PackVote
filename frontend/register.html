@@ -488,9 +488,9 @@
       });
       const data = await res.json();
       if (data.success) {
-        localStorage.setItem('triply_user', JSON.stringify(data));
+        localStorage.setItem('PackVote_user', JSON.stringify(data));
         showToast('Account created! Welcome to PackVote 🎉');
-        setTimeout(() => window.location.href = 'dashboard.html', 1200);
+        setTimeout(() => window.location.href = 'index.html', 1200);
       } else {
         showToast(data.error || 'Registration failed', 'error');
         btn.disabled    = false;

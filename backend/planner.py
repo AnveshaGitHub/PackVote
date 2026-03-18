@@ -150,7 +150,7 @@ def generate_default_tasks(group_id, destination, duration, members):
 
         # Activities
         {'title': f'Research top spots in {destination}', 'description': 'Make a list of must-visits', 'category': 'activities', 'priority': 'medium'},
-        {'title': 'Plan day-by-day itinerary',            'description': 'Use Triply AI itinerary', 'category': 'activities', 'priority': 'medium'},
+        {'title': 'Plan day-by-day itinerary',            'description': 'Use PackVote AI itinerary', 'category': 'activities', 'priority': 'medium'},
         {'title': 'Find local food recommendations',       'description': 'Best restaurants and street food', 'category': 'activities', 'priority': 'low'},
     ]
 

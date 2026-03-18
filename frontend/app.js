@@ -111,16 +111,16 @@ function showToast(message, type = 'success') {
 
 // ── Auth ──────────────────────────────────────────────────────────────────
 function requireAuth() {
-  const user = loadData('triply_user');
+  const user = loadData('PackVote_user');
   if (!user) { window.location.href = 'login.html'; return null; }
   return user;
 }
 
 function logout() {
-  localStorage.removeItem('triply_user');
-  localStorage.removeItem('triply_group_id');
-  localStorage.removeItem('triply_voter_name');
-  localStorage.removeItem('triply_group_name');
+  localStorage.removeItem('PackVote_user');
+  localStorage.removeItem('PackVote_group_id');
+  localStorage.removeItem('PackVote_voter_name');
+  localStorage.removeItem('PackVote_group_name');
   showToast('Logged out 👋');
   setTimeout(() => window.location.href = 'login.html', 800);
 }
@@ -159,7 +159,7 @@ function removeMember(name) {
 }
 
 async function createGroup() {
-  const user      = loadData('triply_user');
+  const user      = loadData('PackVote_user');
   const groupName = document.getElementById('groupName')?.value.trim();
   if (!groupName)         { showToast('Enter a group name', 'error'); return; }
   if (members.length < 1) { showToast('Add at least 1 member', 'error'); return; }
@@ -171,12 +171,12 @@ async function createGroup() {
     });
     const data = await res.json();
     if (data.success) {
-      saveData('triply_group_id',   data.group_id);
-      saveData('triply_group_name', data.group_name);
+      saveData('PackVote_group_id',   data.group_id);
+      saveData('PackVote_group_name', data.group_name);
       if (user) {
         if (!user.groups) user.groups = [];
         user.groups.push({ group_id: data.group_id, group_name: data.group_name, joined_at: new Date().toISOString() });
-        saveData('triply_user', user);
+        saveData('PackVote_user', user);
       }
       showToast(`"${groupName}" created! 🎉`);
       setTimeout(() => window.location.href = 'vote.html', 1200);
@@ -210,8 +210,8 @@ let selectedStyles    = [];
 
 function initVotePage() {
   if (!document.getElementById('cardStack')) return;
-  const savedGroup = loadData('triply_group_id');
-  const savedUser  = loadData('triply_user');
+  const savedGroup = loadData('PackVote_group_id');
+  const savedUser  = loadData('PackVote_user');
   const groupEl    = document.getElementById('groupId');
   const nameEl     = document.getElementById('voterName');
   if (savedGroup && groupEl) groupEl.value = savedGroup;
@@ -341,7 +341,7 @@ function toggleStyle(el) {
 
 async function submitVote() {
   const voterName = document.getElementById('voterName')?.value.trim();
-  const groupId   = document.getElementById('groupId')?.value.trim() || loadData('triply_group_id');
+  const groupId   = document.getElementById('groupId')?.value.trim() || loadData('PackVote_group_id');
   const duration  = parseInt(document.getElementById('duration')?.value || '7');
   const month     = document.getElementById('month')?.value || 'December';
   if (!voterName) { showToast('Enter your name', 'error'); return; }
@@ -360,8 +360,8 @@ async function submitVote() {
     });
     const data = await res.json();
     if (data.success) {
-      saveData('triply_group_id',   groupId);
-      saveData('triply_voter_name', voterName);
+      saveData('PackVote_group_id',   groupId);
+      saveData('PackVote_voter_name', voterName);
       showToast('Vote submitted! 🎉');
       setTimeout(() => window.location.href = 'results.html', 1200);
     } else {
@@ -373,11 +373,11 @@ async function submitVote() {
 // ══════════════════════════════════════════════════════════════════════════
 // RESULTS PAGE
 // ══════════════════════════════════════════════════════════════════════════
-let triplyMap = null;
+let PackVoteMap = null;
 
 async function initResultsPage() {
   if (!document.getElementById('winnerName')) return;
-  const groupId = loadData('triply_group_id');
+  const groupId = loadData('PackVote_group_id');
   if (!groupId) { loadDemoResults(); return; }
   try {
     const res  = await fetch(`${API}/vote/results/${groupId}`);
@@ -385,7 +385,15 @@ async function initResultsPage() {
     if (data.error) { loadDemoResults(); return; }
     renderResults(data);
     const winner = data.consensus?.winner;
-    if (winner) { await loadWeather(winner); await loadItinerary(winner, data.consensus); }
+    if (winner) {
+      await loadWeather(winner);
+      await loadItinerary(winner, data.consensus);
+      await loadDeepLinks(
+        winner,
+        data.consensus.avg_duration || 7,
+        data.consensus.consensus_budget || 'medium'
+      );
+    }
   } catch(e) { loadDemoResults(); }
 }
 
@@ -533,6 +541,46 @@ function renderCost(cost) {
     </div>`;
 }
 
+// ADD this function in app.js
+
+async function loadDeepLinks(destination, duration, budget) {
+  try {
+    const res  = await fetch(`${API}/deeplinks`, {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify({ destination, duration, budget })
+    });
+    const data = await res.json();
+    if (!data.links) return;
+
+    const map = {
+      'flights':    'linksFlights',
+      'trains':     'linksTrains',
+      'buses':      'linksBuses',
+      'hotels':     'linksHotels',
+      'food':       'linksFood',
+      'activities': 'linksActivities',
+    };
+
+    Object.entries(map).forEach(([key, elId]) => {
+      const el    = document.getElementById(elId);
+      const items = data.links[key] || [];
+      if (!el) return;
+      el.innerHTML = items.map(link => `
+        <a href="${link.url}" target="_blank" rel="noopener" class="booking-btn">
+          <span class="booking-btn-logo">${link.logo}</span>
+          <span class="booking-btn-info">
+            <span class="booking-btn-name">${link.name}</span>
+            <span class="booking-btn-note">${link.note}</span>
+          </span>
+        </a>`).join('');
+    });
+
+  } catch(e) {
+    console.log('Deep links unavailable', e);
+  }
+}
+
 function renderItinerary(itinerary) {
   const list = document.getElementById('itineraryList');
   if (!list) return;
@@ -579,17 +627,17 @@ function toggleDay(header) {
 function initMap(destination) {
   if (!window.L) return;
   const mapEl = document.getElementById('map');
-  if (!mapEl || triplyMap) return;
+  if (!mapEl || PackVoteMap) return;
   const coords = getDestCoords(destination);
-  triplyMap = L.map('map').setView(coords, 11);
+  PackVoteMap = L.map('map').setView(coords, 11);
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '© OpenStreetMap contributors'
-  }).addTo(triplyMap);
+  }).addTo(PackVoteMap);
   const icon = L.divIcon({
     html: `<div style="background:linear-gradient(135deg,#6c63ff,#ff6584);width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;box-shadow:0 4px 16px rgba(108,99,255,0.5);border:3px solid white;">✈</div>`,
     className: '', iconSize: [40,40], iconAnchor: [20,20]
   });
-  L.marker(coords, { icon }).addTo(triplyMap)
+  L.marker(coords, { icon }).addTo(PackVoteMap)
    .bindPopup(`<b>${destination}</b><br>Your group's destination! 🎉`).openPopup();
 }
 
@@ -616,10 +664,10 @@ let expenseChart = null;
 
 function initExpensesPage() {
   if (!document.getElementById('expGroupId')) return;
-  const savedGroup   = loadData('triply_group_id');
+  const savedGroup   = loadData('PackVote_group_id');
   if (savedGroup) {
     document.getElementById('expGroupId').value = savedGroup;
-    const savedMembers = loadData('triply_exp_members_' + savedGroup);
+    const savedMembers = loadData('PackVote_exp_members_' + savedGroup);
     if (savedMembers && savedMembers.length >= 2) {
       expMembers = savedMembers;
       renderExpMembersList();
@@ -667,8 +715,8 @@ function setupGroup() {
 function setupGroupDirect(groupId, members) {
   expGroupId = groupId;
   expMembers = members;
-  saveData('triply_exp_members_' + groupId, members);
-  saveData('triply_group_id', groupId);
+  saveData('PackVote_exp_members_' + groupId, members);
+  saveData('PackVote_group_id', groupId);
   const setupEl = document.getElementById('groupSetup');
   const formEl  = document.getElementById('addExpenseForm');
   const barEl   = document.getElementById('groupInfoBar');
@@ -916,8 +964,8 @@ const CAT_ICONS = { documents:'📄', bookings:'🎫', packing:'🧳', activitie
 
 function initPlannerPage() {
   if (!document.getElementById('planGroupId')) return;
-  const savedGroup = loadData('triply_group_id');
-  const savedDest  = loadData('triply_winner') || '';
+  const savedGroup = loadData('PackVote_group_id');
+  const savedDest  = loadData('PackVote_winner') || '';
   if (savedGroup) {
     const planGroupEl = document.getElementById('planGroupId');
     const planDestEl  = document.getElementById('planDestination');
@@ -932,8 +980,8 @@ async function loadPlanner() {
   const groupId   = groupIdEl?.value.trim();
   if (!groupId) { showToast('Enter a group ID', 'error'); return; }
   planGroupId = groupId;
-  saveData('triply_group_id', groupId);
-  planMembers = loadData('triply_exp_members_' + groupId) || [];
+  saveData('PackVote_group_id', groupId);
+  planMembers = loadData('PackVote_exp_members_' + groupId) || [];
   try {
     const res  = await fetch(`${API}/planner/${groupId}`);
     const data = await res.json();
