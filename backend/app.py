@@ -470,30 +470,27 @@
 from dotenv import load_dotenv
 load_dotenv()
 
-from expenses import add_expense, get_expenses, delete_expense, get_expense_stats
-from planner import add_task, get_tasks, toggle_task, delete_task, update_task, generate_default_tasks
 from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 import json
 import os
 from datetime import datetime
 
+from database import init_db, get_connection
 from voting import VotingEngine
 from recommender import RecommendationEngine
 from apis import TravelAPI
-from auth import (register_user, login_user, get_user,
-                  add_group_to_user, update_preferences)
-from database import init_db, get_connection
+from auth import register_user, login_user, get_user, update_preferences, add_group_to_user
+from expenses import add_expense, get_expenses, delete_expense, get_expense_stats
+from planner import add_task, get_tasks, toggle_task, delete_task, update_task, generate_default_tasks
+from email_service import send_join_confirmation, send_voting_open, send_results_ready
 
 app = Flask(__name__)
 CORS(app)
 
-# ── paths ───────────────────────────────────────────────
-
-BASE_DIR      = os.path.dirname(__file__)
-DATA_DIR      = os.path.join(BASE_DIR, 'data')
-FRONTEND_DIR  = os.path.join(BASE_DIR, '..', 'frontend')
-
+BASE_DIR         = os.path.dirname(__file__)
+DATA_DIR         = os.path.join(BASE_DIR, 'data')
+FRONTEND_DIR     = os.path.join(BASE_DIR, '..', 'frontend')
 ITINERARIES_FILE = os.path.join(DATA_DIR, 'itineraries.json')
 
 voting_engine = VotingEngine()
@@ -502,7 +499,7 @@ travel_api    = TravelAPI()
 
 init_db()
 
-# ── helpers ─────────────────────────────────────────────
+# ── helpers ──────────────────────────────────────────────────────────────
 
 def load_json(filepath, default):
     if os.path.exists(filepath):
@@ -515,7 +512,7 @@ def save_json(filepath, data):
     with open(filepath, 'w') as f:
         json.dump(data, f, indent=2)
 
-# ── frontend routes ─────────────────────────────────────
+# ── frontend routes ───────────────────────────────────────────────────────
 
 @app.route('/')
 def home():
@@ -541,24 +538,24 @@ def vote_page():
 def results_page():
     return send_from_directory(FRONTEND_DIR, 'results.html')
 
-# ── status ──────────────────────────────────────────────
+# ── status ────────────────────────────────────────────────────────────────
 
 @app.route('/api/status', methods=['GET'])
 def status():
     return jsonify({'status': 'PackVote backend running!', 'version': '2.0'})
 
-# ═══════════════════════════════════════════════════════
+# ══════════════════════════════════════════════════════════════════════════
 # AUTH ROUTES
-# ═══════════════════════════════════════════════════════
+# ══════════════════════════════════════════════════════════════════════════
 
 @app.route('/api/auth/register', methods=['POST'])
 def register():
-    data = request.json
-    name     = data.get('name', '').strip()
-    dob      = data.get('dob', '')
-    email    = data.get('email', '').strip().lower()
-    phone    = data.get('phone', '').strip()
-    password = data.get('password', '')
+    data               = request.json
+    name               = data.get('name', '').strip()
+    dob                = data.get('dob', '')
+    email              = data.get('email', '').strip().lower()
+    phone              = data.get('phone', '').strip()
+    password           = data.get('password', '')
     travel_preferences = data.get('travel_preferences', {})
 
     if not name:
@@ -570,7 +567,7 @@ def register():
     if not phone or len(phone) < 10:
         return jsonify({'success': False, 'error': 'Valid phone required'}), 400
     if not password or len(password) < 6:
-        return jsonify({'success': False, 'error': 'Password must be 6+ chars'}), 400
+        return jsonify({'success': False, 'error': 'Password must be at least 6 characters'}), 400
 
     result = register_user(name, dob, email, phone, password, travel_preferences)
     if result['success']:
@@ -605,9 +602,9 @@ def update_user_preferences(user_id):
     result = update_preferences(user_id, data.get('travel_preferences', {}))
     return jsonify(result)
 
-# ═══════════════════════════════════════════════════════
-# GROUP ROUTES  — now stored in MySQL
-# ═══════════════════════════════════════════════════════
+# ══════════════════════════════════════════════════════════════════════════
+# GROUP ROUTES
+# ══════════════════════════════════════════════════════════════════════════
 
 @app.route('/api/group/create', methods=['POST'])
 def create_group():
@@ -642,6 +639,56 @@ def create_group():
         return jsonify({'success': False, 'error': str(e)}), 500
 
 
+@app.route('/api/group/join', methods=['POST'])
+def join_group():
+    data      = request.json
+    group_id  = data.get('group_id', '').strip()
+    member    = data.get('member_name', '').strip()
+    email     = data.get('email', '').strip()
+
+    if not group_id or not member:
+        return jsonify({'success': False, 'error': 'Group ID and name required'}), 400
+
+    try:
+        conn = get_connection()
+        with conn.cursor() as cur:
+            cur.execute("SELECT * FROM groups_table WHERE group_id = %s", (group_id,))
+            group = cur.fetchone()
+            if not group:
+                return jsonify({'success': False, 'error': 'Group not found. Check the ID and try again.'}), 404
+
+            cur.execute(
+                "SELECT id FROM members WHERE group_id = %s AND name = %s",
+                (group_id, member)
+            )
+            if cur.fetchone():
+                return jsonify({'success': False, 'error': 'You are already in this group'}), 400
+
+            cur.execute(
+                "INSERT INTO members (group_id, name, email) VALUES (%s, %s, %s)",
+                (group_id, member, email)
+            )
+        conn.commit()
+        conn.close()
+
+        if email:
+            try:
+                send_join_confirmation(email, member, group['name'], group_id)
+            except Exception as mail_err:
+                print(f"Email error (non-fatal): {mail_err}")
+
+        return jsonify({
+            'success':    True,
+            'group_id':   group_id,
+            'group_name': group['name'],
+            'message':    f'Welcome to {group["name"]}!'
+        })
+
+    except Exception as e:
+        print(f"join_group error: {e}")
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+
 @app.route('/api/group/<group_id>', methods=['GET'])
 def get_group(group_id):
     try:
@@ -651,25 +698,159 @@ def get_group(group_id):
             group = cur.fetchone()
             if not group:
                 return jsonify({'error': 'Group not found'}), 404
-            cur.execute("SELECT name FROM members WHERE group_id = %s", (group_id,))
-            members = [r['name'] for r in cur.fetchall()]
+
+            cur.execute("SELECT name, email FROM members WHERE group_id = %s", (group_id,))
+            members_rows = cur.fetchall()
+            members = [r['name'] for r in members_rows]
+
+            cur.execute(
+                "SELECT * FROM destinations WHERE group_id = %s ORDER BY created_at ASC",
+                (group_id,)
+            )
+            destinations = cur.fetchall()
+
+            cur.execute(
+                "SELECT DISTINCT user_name FROM votes WHERE group_id = %s", (group_id,)
+            )
+            voters = [r['user_name'] for r in cur.fetchall()]
+
             cur.execute("SELECT COUNT(*) as cnt FROM votes WHERE group_id = %s", (group_id,))
             vote_count = cur.fetchone()['cnt']
+
         conn.close()
         return jsonify({
-            'group_id':    group_id,
-            'name':        group['name'],
-            'members':     members,
-            'total_votes': vote_count,
-            'created_at':  str(group['created_at'])
+            'group_id':     group_id,
+            'name':         group['name'],
+            'created_by':   group.get('created_by', ''),
+            'voting_open':  bool(group.get('voting_open', False)),
+            'members':      members,
+            'destinations': destinations,
+            'voters':       voters,
+            'total_votes':  vote_count,
+            'created_at':   str(group['created_at'])
         })
     except Exception as e:
         print(f"get_group error: {e}")
         return jsonify({'error': str(e)}), 500
 
-# ═══════════════════════════════════════════════════════
-# VOTE ROUTES  — now stored in MySQL
-# ═══════════════════════════════════════════════════════
+# ══════════════════════════════════════════════════════════════════════════
+# DESTINATION ROUTES
+# ══════════════════════════════════════════════════════════════════════════
+
+@app.route('/api/group/<group_id>/destinations', methods=['GET'])
+def get_destinations(group_id):
+    try:
+        conn = get_connection()
+        with conn.cursor() as cur:
+            cur.execute(
+                "SELECT * FROM destinations WHERE group_id = %s ORDER BY created_at ASC",
+                (group_id,)
+            )
+            rows = cur.fetchall()
+        conn.close()
+        return jsonify({'destinations': rows})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/group/<group_id>/destinations/add', methods=['POST'])
+def add_destination(group_id):
+    data     = request.json
+    name     = data.get('name', '').strip()
+    added_by = data.get('added_by', '')
+
+    if not name:
+        return jsonify({'success': False, 'error': 'Destination name required'}), 400
+
+    try:
+        conn = get_connection()
+        with conn.cursor() as cur:
+            cur.execute(
+                "SELECT id FROM destinations WHERE group_id = %s AND LOWER(name) = LOWER(%s)",
+                (group_id, name)
+            )
+            if cur.fetchone():
+                return jsonify({'success': False, 'error': 'Already added'}), 400
+
+            cur.execute(
+                "INSERT INTO destinations (group_id, name, added_by) VALUES (%s, %s, %s)",
+                (group_id, name, added_by)
+            )
+            cur.execute(
+                "SELECT * FROM destinations WHERE group_id = %s ORDER BY created_at ASC",
+                (group_id,)
+            )
+            destinations = cur.fetchall()
+        conn.commit()
+        conn.close()
+        return jsonify({'success': True, 'destinations': destinations})
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+
+@app.route('/api/group/<group_id>/destinations/remove', methods=['POST'])
+def remove_destination(group_id):
+    name = request.json.get('name', '').strip()
+    try:
+        conn = get_connection()
+        with conn.cursor() as cur:
+            cur.execute(
+                "DELETE FROM destinations WHERE group_id = %s AND name = %s",
+                (group_id, name)
+            )
+            cur.execute(
+                "SELECT * FROM destinations WHERE group_id = %s ORDER BY created_at ASC",
+                (group_id,)
+            )
+            destinations = cur.fetchall()
+        conn.commit()
+        conn.close()
+        return jsonify({'success': True, 'destinations': destinations})
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+
+@app.route('/api/group/<group_id>/open-voting', methods=['POST'])
+def open_voting(group_id):
+    try:
+        conn = get_connection()
+        with conn.cursor() as cur:
+            cur.execute(
+                "UPDATE groups_table SET voting_open = TRUE WHERE group_id = %s",
+                (group_id,)
+            )
+            cur.execute(
+                "SELECT name FROM destinations WHERE group_id = %s", (group_id,)
+            )
+            dest_names = [r['name'] for r in cur.fetchall()]
+
+            cur.execute(
+                "SELECT name, email FROM members WHERE group_id = %s AND email IS NOT NULL AND email != ''",
+                (group_id,)
+            )
+            members = cur.fetchall()
+
+            cur.execute("SELECT name FROM groups_table WHERE group_id = %s", (group_id,))
+            group = cur.fetchone()
+
+        conn.commit()
+        conn.close()
+
+        if group:
+            for m in members:
+                try:
+                    send_voting_open(m['email'], m['name'], group['name'], dest_names)
+                except Exception as mail_err:
+                    print(f"Email error (non-fatal): {mail_err}")
+
+        return jsonify({'success': True, 'message': 'Voting opened and members notified'})
+    except Exception as e:
+        print(f"open_voting error: {e}")
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+# ══════════════════════════════════════════════════════════════════════════
+# VOTE ROUTES
+# ══════════════════════════════════════════════════════════════════════════
 
 @app.route('/api/vote/submit', methods=['POST'])
 def submit_vote():
@@ -682,10 +863,12 @@ def submit_vote():
     try:
         conn = get_connection()
         with conn.cursor() as cur:
-            cur.execute("SELECT group_id FROM groups_table WHERE group_id = %s", (group_id,))
+            cur.execute(
+                "SELECT group_id FROM groups_table WHERE group_id = %s", (group_id,)
+            )
             if not cur.fetchone():
                 return jsonify({'error': 'Group not found'}), 404
-            # Upsert — replace existing vote from same user in same group
+
             cur.execute(
                 """INSERT INTO votes (group_id, user_name, preferences)
                    VALUES (%s, %s, %s)
@@ -712,14 +895,28 @@ def get_results(group_id):
             group = cur.fetchone()
             if not group:
                 return jsonify({'error': 'Group not found'}), 404
-            cur.execute("SELECT user_name, preferences FROM votes WHERE group_id = %s", (group_id,))
+
+            cur.execute(
+                "SELECT user_name, preferences FROM votes WHERE group_id = %s", (group_id,)
+            )
             rows = cur.fetchall()
+
+            cur.execute(
+                "SELECT COUNT(*) as cnt FROM members WHERE group_id = %s", (group_id,)
+            )
+            member_count = cur.fetchone()['cnt']
+
+            cur.execute(
+                "SELECT name, email FROM members WHERE group_id = %s AND email IS NOT NULL AND email != ''",
+                (group_id,)
+            )
+            members_with_email = cur.fetchall()
+
         conn.close()
 
         if not rows:
             return jsonify({'error': 'No votes yet'}), 400
 
-        # Build votes dict for the voting engine
         votes = {}
         for row in rows:
             prefs = row['preferences']
@@ -729,6 +926,15 @@ def get_results(group_id):
 
         consensus       = voting_engine.calculate_consensus(votes)
         recommendations = recommender.get_recommendations(consensus)
+        winner          = consensus.get('winner', '')
+
+        # Send results email if all members have voted
+        if winner and len(rows) >= member_count and member_count > 0:
+            for m in members_with_email:
+                try:
+                    send_results_ready(m['email'], m['name'], group['name'], winner, len(rows))
+                except Exception as mail_err:
+                    print(f"Email error (non-fatal): {mail_err}")
 
         return jsonify({
             'group_id':        group_id,
@@ -741,18 +947,18 @@ def get_results(group_id):
         print(f"get_results error: {e}")
         return jsonify({'error': str(e)}), 500
 
-# ═══════════════════════════════════════════════════════
-# WEATHER ROUTE  — was missing, causing 404
-# ═══════════════════════════════════════════════════════
+# ══════════════════════════════════════════════════════════════════════════
+# WEATHER ROUTE
+# ══════════════════════════════════════════════════════════════════════════
 
 @app.route('/api/weather/<destination>', methods=['GET'])
 def get_weather(destination):
     data = travel_api.get_weather(destination)
     return jsonify(data)
 
-# ═══════════════════════════════════════════════════════
+# ══════════════════════════════════════════════════════════════════════════
 # ITINERARY ROUTES
-# ═══════════════════════════════════════════════════════
+# ══════════════════════════════════════════════════════════════════════════
 
 @app.route('/api/itinerary/generate', methods=['POST'])
 def generate_itinerary():
@@ -791,19 +997,15 @@ def get_user_itineraries(user_id):
     user_its    = [i for i in itineraries['itineraries'] if i.get('user_id') == user_id]
     return jsonify({'itineraries': user_its})
 
-# ── helpers ───────────────────────────────────────────
 
 def build_day_plan(places, duration):
     days        = []
     place_index = 0
     all_places  = places.get('attractions', []) + places.get('restaurants', [])
-
-    # Day title themes
     themes = [
         'Arrival & Exploration', 'Main Attractions', 'Culture & Heritage',
         'Adventure Day', 'Food & Markets', 'Leisure & Local Life', 'Departure Day'
     ]
-
     for day_num in range(1, duration + 1):
         day_places = []
         for _ in range(3):
@@ -812,12 +1014,11 @@ def build_day_plan(places, duration):
                 place_index += 1
         title = themes[(day_num - 1) % len(themes)]
         days.append({'day': day_num, 'title': f'Day {day_num} — {title}', 'activities': day_places})
-
     return days
 
-# ═══════════════════════════════════════════════════════
+# ══════════════════════════════════════════════════════════════════════════
 # DEEP LINKS ROUTE
-# ═══════════════════════════════════════════════════════
+# ══════════════════════════════════════════════════════════════════════════
 
 @app.route('/api/deeplinks', methods=['POST'])
 def get_deeplinks():
@@ -836,13 +1037,14 @@ def get_deeplinks():
         print(f"deeplinks error: {e}")
         return jsonify({'error': str(e)}), 500
 
-# ══════════════════════════════════════════════════════
+# ══════════════════════════════════════════════════════════════════════════
 # EXPENSE ROUTES
-# ══════════════════════════════════════════════════════
+# ══════════════════════════════════════════════════════════════════════════
 
 @app.route('/api/expenses/<group_id>', methods=['GET'])
 def get_group_expenses(group_id):
     return jsonify(get_expenses(group_id))
+
 
 @app.route('/api/expenses/add', methods=['POST'])
 def add_group_expense():
@@ -861,47 +1063,55 @@ def add_group_expense():
     result = add_expense(group_id, paid_by, amount, description, category, split_among, split_type)
     return jsonify(result)
 
+
 @app.route('/api/expenses/delete/<group_id>/<expense_id>', methods=['DELETE'])
 def delete_group_expense(group_id, expense_id):
     return jsonify(delete_expense(group_id, expense_id))
+
 
 @app.route('/api/expenses/stats/<group_id>', methods=['GET'])
 def expense_stats(group_id):
     return jsonify(get_expense_stats(group_id))
 
-# ══════════════════════════════════════════════════════
+# ══════════════════════════════════════════════════════════════════════════
 # PLANNER ROUTES
-# ══════════════════════════════════════════════════════
+# ══════════════════════════════════════════════════════════════════════════
 
 @app.route('/api/planner/<group_id>', methods=['GET'])
 def get_group_tasks(group_id):
     return jsonify(get_tasks(group_id))
+
 
 @app.route('/api/planner/add', methods=['POST'])
 def add_group_task():
     data     = request.json
     group_id = data.get('group_id')
     title    = data.get('title', '').strip()
+
     if not group_id or not title:
         return jsonify({'success': False, 'error': 'Group ID and title required'}), 400
+
     result = add_task(
         group_id    = group_id,
         title       = title,
         description = data.get('description', ''),
-        category    = data.get('category', 'other'),
+        category    = data.get('category',    'other'),
         assigned_to = data.get('assigned_to', 'Unassigned'),
-        priority    = data.get('priority', 'medium'),
-        due_date    = data.get('due_date', '')
+        priority    = data.get('priority',    'medium'),
+        due_date    = data.get('due_date',    '')
     )
     return jsonify(result)
+
 
 @app.route('/api/planner/toggle/<group_id>/<task_id>', methods=['PUT'])
 def toggle_group_task(group_id, task_id):
     return jsonify(toggle_task(group_id, task_id))
 
+
 @app.route('/api/planner/delete/<group_id>/<task_id>', methods=['DELETE'])
 def delete_group_task(group_id, task_id):
     return jsonify(delete_task(group_id, task_id))
+
 
 @app.route('/api/planner/generate', methods=['POST'])
 def generate_tasks():
@@ -910,12 +1120,14 @@ def generate_tasks():
     destination = data.get('destination', 'your destination')
     duration    = data.get('duration', 7)
     members     = data.get('members', [])
+
     if not group_id:
         return jsonify({'success': False, 'error': 'Group ID required'}), 400
+
     result = generate_default_tasks(group_id, destination, duration, members)
     return jsonify(result)
 
-# ── run ───────────────────────────────────────────────
+# ── run ───────────────────────────────────────────────────────────────────
 
 if __name__ == '__main__':
     print("🌍 PackVote backend starting...")

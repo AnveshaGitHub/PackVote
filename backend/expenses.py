@@ -1,61 +1,82 @@
 import json
-import os
 from datetime import datetime
-
-EXPENSES_FILE = os.path.join(os.path.dirname(__file__), 'data', 'expenses.json')
-
-def load_expenses():
-    if os.path.exists(EXPENSES_FILE):
-        with open(EXPENSES_FILE, 'r') as f:
-            return json.load(f)
-    return {'groups': {}}
-
-def save_expenses(data):
-    os.makedirs(os.path.dirname(EXPENSES_FILE), exist_ok=True)
-    with open(EXPENSES_FILE, 'w') as f:
-        json.dump(data, f, indent=2)
+from database import execute_query, execute_one
 
 def add_expense(group_id, paid_by, amount, description, category, split_among, split_type='equal'):
-    data = load_expenses()
-    if group_id not in data['groups']:
-        data['groups'][group_id] = {'expenses': [], 'members': split_among}
-
     amount = float(amount)
 
     # Calculate splits
     splits = {}
     if split_type == 'equal':
-        per_person = round(amount / len(split_among), 2)
-        for member in split_among:
+        members    = split_among if isinstance(split_among, list) else list(split_among.keys())
+        per_person = round(amount / len(members), 2)
+        for member in members:
             splits[member] = per_person
     else:
-        # Custom split passed directly
-        splits = split_among
+        splits  = split_among
+        members = list(split_among.keys())
 
-    expense = {
-        'id':          f"exp_{datetime.now().strftime('%Y%m%d%H%M%S%f')}",
-        'paid_by':     paid_by,
-        'amount':      amount,
-        'description': description,
-        'category':    category,
-        'split_among': split_among if isinstance(split_among, list) else list(split_among.keys()),
-        'splits':      splits,
-        'split_type':  split_type,
-        'date':        datetime.now().strftime('%Y-%m-%d'),
-        'created_at':  datetime.now().isoformat()
+    expense_id = f"exp_{datetime.now().strftime('%Y%m%d%H%M%S%f')}"
+
+    execute_query("""
+        INSERT INTO expenses
+            (expense_id, group_id, paid_by, amount, description,
+             category, split_among, splits, split_type, expense_date, created_at)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+    """, (
+        expense_id, group_id, paid_by, amount, description,
+        category,
+        json.dumps(members),
+        json.dumps(splits),
+        split_type,
+        datetime.now().date(),
+        datetime.now()
+    ))
+
+    return {
+        'success': True,
+        'expense': {
+            'id':          expense_id,
+            'paid_by':     paid_by,
+            'amount':      amount,
+            'description': description,
+            'category':    category,
+            'split_among': members,
+            'splits':      splits,
+            'split_type':  split_type,
+            'date':        str(datetime.now().date())
+        }
     }
 
-    data['groups'][group_id]['expenses'].append(expense)
-    save_expenses(data)
-    return {'success': True, 'expense': expense}
 
 def get_expenses(group_id):
-    data = load_expenses()
-    if group_id not in data['groups']:
-        return {'expenses': [], 'summary': {}, 'settlements': []}
+    rows = execute_query(
+        "SELECT * FROM expenses WHERE group_id = %s ORDER BY created_at DESC",
+        (group_id,), fetch=True
+    ) or []
 
-    expenses = data['groups'][group_id]['expenses']
-    summary  = calculate_summary(expenses)
+    expenses = []
+    for row in rows:
+        try:
+            split_among = json.loads(row['split_among'] or '[]')
+            splits      = json.loads(row['splits']      or '{}')
+        except:
+            split_among = []
+            splits      = {}
+
+        expenses.append({
+            'id':          row['expense_id'],
+            'paid_by':     row['paid_by'],
+            'amount':      float(row['amount']),
+            'description': row['description'],
+            'category':    row['category'],
+            'split_among': split_among,
+            'splits':      splits,
+            'split_type':  row['split_type'],
+            'date':        str(row['expense_date'])
+        })
+
+    summary     = calculate_summary(expenses)
     settlements = calculate_settlements(summary['balances'])
 
     return {
@@ -64,11 +85,14 @@ def get_expenses(group_id):
         'settlements': settlements
     }
 
+
 def calculate_summary(expenses):
+    if not expenses:
+        return get_empty_summary()
+
     total_spent    = 0
     by_category    = {}
     by_person_paid = {}
-    by_person_owed = {}
     balances       = {}
 
     for exp in expenses:
@@ -78,14 +102,9 @@ def calculate_summary(expenses):
 
         total_spent += amount
 
-        # Category breakdown
-        cat = exp.get('category', 'other')
-        by_category[cat] = by_category.get(cat, 0) + amount
+        by_category[exp['category']] = by_category.get(exp['category'], 0) + amount
+        by_person_paid[paid_by]      = by_person_paid.get(paid_by, 0) + amount
 
-        # Who paid
-        by_person_paid[paid_by] = by_person_paid.get(paid_by, 0) + amount
-
-        # Balances — payer gets credited, others get debited
         if paid_by not in balances:
             balances[paid_by] = 0
         balances[paid_by] += amount
@@ -104,13 +123,10 @@ def calculate_summary(expenses):
         'total_expenses': len(expenses)
     }
 
+
 def calculate_settlements(balances):
-    """
-    Minimum transactions algorithm.
-    Figures out the simplest way for everyone to settle up.
-    """
-    creditors = []  # people who are owed money
-    debtors   = []  # people who owe money
+    creditors = []
+    debtors   = []
 
     for person, balance in balances.items():
         if balance > 0.01:
@@ -143,30 +159,34 @@ def calculate_settlements(balances):
 
     return settlements
 
-def delete_expense(group_id, expense_id):
-    data = load_expenses()
-    if group_id not in data['groups']:
-        return {'success': False, 'error': 'Group not found'}
 
-    expenses = data['groups'][group_id]['expenses']
-    data['groups'][group_id]['expenses'] = [
-        e for e in expenses if e['id'] != expense_id
-    ]
-    save_expenses(data)
+def delete_expense(group_id, expense_id):
+    existing = execute_one(
+        "SELECT expense_id FROM expenses WHERE expense_id = %s AND group_id = %s",
+        (expense_id, group_id)
+    )
+    if not existing:
+        return {'success': False, 'error': 'Expense not found'}
+
+    execute_query(
+        "DELETE FROM expenses WHERE expense_id = %s AND group_id = %s",
+        (expense_id, group_id)
+    )
     return {'success': True}
 
+
 def get_expense_stats(group_id):
-    data     = load_expenses()
-    if group_id not in data['groups']:
-        return {}
-    expenses = data['groups'][group_id]['expenses']
+    data = get_expenses(group_id)
+    expenses = data['expenses']
     if not expenses:
         return {}
-    summary  = calculate_summary(expenses)
-    biggest  = max(expenses, key=lambda x: x['amount'])
+
+    summary = data['summary']
+    biggest = max(expenses, key=lambda x: x['amount'])
+
     return {
-        'total_spent':    summary['total_spent'],
-        'total_expenses': len(expenses),
+        'total_spent':         summary['total_spent'],
+        'total_expenses':      len(expenses),
         'biggest_expense': {
             'description': biggest['description'],
             'amount':      biggest['amount'],
@@ -174,4 +194,15 @@ def get_expense_stats(group_id):
         },
         'most_spent_category': max(summary['by_category'], key=summary['by_category'].get) if summary['by_category'] else '—',
         'biggest_spender':     max(summary['by_person_paid'], key=summary['by_person_paid'].get) if summary['by_person_paid'] else '—',
+    }
+
+
+def get_empty_summary():
+    return {
+        'total_spent':    0,
+        'per_person_avg': 0,
+        'by_category':    {},
+        'by_person_paid': {},
+        'balances':       {},
+        'total_expenses': 0
     }
