@@ -178,7 +178,7 @@ def generate_default_tasks(group_id, destination, duration, members):
         # Documents
         {'title': 'Collect Aadhaar/ID copies',   'description': 'Scan and share with group',       'category': 'documents',  'priority': 'high'},
         {'title': 'Apply for travel insurance',   'description': f'Coverage for {duration} days',   'category': 'documents',  'priority': 'medium'},
-        {'title': 'Check passport validity',      'description': 'Must be valid for 6 months',      'category': 'documents',  'priority': 'high'},
+        {'title': 'Carry Aadhaar / Govt ID', 'description': 'Valid ID required for domestic travel', 'category': 'documents', 'priority': 'high'},
         # Bookings
         {'title': f'Book flights to {destination}',  'description': 'Compare prices on MakeMyTrip', 'category': 'bookings',   'priority': 'high'},
         {'title': f'Book hotel in {destination}',    'description': f'{duration} nights stay',       'category': 'bookings',   'priority': 'high'},

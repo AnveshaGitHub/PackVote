@@ -6381,6 +6381,671 @@
         }
       ],
       "generated_at": "2026-03-20T18:05:22.030997"
+    },
+    {
+      "destination": "Jaipur",
+      "duration": 7,
+      "budget": "medium",
+      "month": "December",
+      "weather": {
+        "destination": "Jaipur",
+        "temperature_c": "26",
+        "feels_like_c": "26",
+        "humidity": "48",
+        "description": "Haze",
+        "forecast": [
+          {
+            "date": "2026-03-22",
+            "max_temp": "29",
+            "min_temp": "20",
+            "description": "Partly Cloudy "
+          },
+          {
+            "date": "2026-03-23",
+            "max_temp": "31",
+            "min_temp": "20",
+            "description": "Sunny"
+          },
+          {
+            "date": "2026-03-24",
+            "max_temp": "32",
+            "min_temp": "21",
+            "description": "Sunny"
+          }
+        ]
+      },
+      "estimated_cost": {
+        "currency": "INR",
+        "per_person": {
+          "flights": 8000,
+          "accommodation": 28000,
+          "food": 14000,
+          "transport": 10500,
+          "activities": 10500,
+          "total": 71000
+        },
+        "daily_average": 9000,
+        "duration_days": 7,
+        "budget_level": "medium",
+        "note": "Estimates based on average costs. Actual prices may vary."
+      },
+      "days": [
+        {
+          "day": 1,
+          "title": "Day 1 \u2014 Arrival & Exploration",
+          "activities": [
+            {
+              "name": "\u090f\u0932\u094d\u092c\u0930\u094d\u091f \u0939\u0949\u0932",
+              "type": "museum",
+              "lat": 26.9117053,
+              "lon": 75.8194973,
+              "description": "",
+              "opening_hours": "Check locally"
+            },
+            {
+              "name": "Jaipur Wax Museum",
+              "type": "museum",
+              "lat": 26.9391114,
+              "lon": 75.8163025,
+              "description": "",
+              "opening_hours": "Mo-Su 10:00-18:30"
+            },
+            {
+              "name": "Alice Garg Seashell Museum",
+              "type": "museum",
+              "lat": 26.8443983,
+              "lon": 75.8072115,
+              "description": "",
+              "opening_hours": "Check locally"
+            }
+          ]
+        },
+        {
+          "day": 2,
+          "title": "Day 2 \u2014 Main Attractions",
+          "activities": [
+            {
+              "name": "Amrapali Museum",
+              "type": "museum",
+              "lat": 26.9150126,
+              "lon": 75.8019066,
+              "description": "",
+              "opening_hours": "Check locally"
+            },
+            {
+              "name": "amrapali museum",
+              "type": "museum",
+              "lat": 26.9150439,
+              "lon": 75.8019015,
+              "description": "",
+              "opening_hours": "Check locally"
+            }
+          ]
+        },
+        {
+          "day": 3,
+          "title": "Day 3 \u2014 Culture & Heritage",
+          "activities": []
+        },
+        {
+          "day": 4,
+          "title": "Day 4 \u2014 Adventure Day",
+          "activities": []
+        },
+        {
+          "day": 5,
+          "title": "Day 5 \u2014 Food & Markets",
+          "activities": []
+        },
+        {
+          "day": 6,
+          "title": "Day 6 \u2014 Leisure & Local Life",
+          "activities": []
+        },
+        {
+          "day": 7,
+          "title": "Day 7 \u2014 Departure Day",
+          "activities": []
+        }
+      ],
+      "generated_at": "2026-03-22T11:54:53.764687"
+    },
+    {
+      "destination": "Jaipur",
+      "duration": 7,
+      "budget": "medium",
+      "month": "December",
+      "weather": {
+        "destination": "Jaipur",
+        "temperature_c": "26",
+        "feels_like_c": "26",
+        "humidity": "48",
+        "description": "Haze",
+        "forecast": [
+          {
+            "date": "2026-03-22",
+            "max_temp": "29",
+            "min_temp": "20",
+            "description": "Partly Cloudy "
+          },
+          {
+            "date": "2026-03-23",
+            "max_temp": "31",
+            "min_temp": "20",
+            "description": "Sunny"
+          },
+          {
+            "date": "2026-03-24",
+            "max_temp": "32",
+            "min_temp": "21",
+            "description": "Sunny"
+          }
+        ]
+      },
+      "estimated_cost": {
+        "currency": "INR",
+        "per_person": {
+          "flights": 8000,
+          "accommodation": 28000,
+          "food": 14000,
+          "transport": 10500,
+          "activities": 10500,
+          "total": 71000
+        },
+        "daily_average": 9000,
+        "duration_days": 7,
+        "budget_level": "medium",
+        "note": "Estimates based on average costs. Actual prices may vary."
+      },
+      "days": [
+        {
+          "day": 1,
+          "title": "Day 1 \u2014 Arrival & Exploration",
+          "activities": [
+            {
+              "name": "\u090f\u0932\u094d\u092c\u0930\u094d\u091f \u0939\u0949\u0932",
+              "type": "museum",
+              "lat": 26.9117053,
+              "lon": 75.8194973,
+              "description": "",
+              "opening_hours": "Check locally"
+            },
+            {
+              "name": "Jaipur Wax Museum",
+              "type": "museum",
+              "lat": 26.9391114,
+              "lon": 75.8163025,
+              "description": "",
+              "opening_hours": "Mo-Su 10:00-18:30"
+            },
+            {
+              "name": "Alice Garg Seashell Museum",
+              "type": "museum",
+              "lat": 26.8443983,
+              "lon": 75.8072115,
+              "description": "",
+              "opening_hours": "Check locally"
+            }
+          ]
+        },
+        {
+          "day": 2,
+          "title": "Day 2 \u2014 Main Attractions",
+          "activities": [
+            {
+              "name": "Amrapali Museum",
+              "type": "museum",
+              "lat": 26.9150126,
+              "lon": 75.8019066,
+              "description": "",
+              "opening_hours": "Check locally"
+            },
+            {
+              "name": "amrapali museum",
+              "type": "museum",
+              "lat": 26.9150439,
+              "lon": 75.8019015,
+              "description": "",
+              "opening_hours": "Check locally"
+            }
+          ]
+        },
+        {
+          "day": 3,
+          "title": "Day 3 \u2014 Culture & Heritage",
+          "activities": []
+        },
+        {
+          "day": 4,
+          "title": "Day 4 \u2014 Adventure Day",
+          "activities": []
+        },
+        {
+          "day": 5,
+          "title": "Day 5 \u2014 Food & Markets",
+          "activities": []
+        },
+        {
+          "day": 6,
+          "title": "Day 6 \u2014 Leisure & Local Life",
+          "activities": []
+        },
+        {
+          "day": 7,
+          "title": "Day 7 \u2014 Departure Day",
+          "activities": []
+        }
+      ],
+      "generated_at": "2026-03-22T12:23:33.792094"
+    },
+    {
+      "destination": "Jaipur",
+      "duration": 7,
+      "budget": "medium",
+      "month": "December",
+      "weather": {
+        "destination": "Jaipur",
+        "temperature_c": "29",
+        "feels_like_c": "28",
+        "humidity": "33",
+        "description": "Haze",
+        "forecast": [
+          {
+            "date": "2026-03-22",
+            "max_temp": "30",
+            "min_temp": "20",
+            "description": "Sunny"
+          },
+          {
+            "date": "2026-03-23",
+            "max_temp": "32",
+            "min_temp": "22",
+            "description": "Sunny"
+          },
+          {
+            "date": "2026-03-24",
+            "max_temp": "34",
+            "min_temp": "22",
+            "description": "Sunny"
+          }
+        ]
+      },
+      "estimated_cost": {
+        "currency": "INR",
+        "per_person": {
+          "flights": 8000,
+          "accommodation": 28000,
+          "food": 14000,
+          "transport": 10500,
+          "activities": 10500,
+          "total": 71000
+        },
+        "daily_average": 9000,
+        "duration_days": 7,
+        "budget_level": "medium",
+        "note": "Estimates based on average costs. Actual prices may vary."
+      },
+      "days": [
+        {
+          "day": 1,
+          "title": "Day 1 \u2014 Arrival & Exploration",
+          "activities": [
+            {
+              "name": "\u090f\u0932\u094d\u092c\u0930\u094d\u091f \u0939\u0949\u0932",
+              "type": "museum",
+              "lat": 26.9117053,
+              "lon": 75.8194973,
+              "description": "",
+              "opening_hours": "Check locally"
+            },
+            {
+              "name": "Jaipur Wax Museum",
+              "type": "museum",
+              "lat": 26.9391114,
+              "lon": 75.8163025,
+              "description": "",
+              "opening_hours": "Mo-Su 10:00-18:30"
+            },
+            {
+              "name": "Alice Garg Seashell Museum",
+              "type": "museum",
+              "lat": 26.8443983,
+              "lon": 75.8072115,
+              "description": "",
+              "opening_hours": "Check locally"
+            }
+          ]
+        },
+        {
+          "day": 2,
+          "title": "Day 2 \u2014 Main Attractions",
+          "activities": [
+            {
+              "name": "Amrapali Museum",
+              "type": "museum",
+              "lat": 26.9150126,
+              "lon": 75.8019066,
+              "description": "",
+              "opening_hours": "Check locally"
+            },
+            {
+              "name": "amrapali museum",
+              "type": "museum",
+              "lat": 26.9150439,
+              "lon": 75.8019015,
+              "description": "",
+              "opening_hours": "Check locally"
+            }
+          ]
+        },
+        {
+          "day": 3,
+          "title": "Day 3 \u2014 Culture & Heritage",
+          "activities": []
+        },
+        {
+          "day": 4,
+          "title": "Day 4 \u2014 Adventure Day",
+          "activities": []
+        },
+        {
+          "day": 5,
+          "title": "Day 5 \u2014 Food & Markets",
+          "activities": []
+        },
+        {
+          "day": 6,
+          "title": "Day 6 \u2014 Leisure & Local Life",
+          "activities": []
+        },
+        {
+          "day": 7,
+          "title": "Day 7 \u2014 Departure Day",
+          "activities": []
+        }
+      ],
+      "generated_at": "2026-03-22T13:52:26.304438"
+    },
+    {
+      "destination": "Jaipur",
+      "duration": 7,
+      "budget": "medium",
+      "month": "December",
+      "weather": {
+        "destination": "Jaipur",
+        "temperature_c": "28",
+        "feels_like_c": "27",
+        "humidity": "33",
+        "description": "Haze",
+        "forecast": [
+          {
+            "date": "2026-03-22",
+            "max_temp": "30",
+            "min_temp": "20",
+            "description": "Sunny"
+          },
+          {
+            "date": "2026-03-23",
+            "max_temp": "32",
+            "min_temp": "22",
+            "description": "Sunny"
+          },
+          {
+            "date": "2026-03-24",
+            "max_temp": "34",
+            "min_temp": "22",
+            "description": "Sunny"
+          }
+        ]
+      },
+      "estimated_cost": {
+        "currency": "INR",
+        "per_person": {
+          "flights": 8000,
+          "accommodation": 28000,
+          "food": 14000,
+          "transport": 10500,
+          "activities": 10500,
+          "total": 71000
+        },
+        "daily_average": 9000,
+        "duration_days": 7,
+        "budget_level": "medium",
+        "note": "Estimates based on average costs. Actual prices may vary."
+      },
+      "days": [
+        {
+          "day": 1,
+          "title": "Day 1 \u2014 Arrival & Exploration",
+          "activities": [
+            {
+              "name": "\u090f\u0932\u094d\u092c\u0930\u094d\u091f \u0939\u0949\u0932",
+              "type": "museum",
+              "lat": 26.9117053,
+              "lon": 75.8194973,
+              "description": "",
+              "opening_hours": "Check locally"
+            },
+            {
+              "name": "Jaipur Wax Museum",
+              "type": "museum",
+              "lat": 26.9391114,
+              "lon": 75.8163025,
+              "description": "",
+              "opening_hours": "Mo-Su 10:00-18:30"
+            },
+            {
+              "name": "Alice Garg Seashell Museum",
+              "type": "museum",
+              "lat": 26.8443983,
+              "lon": 75.8072115,
+              "description": "",
+              "opening_hours": "Check locally"
+            }
+          ]
+        },
+        {
+          "day": 2,
+          "title": "Day 2 \u2014 Main Attractions",
+          "activities": [
+            {
+              "name": "Amrapali Museum",
+              "type": "museum",
+              "lat": 26.9150126,
+              "lon": 75.8019066,
+              "description": "",
+              "opening_hours": "Check locally"
+            },
+            {
+              "name": "amrapali museum",
+              "type": "museum",
+              "lat": 26.9150439,
+              "lon": 75.8019015,
+              "description": "",
+              "opening_hours": "Check locally"
+            },
+            {
+              "name": "Local Restaurant",
+              "type": "restaurant",
+              "description": "Authentic local cuisine",
+              "lat": 0,
+              "lon": 0,
+              "opening_hours": "12pm-11pm"
+            }
+          ]
+        },
+        {
+          "day": 3,
+          "title": "Day 3 \u2014 Culture & Heritage",
+          "activities": [
+            {
+              "name": "Street Food Market",
+              "type": "market",
+              "description": "Best local street food",
+              "lat": 0,
+              "lon": 0,
+              "opening_hours": "6pm-11pm"
+            },
+            {
+              "name": "Rooftop Cafe",
+              "type": "cafe",
+              "description": "Coffee with a view",
+              "lat": 0,
+              "lon": 0,
+              "opening_hours": "8am-10pm"
+            }
+          ]
+        },
+        {
+          "day": 4,
+          "title": "Day 4 \u2014 Adventure Day",
+          "activities": []
+        },
+        {
+          "day": 5,
+          "title": "Day 5 \u2014 Food & Markets",
+          "activities": []
+        },
+        {
+          "day": 6,
+          "title": "Day 6 \u2014 Leisure & Local Life",
+          "activities": []
+        },
+        {
+          "day": 7,
+          "title": "Day 7 \u2014 Departure Day",
+          "activities": []
+        }
+      ],
+      "generated_at": "2026-03-22T20:04:09.424610"
+    },
+    {
+      "destination": "Jaipur",
+      "duration": 7,
+      "budget": "medium",
+      "month": "December",
+      "weather": {
+        "destination": "Jaipur",
+        "temperature_c": "28",
+        "feels_like_c": "27",
+        "humidity": "33",
+        "description": "Haze",
+        "forecast": [
+          {
+            "date": "2026-03-22",
+            "max_temp": "30",
+            "min_temp": "20",
+            "description": "Sunny"
+          },
+          {
+            "date": "2026-03-23",
+            "max_temp": "32",
+            "min_temp": "22",
+            "description": "Sunny"
+          },
+          {
+            "date": "2026-03-24",
+            "max_temp": "34",
+            "min_temp": "22",
+            "description": "Sunny"
+          }
+        ]
+      },
+      "estimated_cost": {
+        "currency": "INR",
+        "per_person": {
+          "flights": 8000,
+          "accommodation": 28000,
+          "food": 14000,
+          "transport": 10500,
+          "activities": 10500,
+          "total": 71000
+        },
+        "daily_average": 9000,
+        "duration_days": 7,
+        "budget_level": "medium",
+        "note": "Estimates based on average costs. Actual prices may vary."
+      },
+      "days": [
+        {
+          "day": 1,
+          "title": "Day 1 \u2014 Arrival & Exploration",
+          "activities": [
+            {
+              "name": "\u090f\u0932\u094d\u092c\u0930\u094d\u091f \u0939\u0949\u0932",
+              "type": "museum",
+              "lat": 26.9117053,
+              "lon": 75.8194973,
+              "description": "",
+              "opening_hours": "Check locally"
+            },
+            {
+              "name": "Jaipur Wax Museum",
+              "type": "museum",
+              "lat": 26.9391114,
+              "lon": 75.8163025,
+              "description": "",
+              "opening_hours": "Mo-Su 10:00-18:30"
+            },
+            {
+              "name": "Alice Garg Seashell Museum",
+              "type": "museum",
+              "lat": 26.8443983,
+              "lon": 75.8072115,
+              "description": "",
+              "opening_hours": "Check locally"
+            }
+          ]
+        },
+        {
+          "day": 2,
+          "title": "Day 2 \u2014 Main Attractions",
+          "activities": [
+            {
+              "name": "Amrapali Museum",
+              "type": "museum",
+              "lat": 26.9150126,
+              "lon": 75.8019066,
+              "description": "",
+              "opening_hours": "Check locally"
+            },
+            {
+              "name": "amrapali museum",
+              "type": "museum",
+              "lat": 26.9150439,
+              "lon": 75.8019015,
+              "description": "",
+              "opening_hours": "Check locally"
+            }
+          ]
+        },
+        {
+          "day": 3,
+          "title": "Day 3 \u2014 Culture & Heritage",
+          "activities": []
+        },
+        {
+          "day": 4,
+          "title": "Day 4 \u2014 Adventure Day",
+          "activities": []
+        },
+        {
+          "day": 5,
+          "title": "Day 5 \u2014 Food & Markets",
+          "activities": []
+        },
+        {
+          "day": 6,
+          "title": "Day 6 \u2014 Leisure & Local Life",
+          "activities": []
+        },
+        {
+          "day": 7,
+          "title": "Day 7 \u2014 Departure Day",
+          "activities": []
+        }
+      ],
+      "generated_at": "2026-03-22T20:05:09.844262"
     }
   ]
 }

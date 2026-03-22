@@ -101,11 +101,12 @@ def login_user(email, password):
 
     # Get groups
     groups = execute_query("""
-        SELECT gm.group_id, gt.name as group_name, gm.joined_at
-        FROM group_members gm
-        JOIN groups_table gt ON gm.group_id = gt.group_id
-        WHERE gm.member_name = %s
-    """, (user['name'],), fetch=True) or []
+    SELECT m.group_id, g.name as group_name, g.created_at as joined_at
+    FROM members m
+    JOIN groups_table g ON g.group_id = m.group_id
+    WHERE m.name = %s
+    ORDER BY g.created_at DESC
+""", (user['name'],), fetch=True) or []
 
     return {
         'success': True,

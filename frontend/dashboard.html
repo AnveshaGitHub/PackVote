@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>PackVote — Dashboard</title>
+  <link rel="stylesheet" href="style.css"/>
+  <style>
+    .dash-page { padding-top: 100px; padding-bottom: 80px; }
+    .user-bar { display: flex; align-items: center; justify-content: space-between; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 20px 28px; margin-bottom: 28px; }
+    .user-bar-left { display: flex; align-items: center; gap: 14px; }
+    .user-avatar-lg { width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(135deg, var(--accent-1), var(--accent-2)); display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-size: 1.3rem; font-weight: 800; color: white; }
+    .user-greeting { font-family: var(--font-display); font-size: 1.2rem; font-weight: 800; }
+    .user-sub { font-size: 0.82rem; color: var(--text-secondary); margin-top: 2px; }
+    .tab-nav { display: flex; gap: 4px; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 6px; margin-bottom: 28px; overflow-x: auto; }
+    .tab-btn { flex: 1; min-width: 90px; padding: 10px 14px; border-radius: var(--radius-md); border: none; background: none; color: var(--text-secondary); font-family: var(--font-body); font-size: 0.83rem; font-weight: 600; cursor: pointer; transition: var(--transition); white-space: nowrap; display: flex; align-items: center; justify-content: center; gap: 5px; }
+    .tab-btn:hover { color: var(--text-primary); background: var(--bg-glass); }
+    .tab-btn.active { background: rgba(108,99,255,0.15); color: var(--accent-1); border: 1px solid var(--border); }
+    .tab-badge { background: var(--accent-2); color: white; font-size: 0.6rem; font-weight: 800; padding: 1px 6px; border-radius: 50px; }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+    .trip-banner { position: relative; border-radius: var(--radius-xl); overflow: hidden; margin-bottom: 24px; min-height: 200px; display: flex; align-items: flex-end; }
+    .trip-banner-bg { position: absolute; inset: 0; background: linear-gradient(135deg, rgba(108,99,255,0.25), rgba(255,101,132,0.15)); border: 1px solid var(--border); border-radius: var(--radius-xl); }
+    .trip-banner-content { position: relative; z-index: 2; padding: 28px 32px; width: 100%; }
+    .trip-banner-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; flex-wrap: wrap; gap: 12px; }
+    .trip-name { font-family: var(--font-display); font-size: 1.8rem; font-weight: 800; letter-spacing: -0.5px; }
+    .trip-id-pill { font-family: monospace; font-size: 0.75rem; background: rgba(108,99,255,0.2); border: 1px solid var(--border); border-radius: 50px; padding: 4px 14px; color: var(--accent-1); cursor: pointer; transition: var(--transition); }
+    .trip-id-pill:hover { background: rgba(108,99,255,0.4); }
+    .trip-stats { display: grid; grid-template-columns: repeat(5,1fr); gap: 12px; }
+    .trip-stat { background: rgba(10,10,15,0.6); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 14px; text-align: center; backdrop-filter: blur(10px); }
+    .trip-stat-val { font-family: var(--font-display); font-size: 1.5rem; font-weight: 800; color: var(--accent-1); }
+    .trip-stat-lbl { font-size: 0.68rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
+    .no-group-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .action-card { background: var(--bg-card); border: 2px dashed var(--border); border-radius: var(--radius-lg); padding: 32px; text-align: center; transition: var(--transition); }
+    .action-card:hover { border-color: var(--accent-1); box-shadow: var(--shadow-glow); }
+    .action-card-icon { font-size: 2.5rem; margin-bottom: 14px; }
+    .action-card h3 { font-family: var(--font-display); font-size: 1.1rem; font-weight: 800; margin-bottom: 8px; }
+    .action-card p { font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 20px; line-height: 1.6; }
+    .dash-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .dash-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 24px; transition: var(--transition); }
+    .dash-card:hover { border-color: var(--border-hover); }
+    .dash-card-title { font-family: var(--font-display); font-size: 0.95rem; font-weight: 700; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+    .dash-card-title span { margin-left: auto; font-family: var(--font-body); font-size: 0.72rem; color: var(--text-muted); font-weight: 400; }
+    .member-row-d { display: flex; align-items: center; gap: 12px; padding: 9px 0; border-bottom: 1px solid rgba(108,99,255,0.08); font-size: 0.85rem; }
+    .member-row-d:last-child { border-bottom: none; }
+    .av-sm { width: 30px; height: 30px; border-radius: 50%; background: linear-gradient(135deg, var(--accent-1), var(--accent-2)); display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700; color: white; flex-shrink: 0; }
+    .badge-done { background: rgba(67,233,123,0.15); color: var(--accent-3); border: 1px solid rgba(67,233,123,0.3); border-radius: 50px; padding: 2px 10px; font-size: 0.7rem; font-weight: 700; margin-left: auto; }
+    .badge-pend { background: rgba(255,215,0,0.1); color: var(--accent-gold); border: 1px solid rgba(255,215,0,0.3); border-radius: 50px; padding: 2px 10px; font-size: 0.7rem; font-weight: 700; margin-left: auto; }
+    .rec-row-d { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid rgba(108,99,255,0.08); }
+    .rec-row-d:last-child { border-bottom: none; }
+    .rec-rank-d { font-family: var(--font-display); font-size: 1.1rem; font-weight: 800; color: var(--text-muted); min-width: 24px; }
+    .rec-rank-d.gold { color: var(--accent-gold); }
+    .rec-dest-img { width: 40px; height: 40px; border-radius: 8px; object-fit: cover; flex-shrink: 0; }
+    .rec-info-d { flex: 1; }
+    .rec-name-d { font-weight: 700; font-size: 0.88rem; }
+    .rec-bar-d { height: 3px; background: var(--bg-secondary); border-radius: 2px; margin-top: 5px; overflow: hidden; }
+    .rec-bar-fill-d { height: 100%; background: linear-gradient(90deg, var(--accent-1), var(--accent-3)); border-radius: 2px; }
+    .rec-pct-d { font-weight: 700; font-size: 0.82rem; color: var(--accent-1); }
+    .exp-row { display: flex; align-items: center; gap: 12px; padding: 9px 0; border-bottom: 1px solid rgba(108,99,255,0.08); font-size: 0.83rem; }
+    .exp-row:last-child { border-bottom: none; }
+    .exp-cat-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .exp-info { flex: 1; }
+    .exp-desc { font-weight: 600; }
+    .exp-by { font-size: 0.72rem; color: var(--text-muted); }
+    .exp-amt { font-weight: 800; color: var(--accent-3); font-family: var(--font-display); }
+    .task-row { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid rgba(108,99,255,0.08); font-size: 0.83rem; }
+    .task-row:last-child { border-bottom: none; }
+    .task-check { width: 18px; height: 18px; border-radius: 50%; border: 2px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 0.65rem; flex-shrink: 0; }
+    .task-check.done { background: var(--accent-3); border-color: var(--accent-3); color: #0a0a0f; font-weight: 800; }
+    .invite-box { margin-top: 14px; background: rgba(108,99,255,0.06); border: 1px dashed var(--border); border-radius: var(--radius-md); padding: 14px; }
+    .invite-lbl { font-size: 0.72rem; color: var(--text-muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .invite-row { display: flex; gap: 8px; }
+    .invite-input { flex: 1; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 8px 12px; color: var(--accent-1); font-size: 0.78rem; font-family: monospace; outline: none; }
+    .survey-wrap { max-width: 660px; margin: 0 auto; }
+    .survey-prog { display: flex; gap: 6px; margin-bottom: 28px; }
+    .s-dot { height: 4px; flex: 1; border-radius: 2px; background: var(--border); transition: var(--transition); }
+    .s-dot.active { background: var(--accent-1); }
+    .s-dot.done { background: var(--accent-3); }
+    .survey-step { display: none; }
+    .survey-step.active { display: block; }
+    .opt-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-top: 12px; }
+    .opt-grid-2 { grid-template-columns: repeat(2,1fr); }
+    .opt-card { border: 2px solid var(--border); border-radius: var(--radius-md); padding: 16px 10px; text-align: center; cursor: pointer; transition: var(--transition); background: var(--bg-glass); }
+    .opt-card:hover { border-color: rgba(108,99,255,0.5); transform: translateY(-2px); }
+    .opt-card.sel { border-color: var(--accent-1); background: rgba(108,99,255,0.12); }
+    .opt-icon { font-size: 1.6rem; margin-bottom: 6px; }
+    .opt-label { font-weight: 700; font-size: 0.85rem; }
+    .opt-sub { font-size: 0.72rem; color: var(--text-secondary); margin-top: 2px; }
+    .create-wrap { max-width: 560px; }
+    .flex-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .range-row { display: flex; align-items: center; gap: 12px; }
+    .range-row input[type=range] { flex: 1; accent-color: var(--accent-1); }
+    .range-val { font-weight: 800; color: var(--accent-1); min-width: 40px; font-family: var(--font-display); }
+    .profile-wrap { max-width: 560px; }
+    .profile-header-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 28px; display: flex; align-items: center; gap: 20px; margin-bottom: 20px; }
+    .profile-avatar-lg { width: 72px; height: 72px; border-radius: 50%; background: linear-gradient(135deg, var(--accent-1), var(--accent-2)); display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-size: 2rem; font-weight: 800; color: white; flex-shrink: 0; }
+    .modal-overlay { display: none; position: fixed; inset: 0; z-index: 9999; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); align-items: center; justify-content: center; }
+    .modal-overlay.show { display: flex; }
+    .modal-box { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-xl); padding: 48px 40px; max-width: 420px; width: calc(100% - 40px); text-align: center; position: relative; overflow: hidden; }
+    .modal-box::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--accent-1), var(--accent-2), var(--accent-3)); }
+    .itin-day { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); margin-bottom: 16px; overflow: hidden; }
+    .itin-day-hdr { background: linear-gradient(135deg, rgba(108,99,255,0.12), rgba(255,101,132,0.06)); padding: 16px 24px; display: flex; align-items: center; gap: 16px; border-bottom: 1px solid var(--border); cursor: pointer; transition: var(--transition); }
+    .itin-day-hdr:hover { background: linear-gradient(135deg, rgba(108,99,255,0.18), rgba(255,101,132,0.1)); }
+    .itin-day-num { width: 44px; height: 44px; border-radius: 50%; background: linear-gradient(135deg, var(--accent-1), var(--accent-2)); display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-weight: 800; font-size: 1rem; color: white; flex-shrink: 0; }
+    .itin-day-title { font-family: var(--font-display); font-weight: 800; font-size: 1rem; }
+    .itin-day-sub { font-size: 0.8rem; color: var(--text-secondary); margin-top: 2px; }
+    .itin-body { overflow: hidden; max-height: 0; transition: max-height 0.4s ease; }
+    .itin-body.open { max-height: 1000px; }
+    .itin-act { display: flex; gap: 14px; padding: 16px 24px; border-bottom: 1px solid rgba(108,99,255,0.06); }
+    .itin-act:last-child { border-bottom: none; }
+    .itin-act-icon { width: 36px; height: 36px; border-radius: 50%; background: var(--bg-secondary); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0; margin-top: 2px; }
+    .itin-act-name { font-weight: 700; font-size: 0.92rem; }
+    .itin-act-note { font-size: 0.78rem; color: var(--text-secondary); margin-top: 4px; }
+    @media (max-width: 768px) {
+      .trip-stats { grid-template-columns: repeat(3,1fr); }
+      .dash-grid { grid-template-columns: 1fr; }
+      .no-group-grid { grid-template-columns: 1fr; }
+      .opt-grid { grid-template-columns: repeat(2,1fr); }
+      .flex-2col { grid-template-columns: 1fr; }
+      .tab-btn { font-size: 0.75rem; padding: 8px 8px; min-width: 72px; }
+      .user-bar { flex-direction: column; gap: 12px; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+<div class="bg-grid"></div>
+
+<nav class="navbar">
+  <div class="container">
+    <a href="index.html" class="logo">PackVote ✈</a>
+    <ul class="nav-links">
+      <li><a href="vote.html">Vote</a></li>
+      <li><a href="results.html">Results</a></li>
+      <li><a href="planner.html">Planner</a></li>
+      <li><a href="expenses.html">Expenses</a></li>
+    </ul>
+    <button class="btn btn-secondary btn-sm" onclick="handleLogout()">Sign Out</button>
+  </div>
+</nav>
+
+<div class="dash-page">
+  <div class="container">
+
+    <div class="user-bar">
+      <div class="user-bar-left">
+        <div class="user-avatar-lg" id="uAvatar">U</div>
+        <div>
+          <div class="user-greeting" id="uGreeting">Welcome back!</div>
+          <div class="user-sub" id="uSub">PackVote member</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:10px;">
+        <button class="btn btn-secondary btn-sm" onclick="showTab('profile')">Profile</button>
+        <button class="btn btn-primary btn-sm" onclick="showTab('create')">New Group</button>
+      </div>
+    </div>
+
+    <div class="tab-nav">
+      <button class="tab-btn active" id="tab-dashboard" onclick="showTab('dashboard')">Home</button>
+      <button class="tab-btn" id="tab-survey" onclick="showTab('survey')">Survey <span class="tab-badge" id="surveyBadge" style="display:none;">!</span></button>
+      <button class="tab-btn" id="tab-itinerary" onclick="showTab('itinerary')">Itinerary</button>
+      <button class="tab-btn" id="tab-members" onclick="showTab('members')">Members</button>
+      <button class="tab-btn" id="tab-create" onclick="showTab('create')">New Group</button>
+      <button class="tab-btn" id="tab-profile" onclick="showTab('profile')">Profile</button>
+    </div>
+
+    <!-- HOME TAB -->
+    <div class="tab-panel active" id="panel-dashboard">
+      <div id="tripBanner" class="trip-banner" style="display:none;">
+        <div class="trip-banner-bg"></div>
+        <div class="trip-banner-content">
+          <div class="trip-banner-top">
+            <div>
+              <div style="font-size:0.72rem;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Active Trip</div>
+              <div class="trip-name" id="tripName">Loading...</div>
+            </div>
+            <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+              <span class="trip-id-pill" id="tripIdPill" onclick="copyGroupId()">Copy Group ID</span>
+              <span style="background:rgba(67,233,123,0.2);border:1px solid rgba(67,233,123,0.4);border-radius:50px;padding:4px 14px;font-size:0.72rem;color:var(--accent-3);font-weight:700;">Active</span>
+            </div>
+          </div>
+          <div class="trip-stats">
+            <div class="trip-stat"><div class="trip-stat-val" id="stMembers">-</div><div class="trip-stat-lbl">Members</div></div>
+            <div class="trip-stat"><div class="trip-stat-val" id="stSurveys">-</div><div class="trip-stat-lbl">Surveys</div></div>
+            <div class="trip-stat"><div class="trip-stat-val" id="stRecs">-</div><div class="trip-stat-lbl">AI Recs</div></div>
+            <div class="trip-stat"><div class="trip-stat-val" id="stExpenses">-</div><div class="trip-stat-lbl">Expenses</div></div>
+            <div class="trip-stat"><div class="trip-stat-val" id="stTasks">-</div><div class="trip-stat-lbl">Tasks</div></div>
+          </div>
+        </div>
+      </div>
+  <div id="myTripsSection" style="margin-bottom:24px;display:none;">
+  <div style="font-family:var(--font-display);font-size:1rem;font-weight:800;margin-bottom:12px;">🗺️ My Trips — Switch between your groups</div>
+  <div id="tripsList" style="display:flex;flex-wrap:wrap;gap:10px;"></div>
+  </div>
+      <div id="noGroupState">
+        <div style="text-align:center;margin-bottom:28px;">
+          <div class="hero-badge" style="display:inline-flex;">Let's get started</div>
+          <h2 class="section-title mt-16">Plan your next adventure</h2>
+          <p class="section-subtitle" style="margin:0 auto;">Create a group as the organizer, or join your friend's group with a Group ID.</p>
+        </div>
+        <div class="no-group-grid">
+          <div class="action-card">
+            <div class="action-card-icon">🏕️</div>
+            <h3>Create a Trip Group</h3>
+            <p>You are the organizer. Set the trip details then share the Group ID with your crew.</p>
+            <button class="btn btn-primary w-full" onclick="showTab('create')" style="justify-content:center;">Create Group</button>
+          </div>
+          <div class="action-card">
+            <div class="action-card-icon">🔗</div>
+            <h3>Join a Group</h3>
+            <p>Got a Group ID from your organizer? Enter it below to join.</p>
+            <div class="form-group">
+              <input type="text" id="joinIdInput" class="form-input" placeholder="e.g. group_20260320171234"/>
+            </div>
+            <button class="btn btn-secondary w-full" onclick="joinGroupFromDash()" style="justify-content:center;">Join Group</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="hasGroupState" style="display:none;">
+        <div class="dash-grid">
+          <div class="dash-card">
+            <div class="dash-card-title">Participants <span id="memberCountLbl"></span></div>
+            <div id="dashMemberList"><div style="color:var(--text-muted);font-size:0.85rem;">Loading...</div></div>
+            <div class="invite-box">
+              <div class="invite-lbl">Share Group ID with your friends</div>
+              <div class="invite-row">
+                <input class="invite-input" id="inviteField" readonly/>
+                <button class="btn btn-secondary btn-sm" onclick="copyGroupId()">Copy</button>
+              </div>
+            </div>
+          </div>
+          <div class="dash-card">
+            <div class="dash-card-title">AI Recommendations <span>Based on all surveys</span></div>
+            <div id="dashRecList"><div style="color:var(--text-muted);font-size:0.85rem;">Submit surveys to unlock...</div></div>
+            <a href="results.html" class="btn btn-secondary btn-sm" style="margin-top:14px;display:inline-flex;">View Full Results</a>
+          </div>
+          <div class="dash-card">
+            <div class="dash-card-title">Recent Expenses</div>
+            <div id="dashExpList"><div style="color:var(--text-muted);font-size:0.85rem;">No expenses yet.</div></div>
+            <a href="expenses.html" class="btn btn-secondary btn-sm" style="margin-top:14px;display:inline-flex;">Manage Expenses</a>
+          </div>
+          <div class="dash-card">
+            <div class="dash-card-title">Checklist Progress</div>
+            <div id="dashTaskList"><div style="color:var(--text-muted);font-size:0.85rem;">No tasks yet.</div></div>
+            <a href="planner.html" class="btn btn-secondary btn-sm" style="margin-top:14px;display:inline-flex;">Open Planner</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SURVEY TAB -->
+    <div class="tab-panel" id="panel-survey">
+      <div class="survey-wrap">
+        <div style="margin-bottom:24px;">
+          <div class="hero-badge" style="display:inline-flex;">Help the AI decide</div>
+          <h2 class="section-title mt-16">Trip Survey</h2>
+          <p style="color:var(--text-secondary);font-size:0.9rem;">Every member must complete this.</p>
+        </div>
+        <div id="surveyDoneBox" style="display:none;">
+          <div class="card" style="text-align:center;padding:48px;">
+            <div style="font-size:3rem;margin-bottom:16px;">🎉</div>
+            <h3 style="font-family:var(--font-display);font-size:1.4rem;font-weight:800;margin-bottom:8px;">Survey Submitted!</h3>
+            <p style="color:var(--text-secondary);margin-bottom:24px;">Waiting for other members...</p>
+            <a href="results.html" class="btn btn-primary" style="justify-content:center;">View Results</a>
+          </div>
+        </div>
+        <div id="surveyFormBox" class="card">
+          <div class="survey-prog">
+            <div class="s-dot active" id="sd1"></div>
+            <div class="s-dot" id="sd2"></div>
+            <div class="s-dot" id="sd3"></div>
+            <div class="s-dot" id="sd4"></div>
+          </div>
+          <div class="survey-step active" id="ss1">
+            <div style="font-size:0.78rem;color:var(--text-muted);margin-bottom:4px;">Step 1 of 4</div>
+            <h3 style="font-family:var(--font-display);font-size:1.2rem;font-weight:800;margin-bottom:4px;">Where would you like to go?</h3>
+            <p style="font-size:0.83rem;color:var(--text-secondary);margin-bottom:12px;">Pick up to 3 destinations.</p>
+            <div class="opt-grid">
+              <div class="opt-card" onclick="toggleDest(this)" data-val="Goa"><div class="opt-icon">🏖️</div><div class="opt-label">Goa</div><div class="opt-sub">Beach</div></div>
+              <div class="opt-card" onclick="toggleDest(this)" data-val="Jaipur"><div class="opt-icon">🏰</div><div class="opt-label">Jaipur</div><div class="opt-sub">History</div></div>
+              <div class="opt-card" onclick="toggleDest(this)" data-val="Kerala"><div class="opt-icon">🌿</div><div class="opt-label">Kerala</div><div class="opt-sub">Nature</div></div>
+              <div class="opt-card" onclick="toggleDest(this)" data-val="Manali"><div class="opt-icon">🏔️</div><div class="opt-label">Manali</div><div class="opt-sub">Adventure</div></div>
+              <div class="opt-card" onclick="toggleDest(this)" data-val="Leh Ladakh"><div class="opt-icon">🛕</div><div class="opt-label">Leh Ladakh</div><div class="opt-sub">Mountains</div></div>
+              <div class="opt-card" onclick="toggleDest(this)" data-val="Udaipur"><div class="opt-icon">💎</div><div class="opt-label">Udaipur</div><div class="opt-sub">Romance</div></div>
+              <div class="opt-card" onclick="toggleDest(this)" data-val="Rishikesh"><div class="opt-icon">🧘</div><div class="opt-label">Rishikesh</div><div class="opt-sub">Yoga</div></div>
+              <div class="opt-card" onclick="toggleDest(this)" data-val="Varanasi"><div class="opt-icon">🕯️</div><div class="opt-label">Varanasi</div><div class="opt-sub">Spiritual</div></div>
+              <div class="opt-card" onclick="toggleDest(this)" data-val="Coorg"><div class="opt-icon">☕</div><div class="opt-label">Coorg</div><div class="opt-sub">Hills</div></div>
+              <div class="opt-card" onclick="toggleDest(this)" data-val="Jaisalmer"><div class="opt-icon">🐪</div><div class="opt-label">Jaisalmer</div><div class="opt-sub">Desert</div></div>
+              <div class="opt-card" onclick="toggleDest(this)" data-val="Andaman"><div class="opt-icon">🐠</div><div class="opt-label">Andaman</div><div class="opt-sub">Islands</div></div>
+              <div class="opt-card" onclick="toggleDest(this)" data-val="Mumbai"><div class="opt-icon">🏙️</div><div class="opt-label">Mumbai</div><div class="opt-sub">City</div></div>
+            </div>
+            <button class="btn btn-primary w-full mt-16" onclick="sNext(2)" style="justify-content:center;">Continue</button>
+          </div>
+          <div class="survey-step" id="ss2">
+            <div style="font-size:0.78rem;color:var(--text-muted);margin-bottom:4px;">Step 2 of 4</div>
+            <h3 style="font-family:var(--font-display);font-size:1.2rem;font-weight:800;margin-bottom:4px;">What do you want to do?</h3>
+            <div class="opt-grid">
+              <div class="opt-card" onclick="this.classList.toggle('sel')" data-val="adventure"><div class="opt-icon">🏄</div><div class="opt-label">Adventure</div></div>
+              <div class="opt-card" onclick="this.classList.toggle('sel')" data-val="food"><div class="opt-icon">🍜</div><div class="opt-label">Food Tour</div></div>
+              <div class="opt-card" onclick="this.classList.toggle('sel')" data-val="culture"><div class="opt-icon">🏛️</div><div class="opt-label">Culture</div></div>
+              <div class="opt-card" onclick="this.classList.toggle('sel')" data-val="nature"><div class="opt-icon">🌲</div><div class="opt-label">Nature</div></div>
+              <div class="opt-card" onclick="this.classList.toggle('sel')" data-val="shopping"><div class="opt-icon">🛍️</div><div class="opt-label">Shopping</div></div>
+              <div class="opt-card" onclick="this.classList.toggle('sel')" data-val="wellness"><div class="opt-icon">🧘</div><div class="opt-label">Wellness</div></div>
+              <div class="opt-card" onclick="this.classList.toggle('sel')" data-val="nightlife"><div class="opt-icon">🎵</div><div class="opt-label">Nightlife</div></div>
+              <div class="opt-card" onclick="this.classList.toggle('sel')" data-val="photography"><div class="opt-icon">📸</div><div class="opt-label">Photography</div></div>
+              <div class="opt-card" onclick="this.classList.toggle('sel')" data-val="relaxation"><div class="opt-icon">🏖️</div><div class="opt-label">Relaxation</div></div>
+            </div>
+            <div style="display:flex;gap:12px;margin-top:16px;">
+              <button class="btn btn-secondary" onclick="sNext(1)" style="flex:1;justify-content:center;">Back</button>
+              <button class="btn btn-primary" onclick="sNext(3)" style="flex:2;justify-content:center;">Continue</button>
+            </div>
+          </div>
+          <div class="survey-step" id="ss3">
+            <div style="font-size:0.78rem;color:var(--text-muted);margin-bottom:4px;">Step 3 of 4</div>
+            <h3 style="font-family:var(--font-display);font-size:1.2rem;font-weight:800;margin-bottom:16px;">Stay and Food Preferences</h3>
+            <div class="form-group">
+              <label class="form-label">Preferred Accommodation</label>
+              <div class="opt-grid opt-grid-2" id="accomGrid">
+                <div class="opt-card" onclick="selOne('accomGrid',this)" data-val="hostel"><div class="opt-icon">🛏️</div><div class="opt-label">Hostel</div><div class="opt-sub">Budget</div></div>
+                <div class="opt-card" onclick="selOne('accomGrid',this)" data-val="guesthouse"><div class="opt-icon">🏡</div><div class="opt-label">Guesthouse</div><div class="opt-sub">Cozy</div></div>
+                <div class="opt-card" onclick="selOne('accomGrid',this)" data-val="hotel"><div class="opt-icon">🏨</div><div class="opt-label">Hotel</div><div class="opt-sub">Standard</div></div>
+                <div class="opt-card" onclick="selOne('accomGrid',this)" data-val="resort"><div class="opt-icon">🏖️</div><div class="opt-label">Resort</div><div class="opt-sub">Premium</div></div>
+              </div>
+            </div>
+            <div class="form-group" style="margin-top:20px;">
+              <label class="form-label">Food Preference</label>
+              <div class="opt-grid" id="foodGrid">
+                <div class="opt-card" onclick="selOne('foodGrid',this)" data-val="veg"><div class="opt-icon">🥗</div><div class="opt-label">Vegetarian</div></div>
+                <div class="opt-card" onclick="selOne('foodGrid',this)" data-val="nonveg"><div class="opt-icon">🍗</div><div class="opt-label">Non-Veg</div></div>
+                <div class="opt-card" onclick="selOne('foodGrid',this)" data-val="both"><div class="opt-icon">🍽️</div><div class="opt-label">Both OK</div></div>
+              </div>
+            </div>
+            <div style="display:flex;gap:12px;margin-top:16px;">
+              <button class="btn btn-secondary" onclick="sNext(2)" style="flex:1;justify-content:center;">Back</button>
+              <button class="btn btn-primary" onclick="sNext(4)" style="flex:2;justify-content:center;">Continue</button>
+            </div>
+          </div>
+          <div class="survey-step" id="ss4">
+            <div style="font-size:0.78rem;color:var(--text-muted);margin-bottom:4px;">Step 4 of 4</div>
+            <h3 style="font-family:var(--font-display);font-size:1.2rem;font-weight:800;margin-bottom:4px;">Budget Comfort</h3>
+            <div class="opt-grid opt-grid-2" id="budgetGrid">
+              <div class="opt-card" onclick="selOne('budgetGrid',this)" data-val="low"><div class="opt-icon">🪙</div><div class="opt-label">Rs 1000-2000</div><div class="opt-sub">Budget</div></div>
+              <div class="opt-card" onclick="selOne('budgetGrid',this)" data-val="medium"><div class="opt-icon">💳</div><div class="opt-label">Rs 2000-4000</div><div class="opt-sub">Comfortable</div></div>
+              <div class="opt-card" onclick="selOne('budgetGrid',this)" data-val="high"><div class="opt-icon">💎</div><div class="opt-label">Rs 4000-8000</div><div class="opt-sub">Premium</div></div>
+              <div class="opt-card" onclick="selOne('budgetGrid',this)" data-val="luxury"><div class="opt-icon">👑</div><div class="opt-label">Rs 8000+</div><div class="opt-sub">Luxury</div></div>
+            </div>
+            <div class="form-group" style="margin-top:20px;">
+              <label class="form-label">Special Notes</label>
+              <textarea id="surveyNotes" class="form-input" rows="3" placeholder="Any special requests..."></textarea>
+            </div>
+            <div style="display:flex;gap:12px;margin-top:16px;">
+              <button class="btn btn-secondary" onclick="sNext(3)" style="flex:1;justify-content:center;">Back</button>
+              <button class="btn btn-success" onclick="submitSurvey()" id="surveyBtn" style="flex:2;justify-content:center;">Submit Survey</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ITINERARY TAB -->
+    <div class="tab-panel" id="panel-itinerary">
+      <div style="margin-bottom:28px;">
+        <div class="hero-badge" style="display:inline-flex;">AI Generated</div>
+        <h2 class="section-title mt-16">Your Itinerary</h2>
+      </div>
+      <div id="itineraryContent">
+        <div style="text-align:center;padding:60px 20px;color:var(--text-muted);">
+          <div style="font-size:3rem;margin-bottom:12px;">🗺️</div>
+          <p>Submit surveys first so AI can build your itinerary.</p>
+          <a href="results.html" class="btn btn-primary mt-16" style="justify-content:center;display:inline-flex;">Check Results</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- MEMBERS TAB -->
+    <div class="tab-panel" id="panel-members">
+      <div style="margin-bottom:28px;">
+        <h2 class="section-title">Group Members</h2>
+        <p style="color:var(--text-secondary);">Track who has submitted their survey.</p>
+      </div>
+      <div id="membersContent" style="max-width:560px;"><div style="color:var(--text-muted);">Loading...</div></div>
+    </div>
+
+    <!-- CREATE GROUP TAB -->
+    <div class="tab-panel" id="panel-create">
+      <div class="create-wrap">
+        <div class="hero-badge" style="display:inline-flex;">Organizer Setup</div>
+        <h2 class="section-title mt-16">Create Your Trip Group</h2>
+        <p style="color:var(--text-secondary);margin-bottom:28px;">Set trip parameters and share the Group ID with your crew.</p>
+        <div class="card">
+          <div class="form-group">
+            <label class="form-label">Group / Trip Name</label>
+            <input type="text" id="cgName" class="form-input" placeholder="e.g. Monsoon Getaway 2025"/>
+          </div>
+          <div class="flex-2col">
+            <div class="form-group">
+              <label class="form-label">Duration (days)</label>
+              <input type="number" id="cgDuration" class="form-input" value="7" min="1" max="30"/>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Budget per person/day (Rs)</label>
+              <input type="number" id="cgBudget" class="form-input" placeholder="3000"/>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Budget Flexibility (%)</label>
+            <div class="range-row">
+              <input type="range" id="cgFlex" min="0" max="50" value="10" oninput="document.getElementById('cgFlexVal').textContent=this.value+'%'"/>
+              <span class="range-val" id="cgFlexVal">10%</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Travel Month</label>
+            <select id="cgMonth" class="form-input">
+              <option>January</option><option>February</option><option>March</option>
+              <option>April</option><option>May</option><option>June</option>
+              <option>July</option><option>August</option><option>September</option>
+              <option>October</option><option>November</option><option selected>December</option>
+            </select>
+          </div>
+          <button class="btn btn-primary w-full mt-8" onclick="createGroup()" id="createBtn" style="justify-content:center;">Create Group and Get Invite Link</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROFILE TAB -->
+    <div class="tab-panel" id="panel-profile">
+      <div class="profile-wrap">
+        <div class="profile-header-card">
+          <div class="profile-avatar-lg" id="pAvatar">U</div>
+          <div>
+            <div style="font-family:var(--font-display);font-size:1.4rem;font-weight:800;" id="pName">Loading...</div>
+            <div style="font-size:0.85rem;color:var(--text-secondary);margin-top:4px;" id="pEmail">Loading...</div>
+            <div style="font-size:0.78rem;color:var(--text-muted);margin-top:2px;" id="pPhone">Loading...</div>
+          </div>
+        </div>
+        <div class="card">
+          <div style="font-family:var(--font-display);font-size:1rem;font-weight:800;margin-bottom:20px;">Edit Profile</div>
+          <div class="form-group">
+            <label class="form-label">Full Name</label>
+            <input type="text" id="eName" class="form-input"/>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Phone Number</label>
+            <input type="tel" id="ePhone" class="form-input"/>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Budget Preference</label>
+            <select id="eBudget" class="form-input">
+              <option value="low">Budget</option>
+              <option value="medium">Medium</option>
+              <option value="high">Premium</option>
+              <option value="luxury">Luxury</option>
+            </select>
+          </div>
+          <button class="btn btn-primary" onclick="saveProfile()" style="justify-content:center;">Save Changes</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<div class="modal-overlay" id="regModal">
+  <div class="modal-box">
+    <div style="font-size:3.5rem;margin-bottom:16px;">🎉</div>
+    <h2 style="font-family:var(--font-display);font-size:1.6rem;font-weight:800;margin-bottom:8px;">Registration Successful!</h2>
+    <p style="color:var(--text-secondary);margin-bottom:28px;">Your PackVote account is ready!</p>
+    <button class="btn btn-primary w-full" onclick="document.getElementById('regModal').classList.remove('show')" style="justify-content:center;">Let's Go</button>
+  </div>
+</div>
+
+<script src="app.js"></script>
+<script>
+var user = loadUser();
+if (!user || !user.user_id) { window.location.href = 'login.html'; }
+
+if (localStorage.getItem('PackVote_show_reg_success') === '1') {
+  localStorage.removeItem('PackVote_show_reg_success');
+  document.getElementById('regModal').classList.add('show');
+}
+
+if (user) {
+  var ini = (user.name && user.name[0]) ? user.name[0].toUpperCase() : 'U';
+  document.getElementById('uAvatar').textContent   = ini;
+  document.getElementById('uGreeting').textContent = 'Welcome back, ' + user.name + '!';
+  document.getElementById('uSub').textContent      = user.email || '';
+  document.getElementById('pAvatar').textContent   = ini;
+  document.getElementById('pName').textContent     = user.name  || 'No name';
+  document.getElementById('pEmail').textContent    = user.email || 'No email';
+  document.getElementById('pPhone').textContent    = user.phone || 'No phone';
+  document.getElementById('eName').value           = user.name  || '';
+  document.getElementById('ePhone').value          = user.phone || '';
+  document.getElementById('eBudget').value         = (user.travel_preferences && user.travel_preferences.budget) ? user.travel_preferences.budget : 'medium';
+}
+
+var groupId = null;
+var grpName = null;
+
+async function loadActiveGroup() {
+  var group = await fetchActiveGroup(user.user_id);
+  if (group) { groupId = group.group_id; grpName = group.group_name; }
+  return group;
+}
+
+function showTab(name) {
+  document.querySelectorAll('.tab-panel').forEach(function(p) { p.classList.remove('active'); });
+  document.querySelectorAll('.tab-btn').forEach(function(b)   { b.classList.remove('active'); });
+  document.getElementById('panel-' + name).classList.add('active');
+  var tb = document.getElementById('tab-' + name);
+  if (tb) tb.classList.add('active');
+  if (name === 'dashboard') loadDashboard();
+  if (name === 'members')   loadMembers();
+  if (name === 'itinerary') loadItinerary();
+}
+
+async function loadDashboard() {
+  await loadActiveGroup();
+  try {
+  var allRes    = await fetch(API + '/auth/user/' + user.user_id + '/groups');
+  var allData   = await allRes.json();
+  var allGroups = allData.groups || [];
+  var tripsSection = document.getElementById('myTripsSection');
+  var tripsList    = document.getElementById('tripsList');
+  if (allGroups.length > 0) {
+    tripsSection.style.display = 'block';
+    tripsList.innerHTML = allGroups.map(function(g) {
+      var isActive = g.group_id === groupId;
+      return '<div onclick="switchTrip(\'' + g.group_id + '\',\'' + g.group_name + '\')" style="cursor:pointer;padding:14px 18px;border-radius:var(--radius-md);border:2px solid ' + (isActive ? 'var(--accent-1)' : 'var(--border)') + ';background:' + (isActive ? 'rgba(108,99,255,0.15)' : 'var(--bg-card)') + ';min-width:200px;">'
+        + '<div style="font-weight:800;font-size:0.95rem;color:' + (isActive ? 'var(--accent-1)' : 'var(--text-primary)') + ';margin-bottom:6px;">' + g.group_name + '</div>'
+        + '<div style="display:flex;align-items:center;gap:6px;background:rgba(0,0,0,0.3);border-radius:4px;padding:4px 8px;">'
+        + '<span style="font-size:0.65rem;color:var(--text-muted);">ID:</span>'
+        + '<span style="font-size:0.72rem;color:var(--accent-1);font-family:monospace;font-weight:600;">' + g.group_id + '</span>'
+        + '<span onclick="event.stopPropagation();navigator.clipboard.writeText(\'' + g.group_id + '\').then(function(){showToast(\'ID Copied! 📋\')})" style="cursor:pointer;font-size:0.65rem;color:var(--text-muted);margin-left:4px;padding:1px 5px;border:1px solid var(--border);border-radius:3px;">Copy</span>'
+        + '</div>'
+        + (isActive ? '<div style="font-size:0.68rem;color:var(--accent-3);margin-top:6px;font-weight:700;">● Active</div>' : '<div style="font-size:0.68rem;color:var(--text-muted);margin-top:6px;">Click to switch</div>')
+        + '</div>';
+    }).join('');
+  }
+} catch(e) {}
+  if (!groupId) {
+    document.getElementById('noGroupState').style.display  = 'block';
+    document.getElementById('hasGroupState').style.display = 'none';
+    document.getElementById('tripBanner').style.display    = 'none';
+    return;
+  }
+  document.getElementById('noGroupState').style.display  = 'none';
+  document.getElementById('hasGroupState').style.display = 'block';
+  document.getElementById('tripBanner').style.display    = 'flex';
+  document.getElementById('tripName').textContent        = grpName || groupId;
+  document.getElementById('tripIdPill').textContent      = groupId;
+  document.getElementById('inviteField').value           = groupId;
+
+  try {
+    var res = await fetch(API + '/group/' + groupId);
+    var d   = await res.json();
+    var members = d.members || [], voters = d.voters || [];
+    document.getElementById('stMembers').textContent      = members.length;
+    document.getElementById('stSurveys').textContent      = voters.length;
+    document.getElementById('memberCountLbl').textContent = members.length + ' members';
+    var memberHTML = '';
+    for (var i = 0; i < members.length; i++) {
+      var m = members[i]; var surveyed = voters.indexOf(m) !== -1;
+      memberHTML += '<div class="member-row-d"><div class="av-sm">' + m[0].toUpperCase() + '</div>';
+      memberHTML += '<div style="flex:1;font-weight:500;">' + m + '</div>';
+      memberHTML += '<span class="' + (surveyed?'badge-done':'badge-pend') + '">' + (surveyed?'Surveyed':'Pending') + '</span></div>';
+    }
+    document.getElementById('dashMemberList').innerHTML = memberHTML || '<div style="color:var(--text-muted);font-size:0.85rem;">No members yet.</div>';
+    if (user && voters.indexOf(user.name) === -1) { document.getElementById('surveyBadge').style.display = 'inline'; }
+  } catch(e) {}
+
+  try {
+    var res2 = await fetch(API + '/vote/results/' + groupId);
+    var d2   = await res2.json();
+    var recs = d2.recommendations || [];
+    document.getElementById('stRecs').textContent = recs.length;
+    var recHTML = '';
+    for (var j = 0; j < Math.min(recs.length, 4); j++) {
+      var r = recs[j]; var dest = r.destination||r.name||'Unknown'; var score = r.match_percentage||75;
+      recHTML += '<div class="rec-row-d"><div class="rec-rank-d ' + (j===0?'gold':'') + '">#' + (j+1) + '</div>';
+      recHTML += '<img class="rec-dest-img" src="' + getDestImage(dest) + '" alt=""/>';
+      recHTML += '<div class="rec-info-d"><div class="rec-name-d">' + dest + '</div>';
+      recHTML += '<div class="rec-bar-d"><div class="rec-bar-fill-d" style="width:' + score + '%"></div></div></div>';
+      recHTML += '<div class="rec-pct-d">' + score + '%</div></div>';
+    }
+    document.getElementById('dashRecList').innerHTML = recHTML || '<div style="color:var(--text-muted);font-size:0.85rem;">Submit surveys to see recommendations...</div>';
+  } catch(e) { document.getElementById('stRecs').textContent = '0'; }
+
+  try {
+    var res3 = await fetch(API + '/expenses/' + groupId);
+    var d3   = await res3.json();
+    var exps = d3.expenses || [];
+    document.getElementById('stExpenses').textContent = exps.length;
+    var catColors = {food:'#43e97b',transport:'#6c63ff',hotel:'#ff6584',activities:'#ffd700',other:'#a0a0b8'};
+    var expHTML = '';
+    for (var k = 0; k < Math.min(exps.length, 4); k++) {
+      var e = exps[k];
+      expHTML += '<div class="exp-row"><div class="exp-cat-dot" style="background:' + (catColors[e.category]||'#6c63ff') + '"></div>';
+      expHTML += '<div class="exp-info"><div class="exp-desc">' + e.description + '</div><div class="exp-by">Paid by ' + e.paid_by + '</div></div>';
+      expHTML += '<div class="exp-amt">₹' + Number(e.amount).toLocaleString('en-IN') + '</div></div>';
+    }
+    document.getElementById('dashExpList').innerHTML = expHTML || '<div style="color:var(--text-muted);font-size:0.85rem;">No expenses yet.</div>';
+  } catch(e) { document.getElementById('stExpenses').textContent = '0'; }
+
+  try {
+    var res4  = await fetch(API + '/planner/' + groupId);
+    var d4    = await res4.json();
+    var tasks = d4.tasks || [];
+    var done  = tasks.filter(function(t) { return t.completed; }).length;
+    document.getElementById('stTasks').textContent = done + '/' + tasks.length;
+    var taskHTML = '';
+    for (var q = 0; q < Math.min(tasks.length, 5); q++) {
+      var task = tasks[q];
+      taskHTML += '<div class="task-row"><div class="task-check ' + (task.completed?'done':'') + '">' + (task.completed?'✓':'') + '</div>';
+      taskHTML += '<div style="' + (task.completed?'text-decoration:line-through;color:var(--text-muted);':'') + 'flex:1;">' + task.title + '</div></div>';
+    }
+    document.getElementById('dashTaskList').innerHTML = taskHTML || '<div style="color:var(--text-muted);font-size:0.85rem;">No tasks yet.</div>';
+  } catch(e) { document.getElementById('stTasks').textContent = '0/0'; }
+}
+
+async function loadMembers() {
+  if (!groupId) await loadActiveGroup();
+  if (!groupId) { document.getElementById('membersContent').innerHTML = '<p style="color:var(--text-muted);">No group yet.</p>'; return; }
+  try {
+    var res = await fetch(API + '/group/' + groupId);
+    var d   = await res.json();
+    var members = d.members || [], voters = d.voters || [];
+    var pct = members.length ? Math.round(voters.length/members.length*100) : 0;
+    var html = '<div class="card" style="margin-bottom:20px;padding:20px 24px;">';
+    html += '<div style="font-family:var(--font-display);font-weight:800;font-size:1rem;margin-bottom:4px;">' + d.name + '</div>';
+    html += '<div style="font-size:0.76rem;color:var(--text-muted);font-family:monospace;margin-bottom:12px;">' + groupId + '</div>';
+    html += '<div style="font-size:0.83rem;color:var(--text-secondary);margin-bottom:10px;">' + members.length + ' members, ' + voters.length + ' surveys submitted</div>';
+    html += '<div style="height:4px;background:var(--bg-secondary);border-radius:2px;overflow:hidden;"><div style="height:100%;width:' + pct + '%;background:linear-gradient(90deg,var(--accent-1),var(--accent-3));border-radius:2px;"></div></div></div>';
+    for (var i = 0; i < members.length; i++) {
+      var m = members[i]; var surveyed = voters.indexOf(m) !== -1;
+      html += '<div class="card" style="display:flex;align-items:center;gap:14px;margin-bottom:12px;padding:16px 20px;">';
+      html += '<div class="av-sm" style="width:40px;height:40px;font-size:1rem;">' + m[0].toUpperCase() + '</div>';
+      html += '<div style="flex:1;font-weight:600;">' + m + '</div>';
+      html += '<span class="' + (surveyed?'badge-done':'badge-pend') + '">' + (surveyed?'Surveyed':'Pending') + '</span></div>';
+    }
+    document.getElementById('membersContent').innerHTML = html;
+  } catch(e) { document.getElementById('membersContent').innerHTML = '<p style="color:var(--text-muted);">Error loading members.</p>'; }
+}
+
+async function loadItinerary() {
+  var el = document.getElementById('itineraryContent');
+  if (!groupId) await loadActiveGroup();
+  if (!groupId) return;
+  var dest = '', dur = 7, budget = 'medium', month = 'December';
+  try {
+    var r = await fetch(API + '/vote/results/' + groupId);
+    var d = await r.json();
+    if (d.consensus) { dest=d.consensus.winner||''; dur=d.consensus.avg_duration||7; budget=d.consensus.consensus_budget||'medium'; month=d.consensus.consensus_month||'December'; }
+    if (!dest && d.recommendations && d.recommendations.length>0) { dest=d.recommendations[0].destination||''; }
+  } catch(e) {}
+  if (!dest) { el.innerHTML='<div style="text-align:center;padding:60px 20px;color:var(--text-muted);"><div style="font-size:3rem;margin-bottom:12px;">🗺️</div><p>Submit surveys first.</p><a href="results.html" class="btn btn-primary mt-16" style="justify-content:center;display:inline-flex;">Check Results</a></div>'; return; }
+  try {
+    var res2 = await fetch(API+'/itinerary/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({destination:dest,duration:dur,budget:budget,travel_style:['culture'],month:month})});
+    var d2 = await res2.json();
+    if (d2.itinerary && d2.itinerary.days) {
+      var html = '<div style="margin-bottom:20px;"><strong style="font-size:1.2rem;">' + dest + '</strong> — ' + dur + ' days</div>';
+      d2.itinerary.days.forEach(function(day) {
+        html += '<div class="itin-day"><div class="itin-day-hdr" onclick="this.nextElementSibling.classList.toggle(\'open\')">';
+        html += '<div class="itin-day-num">' + day.day + '</div>';
+        html += '<div style="flex:1;"><div class="itin-day-title">' + day.title + '</div><div class="itin-day-sub">' + (day.activities||[]).length + ' activities</div></div>';
+        html += '<div style="color:var(--text-muted);">▾</div></div>';
+        html += '<div class="itin-body ' + (day.day===1?'open':'') + '">';
+        (day.activities||[]).forEach(function(a) {
+          html += '<div class="itin-act"><div class="itin-act-icon">📍</div><div><div class="itin-act-name">' + (a.name||'Activity') + '</div>';
+          html += '<div class="itin-act-note">' + (a.type||'') + '</div></div></div>';
+        });
+        html += '</div></div>';
+      });
+      el.innerHTML = html;
+    }
+  } catch(e) { el.innerHTML='<p style="color:var(--text-muted);">Could not load itinerary.</p>'; }
+}
+
+async function createGroup() {
+  var name=document.getElementById('cgName').value.trim();
+  var budget=document.getElementById('cgBudget').value;
+  var month=document.getElementById('cgMonth').value;
+  if (!name)   { showToast('Enter a group name','error'); return; }
+  if (!budget) { showToast('Enter a budget amount','error'); return; }
+  var btn=document.getElementById('createBtn'); btn.disabled=true; btn.textContent='Creating...';
+  try {
+    var res=await fetch(API+'/group/create',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({group_name:name,members:[user.name],user_id:user.user_id||''})});
+    var d=await res.json();
+    if (d.success) { showToast('Group "'+d.group_name+'" created! 🎉'); setTimeout(function(){showTab('dashboard');},1200); }
+    else { showToast(d.error||'Failed','error'); btn.disabled=false; btn.textContent='Create Group and Get Invite Link'; }
+  } catch(e) { showToast('Cannot connect to server.','error'); btn.disabled=false; btn.textContent='Create Group and Get Invite Link'; }
+}
+
+async function joinGroupFromDash() {
+  var gid=document.getElementById('joinIdInput').value.trim();
+  if (!gid) { showToast('Enter a Group ID','error'); return; }
+  try {
+    var res=await fetch(API+'/group/join',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({group_id:gid,member_name:user.name,email:user.email})});
+    var d=await res.json();
+    if (d.success) { showToast('Joined '+d.group_name+' 🎉'); setTimeout(function(){window.location.reload();},1000); }
+    else showToast(d.error||'Could not join','error');
+  } catch(e) { showToast('Cannot connect to server.','error'); }
+}
+
+function copyGroupId() {
+  var v=groupId||document.getElementById('inviteField').value;
+  if (v) { navigator.clipboard.writeText(v).then(function(){showToast('Group ID copied!');}); }
+}
+
+var surveyDests=[];
+function toggleDest(el) {
+  var v=el.dataset.val;
+  if(el.classList.contains('sel')){el.classList.remove('sel');surveyDests=surveyDests.filter(function(d){return d!==v;});}
+  else{if(surveyDests.length>=3){showToast('Pick up to 3 destinations','error');return;}el.classList.add('sel');surveyDests.push(v);}
+}
+function selOne(gridId,el){document.querySelectorAll('#'+gridId+' .opt-card').forEach(function(c){c.classList.remove('sel');});el.classList.add('sel');}
+function sNext(step){
+  if(step===2&&surveyDests.length===0){showToast('Pick at least 1 destination','error');return;}
+  document.querySelectorAll('.survey-step').forEach(function(s){s.classList.remove('active');});
+  var target=document.getElementById('ss'+step); if(target) target.classList.add('active');
+  for(var i=1;i<=4;i++){var dot=document.getElementById('sd'+i);if(dot)dot.className='s-dot'+(i<step?' done':i===step?' active':'');}
+}
+
+async function submitSurvey() {
+  if (!groupId) await loadActiveGroup();
+  if (!groupId) { showToast('No group found.','error'); return; }
+  var activities=[];
+  document.querySelectorAll('#ss2 .opt-card.sel').forEach(function(c){activities.push(c.dataset.val);});
+  var accomEl=document.querySelector('#accomGrid .opt-card.sel');
+  var foodEl=document.querySelector('#foodGrid .opt-card.sel');
+  var budgetEl=document.querySelector('#budgetGrid .opt-card.sel');
+  if(!budgetEl){showToast('Select your budget comfort','error');return;}
+  if(!accomEl) {showToast('Select accommodation preference','error');return;}
+  if(!foodEl)  {showToast('Select food preference','error');return;}
+  var btn=document.getElementById('surveyBtn'); btn.disabled=true; btn.textContent='Submitting...';
+  try {
+    var res=await fetch(API+'/vote/submit',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({group_id:groupId,user_name:user.name,preferences:{destinations:surveyDests,activities:activities,accommodation:accomEl.dataset.val,food:foodEl.dataset.val,budget:budgetEl.dataset.val,notes:document.getElementById('surveyNotes').value}})});
+    var d=await res.json();
+    if(d.success){document.getElementById('surveyFormBox').style.display='none';document.getElementById('surveyDoneBox').style.display='block';document.getElementById('surveyBadge').style.display='none';showToast('Survey submitted! 🎉');}
+    else{showToast(d.error||'Failed','error');btn.disabled=false;btn.textContent='Submit Survey';}
+  } catch(e){showToast('Cannot connect to server.','error');btn.disabled=false;btn.textContent='Submit Survey';}
+}
+
+async function saveProfile() {
+  var name=document.getElementById('eName').value.trim(), budget=document.getElementById('eBudget').value;
+  if(!name){showToast('Name cannot be empty','error');return;}
+  try {
+    var prefs={budget:budget,trip_duration:(user.travel_preferences&&user.travel_preferences.trip_duration)||7,travel_styles:(user.travel_preferences&&user.travel_preferences.travel_styles)||[],fav_destinations:(user.travel_preferences&&user.travel_preferences.fav_destinations)||[]};
+    var res=await fetch(API+'/auth/preferences/'+user.user_id,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({travel_preferences:prefs})});
+    var d=await res.json();
+    if(d.success){user.name=name;user.travel_preferences=user.travel_preferences||{};user.travel_preferences.budget=budget;saveUser(user);document.getElementById('uGreeting').textContent='Welcome back, '+name+'!';document.getElementById('pName').textContent=name;document.getElementById('uAvatar').textContent=name[0].toUpperCase();document.getElementById('pAvatar').textContent=name[0].toUpperCase();showToast('Profile updated!');}
+    else showToast('Update failed','error');
+  } catch(e){showToast('Cannot connect to server.','error');}
+}
+
+function handleLogout() { localStorage.clear(); window.location.href='login.html'; }
+
+loadDashboard();
+</script>
+</body>
+</html>

@@ -73,14 +73,8 @@
       color: white;
       flex-shrink: 0;
     }
-    .testimonial-name {
-      font-size: 0.85rem;
-      font-weight: 600;
-    }
-    .testimonial-role {
-      font-size: 0.75rem;
-      color: var(--text-muted);
-    }
+    .testimonial-name { font-size: 0.85rem; font-weight: 600; }
+    .testimonial-role { font-size: 0.75rem; color: var(--text-muted); }
     .auth-right {
       background: var(--bg-primary);
       display: flex;
@@ -88,10 +82,7 @@
       justify-content: center;
       padding: 48px 40px;
     }
-    .auth-form-wrap {
-      width: 100%;
-      max-width: 420px;
-    }
+    .auth-form-wrap { width: 100%; max-width: 420px; }
     .auth-logo {
       font-family: var(--font-display);
       font-size: 1.8rem;
@@ -116,11 +107,7 @@
       font-size: 0.9rem;
       margin-bottom: 36px;
     }
-    .auth-subtitle a {
-      color: var(--accent-1);
-      text-decoration: none;
-      font-weight: 600;
-    }
+    .auth-subtitle a { color: var(--accent-1); text-decoration: none; font-weight: 600; }
     .auth-subtitle a:hover { text-decoration: underline; }
     .password-wrap { position: relative; }
     .password-toggle {
@@ -156,10 +143,7 @@
       border-radius: 50%;
       background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
       display: flex; align-items: center; justify-content: center;
-      font-size: 1rem;
-      font-weight: 700;
-      color: white;
-      flex-shrink: 0;
+      font-size: 1rem; font-weight: 700; color: white; flex-shrink: 0;
     }
     .welcome-back-text { font-size: 0.9rem; }
     .welcome-back-name { font-weight: 700; color: var(--text-primary); }
@@ -178,22 +162,16 @@
 
     <!-- LEFT PANEL -->
     <div class="auth-left">
-      <video autoplay muted loop style="
-position: fixed;
-left: 0;
-top: 0;
-width: 50%;
-height: 100%;
-object-fit: cover;">
-    <source src="5329613-uhd_2160_4096_25fps.mp4" type="video/mp4">
-</video>
+      <video autoplay muted loop style="position:fixed;left:0;top:0;width:50%;height:100%;object-fit:cover;">
+        <source src="5329613-uhd_2160_4096_25fps.mp4" type="video/mp4">
+      </video>
       <div class="auth-left-content">
         <a href="index.html" class="logo" style="margin-bottom:32px;">PackVote ✈</a>
         <h2>Welcome<br/><span style="background:linear-gradient(135deg,#6c63ff,#ff6584);background-clip:text;-webkit-background-clip:text;color:transparent;-webkit-text-fill-color:transparent;">back,<br/>explorer.</span></h2>
         <p>Your group is waiting. Sign in and continue planning your next adventure together.</p>
         <div class="testimonial">
           <div class="testimonial-text">
-            "PackVote solved our biggest problem — nobody could agree on where to go. Now we just vote and the AI picks the perfect spot. Our Goa trip was the best ever!"
+            PackVote solved our biggest problem. Nobody could agree on where to go. Now we just vote and the AI picks the perfect spot. Our Goa trip was the best ever!
           </div>
           <div class="testimonial-author">
             <div class="testimonial-avatar">K</div>
@@ -216,7 +194,6 @@ object-fit: cover;">
           Don't have an account? <a href="register.html">Create one free</a>
         </p>
 
-        <!-- Welcome back banner (shown if previously logged in) -->
         <div class="welcome-back" id="welcomeBack">
           <div class="welcome-back-avatar" id="wbAvatar">U</div>
           <div class="welcome-back-text">
@@ -225,7 +202,6 @@ object-fit: cover;">
           </div>
         </div>
 
-        <!-- Login Form -->
         <div class="form-group">
           <label class="form-label">Email Address</label>
           <input type="email" id="loginEmail" class="form-input"
@@ -238,19 +214,18 @@ object-fit: cover;">
           <div class="password-wrap">
             <input type="password" id="loginPassword" class="form-input"
                    placeholder="Your password"
-                   onkeypress="if(event.key==='Enter') loginUser()"/>
-            <span class="password-toggle"
-                  onclick="togglePass()">👁</span>
+                   onkeypress="if(event.key==='Enter') doLogin()"/>
+            <span class="password-toggle" onclick="togglePass()">👁</span>
           </div>
-          <a href="#" class="forgot-link" onclick="forgotPassword()">
+          <a href="#" class="forgot-link" onclick="showToast('Contact support@packvote.com to reset your password','error')">
             Forgot password?
           </a>
         </div>
 
         <button class="btn btn-primary w-full mt-8"
-                onclick="loginUser()"
+                onclick="doLogin()"
                 id="loginBtn"
-                style="justify-content:center; padding: 16px;">
+                style="justify-content:center;padding:16px;">
           Sign In ✈
         </button>
 
@@ -260,13 +235,12 @@ object-fit: cover;">
           <div style="flex:1;height:1px;background:var(--border);"></div>
         </div>
 
-        <a href="register.html" class="btn btn-secondary w-full"
-           style="justify-content:center;">
-          Create New Account 
+        <a href="register.html" class="btn btn-secondary w-full" style="justify-content:center;">
+          Create New Account
         </a>
 
         <p style="font-size:0.75rem;color:var(--text-muted);text-align:center;margin-top:24px;">
-          Your data is stored locally and never shared without your consent. We use it only to personalize your experience and make trip planning easier. If you have any concerns, please contact us at <a href="mailto:support@packvote.com">support@packvote.com</a> <a href="privacy.html" target="_blank">Privacy Policy</a> | <a href="terms.html" target="_blank">Terms of Service</a>
+          Your data is stored locally and never shared without your consent.
         </p>
 
       </div>
@@ -274,61 +248,78 @@ object-fit: cover;">
   </div>
 
   <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Registration Success Modal -->
+  <div id="regModal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);align-items:center;justify-content:center;">
+    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-xl);padding:48px 40px;max-width:420px;width:calc(100% - 40px);text-align:center;position:relative;overflow:hidden;">
+      <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent-1),var(--accent-2),var(--accent-3));"></div>
+      <div style="font-size:3.5rem;margin-bottom:16px;">🎉</div>
+      <h2 style="font-family:var(--font-display);font-size:1.6rem;font-weight:800;margin-bottom:8px;">Registration Successful!</h2>
+      <p style="color:var(--text-secondary);margin-bottom:28px;">Your PackVote account is ready. Sign in below to start planning!</p>
+      <button class="btn btn-primary w-full" onclick="document.getElementById('regModal').style.display='none'" style="justify-content:center;">Lets Sign In</button>
+    </div>
+  </div>
+
   <script src="app.js"></script>
   <script>
+    if (localStorage.getItem('PackVote_show_reg_success') === '1') {
+      localStorage.removeItem('PackVote_show_reg_success');
+      document.getElementById('regModal').style.display = 'flex';
+    }
 
-    // Show welcome back if user was previously logged in
-    window.addEventListener('DOMContentLoaded', () => {
-      const saved = localStorage.getItem('PackVote_user');
+    window.addEventListener('DOMContentLoaded', function() {
+      var saved = localStorage.getItem('PackVote_user');
       if (saved) {
         try {
-          const user = JSON.parse(saved);
-          const wb   = document.getElementById('welcomeBack');
+          var user = JSON.parse(saved);
+          var wb   = document.getElementById('welcomeBack');
           wb.style.display = 'flex';
-          document.getElementById('wbAvatar').textContent = user.name?.[0]?.toUpperCase() || 'U';
-          document.getElementById('wbName').textContent   = `Welcome back, ${user.name}!`;
+          document.getElementById('wbAvatar').textContent = user.name ? user.name[0].toUpperCase() : 'U';
+          document.getElementById('wbName').textContent   = 'Welcome back, ' + user.name + '!';
           document.getElementById('loginEmail').value     = user.email || '';
         } catch(e) {}
       }
     });
 
     function checkSavedUser(email) {
-      const saved = localStorage.getItem('PackVote_user');
+      var saved = localStorage.getItem('PackVote_user');
       if (!saved) return;
       try {
-        const user = JSON.parse(saved);
+        var user = JSON.parse(saved);
         if (user.email === email) {
-          const wb = document.getElementById('welcomeBack');
+          var wb = document.getElementById('welcomeBack');
           wb.style.display = 'flex';
-          document.getElementById('wbAvatar').textContent = user.name?.[0]?.toUpperCase() || 'U';
-          document.getElementById('wbName').textContent   = `Welcome back, ${user.name}!`;
+          document.getElementById('wbAvatar').textContent = user.name ? user.name[0].toUpperCase() : 'U';
+          document.getElementById('wbName').textContent   = 'Welcome back, ' + user.name + '!';
         }
       } catch(e) {}
     }
 
-    async function loginUser() {
-      const email    = document.getElementById('loginEmail').value.trim().toLowerCase();
-      const password = document.getElementById('loginPassword').value;
-      const btn      = document.getElementById('loginBtn');
+    async function doLogin() {
+      var email    = document.getElementById('loginEmail').value.trim().toLowerCase();
+      var password = document.getElementById('loginPassword').value;
+      var btn      = document.getElementById('loginBtn');
 
-      if (!email)    return showToast('Please enter your email', 'error');
-      if (!password) return showToast('Please enter your password', 'error');
+      if (!email)    { showToast('Please enter your email', 'error'); return; }
+      if (!password) { showToast('Please enter your password', 'error'); return; }
 
       btn.disabled    = true;
       btn.textContent = 'Signing in...';
 
       try {
-        const res  = await fetch(`${API}/auth/login`, {
+        var res  = await fetch(API + '/auth/login', {
           method:  'POST',
           headers: { 'Content-Type': 'application/json' },
-          body:    JSON.stringify({ email, password })
+          body:    JSON.stringify({ email: email, password: password })
         });
-        const data = await res.json();
+        var data = await res.json();
 
         if (data.success) {
           localStorage.setItem('PackVote_user', JSON.stringify(data));
-          showToast(`Welcome back, ${data.name}! 🎉`);
-          setTimeout(() => window.location.href = 'index.html', 1200);
+          showToast('Welcome back, ' + data.name + '!');
+          setTimeout(function() {
+            window.location.href = 'dashboard.html';
+          }, 1200);
         } else {
           showToast(data.error || 'Login failed', 'error');
           btn.disabled    = false;
@@ -342,14 +333,10 @@ object-fit: cover;">
     }
 
     function togglePass() {
-      const input = document.getElementById('loginPassword');
-      const icon  = document.querySelector('.password-toggle');
-      input.type  = input.type === 'password' ? 'text' : 'password';
+      var input = document.getElementById('loginPassword');
+      var icon  = document.querySelector('.password-toggle');
+      input.type = input.type === 'password' ? 'text' : 'password';
       icon.textContent = input.type === 'password' ? '👁' : '🙈';
-    }
-
-    function forgotPassword() {
-      showToast('Password reset — contact your admin for now 🔑', 'error');
     }
   </script>
 </body>
