@@ -1,0 +1,382 @@
+{
+  "generated_at": "2026-03-23T16:40:32.518527",
+  "group_id": "group_20260323152050",
+  "consensus": {
+    "winner": "manali",
+    "top_destinations": [
+      {
+        "destination": "manali",
+        "score": 1.0,
+        "percentage": 100
+      },
+      {
+        "destination": "Jaipur",
+        "score": 1.0,
+        "percentage": 100
+      }
+    ],
+    "consensus_budget": "medium",
+    "top_styles": [
+      "culture"
+    ],
+    "avg_duration": 6,
+    "consensus_month": "December",
+    "total_voters": 2,
+    "score_breakdown": {
+      "manali": 1.0,
+      "Jaipur": 1.0
+    }
+  },
+  "weather": {
+    "temp_c": "-1",
+    "feels_like": "-4",
+    "humidity": "84",
+    "description": "Moderate or heavy snow showers",
+    "forecast": [
+      {
+        "date": "2026-03-23",
+        "max": "-0",
+        "min": "-10",
+        "desc": "Moderate or heavy snow showers"
+      },
+      {
+        "date": "2026-03-24",
+        "max": "-1",
+        "min": "-11",
+        "desc": "Patchy snow nearby"
+      },
+      {
+        "date": "2026-03-25",
+        "max": "2",
+        "min": "-10",
+        "desc": "Sunny"
+      }
+    ]
+  },
+  "itinerary": {
+    "destination": "manali",
+    "duration": 6,
+    "theme": "Discover the best of manali",
+    "highlights": [
+      "Explore City Museum",
+      "Explore Central Market",
+      "Explore Historical Fort"
+    ],
+    "reach": {
+      "by_train": "Search trains to nearest station to manali on IRCTC",
+      "by_bus": "RedBus routes available to manali",
+      "by_flight": "Search flights to nearest airport via Google Flights",
+      "by_road": "Check Google Maps for road route"
+    },
+    "days": [
+      {
+        "day": 1,
+        "title": "Arrival & First Impressions",
+        "morning": {
+          "time": "8:00 AM",
+          "activity": "City Museum",
+          "description": "Explore City Museum",
+          "cost": "₹800",
+          "transport": "Auto/cab",
+          "tips": "Go early to avoid crowds"
+        },
+        "afternoon": {
+          "time": "12:00 PM",
+          "activity": "Central Market",
+          "description": "Visit Central Market",
+          "cost": "₹1200",
+          "transport": "Auto/walk",
+          "tips": "Carry water"
+        },
+        "evening": {
+          "time": "5:00 PM",
+          "activity": "Historical Fort",
+          "description": "Evening at Historical Fort",
+          "cost": "₹600",
+          "transport": "Walk",
+          "tips": "Great for photos"
+        },
+        "lunch": {
+          "restaurant": "Local dhaba",
+          "area": "City centre",
+          "cuisine": "Regional",
+          "type": "both",
+          "must_try": "Local thali",
+          "price_for_two": "₹600"
+        },
+        "dinner": {
+          "restaurant": "Local restaurant",
+          "area": "Main market",
+          "cuisine": "Regional",
+          "type": "both",
+          "must_try": "Street food speciality",
+          "price_for_two": "₹800"
+        },
+        "day_cost_per_person": "₹4000",
+        "local_transport": "Auto rickshaw / local bus / walking",
+        "pro_tip": "Day 1: Ask locals for the best hidden spots"
+      },
+      {
+        "day": 2,
+        "title": "Heritage & Culture",
+        "morning": {
+          "time": "8:00 AM",
+          "activity": "Local Temple",
+          "description": "Explore Local Temple",
+          "cost": "₹800",
+          "transport": "Auto/cab",
+          "tips": "Go early to avoid crowds"
+        },
+        "afternoon": {
+          "time": "12:00 PM",
+          "activity": "Garden",
+          "description": "Visit Garden",
+          "cost": "₹1200",
+          "transport": "Auto/walk",
+          "tips": "Carry water"
+        },
+        "evening": {
+          "time": "5:00 PM",
+          "activity": "Viewpoint",
+          "description": "Evening at Viewpoint",
+          "cost": "₹600",
+          "transport": "Walk",
+          "tips": "Great for photos"
+        },
+        "lunch": {
+          "restaurant": "Local dhaba",
+          "area": "City centre",
+          "cuisine": "Regional",
+          "type": "both",
+          "must_try": "Local thali",
+          "price_for_two": "₹600"
+        },
+        "dinner": {
+          "restaurant": "Local restaurant",
+          "area": "Main market",
+          "cuisine": "Regional",
+          "type": "both",
+          "must_try": "Street food speciality",
+          "price_for_two": "₹800"
+        },
+        "day_cost_per_person": "₹4000",
+        "local_transport": "Auto rickshaw / local bus / walking",
+        "pro_tip": "Day 2: Ask locals for the best hidden spots"
+      },
+      {
+        "day": 3,
+        "title": "Nature & Adventure",
+        "morning": {
+          "time": "8:00 AM",
+          "activity": "Art Gallery",
+          "description": "Explore Art Gallery",
+          "cost": "₹800",
+          "transport": "Auto/cab",
+          "tips": "Go early to avoid crowds"
+        },
+        "afternoon": {
+          "time": "12:00 PM",
+          "activity": "City Museum",
+          "description": "Visit City Museum",
+          "cost": "₹1200",
+          "transport": "Auto/walk",
+          "tips": "Carry water"
+        },
+        "evening": {
+          "time": "5:00 PM",
+          "activity": "Central Market",
+          "description": "Evening at Central Market",
+          "cost": "₹600",
+          "transport": "Walk",
+          "tips": "Great for photos"
+        },
+        "lunch": {
+          "restaurant": "Local dhaba",
+          "area": "City centre",
+          "cuisine": "Regional",
+          "type": "both",
+          "must_try": "Local thali",
+          "price_for_two": "₹600"
+        },
+        "dinner": {
+          "restaurant": "Local restaurant",
+          "area": "Main market",
+          "cuisine": "Regional",
+          "type": "both",
+          "must_try": "Street food speciality",
+          "price_for_two": "₹800"
+        },
+        "day_cost_per_person": "₹4000",
+        "local_transport": "Auto rickshaw / local bus / walking",
+        "pro_tip": "Day 3: Ask locals for the best hidden spots"
+      },
+      {
+        "day": 4,
+        "title": "Food & Local Life",
+        "morning": {
+          "time": "8:00 AM",
+          "activity": "Historical Fort",
+          "description": "Explore Historical Fort",
+          "cost": "₹800",
+          "transport": "Auto/cab",
+          "tips": "Go early to avoid crowds"
+        },
+        "afternoon": {
+          "time": "12:00 PM",
+          "activity": "Local Temple",
+          "description": "Visit Local Temple",
+          "cost": "₹1200",
+          "transport": "Auto/walk",
+          "tips": "Carry water"
+        },
+        "evening": {
+          "time": "5:00 PM",
+          "activity": "Garden",
+          "description": "Evening at Garden",
+          "cost": "₹600",
+          "transport": "Walk",
+          "tips": "Great for photos"
+        },
+        "lunch": {
+          "restaurant": "Local dhaba",
+          "area": "City centre",
+          "cuisine": "Regional",
+          "type": "both",
+          "must_try": "Local thali",
+          "price_for_two": "₹600"
+        },
+        "dinner": {
+          "restaurant": "Local restaurant",
+          "area": "Main market",
+          "cuisine": "Regional",
+          "type": "both",
+          "must_try": "Street food speciality",
+          "price_for_two": "₹800"
+        },
+        "day_cost_per_person": "₹4000",
+        "local_transport": "Auto rickshaw / local bus / walking",
+        "pro_tip": "Day 4: Ask locals for the best hidden spots"
+      },
+      {
+        "day": 5,
+        "title": "Shopping & Leisure",
+        "morning": {
+          "time": "8:00 AM",
+          "activity": "Viewpoint",
+          "description": "Explore Viewpoint",
+          "cost": "₹800",
+          "transport": "Auto/cab",
+          "tips": "Go early to avoid crowds"
+        },
+        "afternoon": {
+          "time": "12:00 PM",
+          "activity": "Art Gallery",
+          "description": "Visit Art Gallery",
+          "cost": "₹1200",
+          "transport": "Auto/walk",
+          "tips": "Carry water"
+        },
+        "evening": {
+          "time": "5:00 PM",
+          "activity": "City Museum",
+          "description": "Evening at City Museum",
+          "cost": "₹600",
+          "transport": "Walk",
+          "tips": "Great for photos"
+        },
+        "lunch": {
+          "restaurant": "Local dhaba",
+          "area": "City centre",
+          "cuisine": "Regional",
+          "type": "both",
+          "must_try": "Local thali",
+          "price_for_two": "₹600"
+        },
+        "dinner": {
+          "restaurant": "Local restaurant",
+          "area": "Main market",
+          "cuisine": "Regional",
+          "type": "both",
+          "must_try": "Street food speciality",
+          "price_for_two": "₹800"
+        },
+        "day_cost_per_person": "₹4000",
+        "local_transport": "Auto rickshaw / local bus / walking",
+        "pro_tip": "Day 5: Ask locals for the best hidden spots"
+      },
+      {
+        "day": 6,
+        "title": "Hidden Gems",
+        "morning": {
+          "time": "8:00 AM",
+          "activity": "Central Market",
+          "description": "Explore Central Market",
+          "cost": "₹800",
+          "transport": "Auto/cab",
+          "tips": "Go early to avoid crowds"
+        },
+        "afternoon": {
+          "time": "12:00 PM",
+          "activity": "Historical Fort",
+          "description": "Visit Historical Fort",
+          "cost": "₹1200",
+          "transport": "Auto/walk",
+          "tips": "Carry water"
+        },
+        "evening": {
+          "time": "5:00 PM",
+          "activity": "Local Temple",
+          "description": "Evening at Local Temple",
+          "cost": "₹600",
+          "transport": "Walk",
+          "tips": "Great for photos"
+        },
+        "lunch": {
+          "restaurant": "Local dhaba",
+          "area": "City centre",
+          "cuisine": "Regional",
+          "type": "both",
+          "must_try": "Local thali",
+          "price_for_two": "₹600"
+        },
+        "dinner": {
+          "restaurant": "Local restaurant",
+          "area": "Main market",
+          "cuisine": "Regional",
+          "type": "both",
+          "must_try": "Street food speciality",
+          "price_for_two": "₹800"
+        },
+        "day_cost_per_person": "₹4000",
+        "local_transport": "Auto rickshaw / local bus / walking",
+        "pro_tip": "Day 6: Ask locals for the best hidden spots"
+      }
+    ],
+    "must_eat": [
+      {
+        "dish": "Local speciality",
+        "where": "City centre",
+        "price": "₹100",
+        "type": "both"
+      }
+    ],
+    "packing": [
+      "Light clothes for December",
+      "Comfortable shoes",
+      "Sunscreen",
+      "Power bank"
+    ],
+    "total_cost": {
+      "per_person_inr": "₹32000",
+      "for_group_inr": "₹64000",
+      "breakdown": {
+        "accommodation": "₹8400",
+        "food": "₹7200",
+        "transport": "₹7600",
+        "activities": "₹4800",
+        "miscellaneous": "₹2400"
+      }
+    },
+    "ai_powered": false
+  }
+}

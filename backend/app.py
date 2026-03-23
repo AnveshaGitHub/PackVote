@@ -15,6 +15,7 @@ from auth import register_user, login_user, get_user, update_preferences, add_gr
 from expenses import add_expense, get_expenses, delete_expense, get_expense_stats
 from planner import add_task, get_tasks, toggle_task, delete_task, update_task, generate_default_tasks
 from email_service import send_join_confirmation, send_voting_open, send_results_ready
+from ai_itinerary import generate_ai_itinerary
 
 app = Flask(__name__)
 CORS(app)
@@ -489,6 +490,70 @@ def get_user_itineraries(user_id):
     user_its    = [i for i in itineraries['itineraries'] if i.get('user_id') == user_id]
     return jsonify({'itineraries': user_its})
 
+
+@app.route('/api/itinerary/ai-generate', methods=['POST'])
+def ai_generate_itinerary():
+    data         = request.json
+    destination  = data.get('destination', '')
+    duration     = data.get('duration', 5)
+    budget       = data.get('budget', 'medium')
+    travel_style = data.get('travel_style', ['culture'])
+    month        = data.get('month', 'December')
+    group_size   = data.get('group_size', 4)
+    food_pref    = data.get('food_pref', 'both')
+    group_type   = data.get('group_type', 'friends')
+
+    if not destination:
+        return jsonify({'error': 'Destination required'}), 400
+    try:
+        itinerary = generate_ai_itinerary(
+            destination   = destination,
+            duration      = duration,
+            budget        = budget,
+            travel_styles = travel_style,
+            month         = month,
+            group_size    = group_size,
+            food_pref     = food_pref,
+            group_type    = group_type
+        )
+        return jsonify({'success': True, 'itinerary': itinerary})
+    except Exception as e:
+        print(f"ai_generate error: {e}")
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/itinerary/group/<group_id>', methods=['GET'])
+def get_group_itinerary(group_id):
+    import json as json_lib
+    try:
+        conn = get_connection()
+        with conn.cursor(dictionary=True) as cur:
+            cur.execute(
+                """SELECT itinerary, ai_powered, created_at
+                   FROM itineraries
+                   WHERE group_id = %s
+                   ORDER BY created_at DESC LIMIT 1""",
+                (group_id,)
+            )
+            row = cur.fetchone()
+        conn.close()
+
+        if not row:
+            return jsonify({'error': 'No itinerary yet'}), 404
+
+        itin = row['itinerary']
+        if isinstance(itin, str):
+            itin = json_lib.loads(itin)
+
+        return jsonify({
+            'success':    True,
+            'itinerary':  itin,
+            'ai_powered': row['ai_powered'],
+            'created_at': str(row['created_at'])
+        })
+    except Exception as e:
+        print(f"get_group_itinerary error: {e}")
+        return jsonify({'error': str(e)}), 500
 
 def build_day_plan(places, duration):
     days        = []
