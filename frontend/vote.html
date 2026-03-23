@@ -72,16 +72,20 @@
 <body>
   <div class="bg-grid"></div>
   <nav class="navbar">
-    <div class="container">
-      <a href="index.html" class="logo">PackVote ✈</a>
-      <ul class="nav-links">
-        <li><a href="index.html">Home</a></li>
-        <li><a href="results.html">Results</a></li>
-        <li><a href="expenses.html">Expenses</a></li>
-        <li><a href="planner.html">Planner</a></li>
-      </ul>
-    </div>
-  </nav>
+  <div class="container">
+    <a href="index.html" class="logo">PackVote ✈</a>
+    <ul class="nav-links">
+      <li><a href="index.html#how">How it works</a></li>
+      <li><a href="index.html#destinations">Destinations</a></li>
+      <li><a href="vote.html">Vote</a></li>
+      <li><a href="results.html">Results</a></li>
+      <li><a href="planner.html">Planner</a></li>
+      <li><a href="expenses.html">Expenses</a></li>
+    </ul>
+    <a href="dashboard.html" class="btn btn-primary btn-sm">Dashboard ✈</a>
+    <button class="btn btn-secondary btn-sm" onclick="openJoinModal()">Join a Group</button>
+  </div>
+</nav>
 
   <div class="vote-page">
     <div class="container">
@@ -203,254 +207,276 @@
   </div>
 
   <div class="toast-container" id="toastContainer"></div>
-  <script src="app.js"></script>
-  <script>
-    const API_BASE   = 'http://127.0.0.1:5000/api';
-    let groupId      = null;
-    let currentUser  = null;
-    let destinations = [];
-    let myVotes      = {};
-    let voteStyles   = [];
-    let isCreator    = false;
-    let votingOpen   = false;
-    let pollTimer    = null;
+<script src="app.js"></script>
+<script>
+const API_BASE   = 'http://127.0.0.1:5000/api';
+let groupId      = null;
+let currentUser  = null;
+let destinations = [];
+let myVotes      = {};
+let voteStyles   = [];
+let isCreator    = false;
+let votingOpen   = false;
+let pollTimer    = null;
 
-    window.addEventListener('DOMContentLoaded', async () => {
-      groupId     = localStorage.getItem('PackVote_group_id');
-      currentUser = JSON.parse(localStorage.getItem('PackVote_user') || 'null');
-      if (!groupId) {
-        showToast('No group found. Please create or join a group first.', 'error');
-        setTimeout(() => window.location.href = 'index.html', 2000);
-        return;
-      }
-      const nameEl = document.getElementById('voterName');
-      if (currentUser?.name && nameEl) nameEl.value = currentUser.name;
-      if (currentUser?.travel_preferences) {
-        const p = currentUser.travel_preferences;
-        if (p.budget)       document.getElementById('voteBudget').value   = p.budget;
-        if (p.trip_duration) document.getElementById('voteDuration').value = p.trip_duration;
-        if (p.travel_styles?.length > 0) {
-          p.travel_styles.forEach(s => {
-            const tag = document.querySelector(`#voteStyleTags [data-style="${s}"]`);
-            if (tag) { tag.classList.add('selected'); voteStyles.push(s); }
-          });
-        }
-      }
-      await loadGroup();
+function toggleVoteStyle(el) {
+  el.classList.toggle('selected');
+  const s = el.dataset.style;
+  if (el.classList.contains('selected')) { if (!voteStyles.includes(s)) voteStyles.push(s); }
+  else voteStyles = voteStyles.filter(x => x !== s);
+}
+
+async function initVote() {
+  currentUser = loadUser();
+  if (!currentUser || !currentUser.user_id) {
+    window.location.href = 'login.html';
+    return;
+  }
+
+  try {
+    const res    = await fetch(`${API_BASE}/auth/user/${currentUser.user_id}/groups`);
+    const data   = await res.json();
+    const groups = data.groups || [];
+    if (groups.length === 0) {
+      showToast('No group found. Create or join a group first.', 'error');
+      setTimeout(() => window.location.href = 'dashboard.html', 2000);
+      return;
+    }
+    groupId = groups[0].group_id;
+  } catch(e) {
+    showToast('Cannot connect to server.', 'error');
+    return;
+  }
+
+  const nameEl = document.getElementById('voterName');
+  if (currentUser?.name && nameEl) nameEl.value = currentUser.name;
+
+  if (currentUser?.travel_preferences) {
+    const p = currentUser.travel_preferences;
+    if (p.budget)        document.getElementById('voteBudget').value   = p.budget;
+    if (p.trip_duration) document.getElementById('voteDuration').value = p.trip_duration;
+    if (p.travel_styles?.length > 0) {
+      p.travel_styles.forEach(s => {
+        const tag = document.querySelector(`#voteStyleTags [data-style="${s}"]`);
+        if (tag) { tag.classList.add('selected'); voteStyles.push(s); }
+      });
+    }
+  }
+  await loadGroup();
+}
+
+async function loadGroup() {
+  try {
+    const res  = await fetch(`${API_BASE}/group/${groupId}`);
+    const data = await res.json();
+    if (data.error) return;
+
+    isCreator    = data.created_by === currentUser?.user_id;
+    votingOpen   = data.voting_open || false;
+    destinations = data.destinations || [];
+
+    document.getElementById('groupInfoBox').innerHTML = `
+      <div style="font-weight:700;margin-bottom:2px;">${data.name}</div>
+      <div style="font-size:0.78rem;color:var(--text-muted);">ID: ${groupId}</div>
+      <div style="font-size:0.78rem;margin-top:4px;color:${votingOpen?'var(--accent-3)':'var(--accent-gold)'};">
+        ● ${votingOpen ? 'Voting is open' : 'Adding destinations'}
+      </div>`;
+
+    const members = data.members || [];
+    const voters  = data.voters  || [];
+    document.getElementById('memberVoteList').innerHTML = members.length === 0
+      ? '<div style="font-size:0.8rem;color:var(--text-muted);">No members yet</div>'
+      : members.map(m => `
+          <div class="member-vote-row">
+            <div style="display:flex;align-items:center;gap:7px;">
+              <div class="member-avatar" style="width:24px;height:24px;font-size:0.65rem;">${m[0].toUpperCase()}</div>
+              ${m}
+            </div>
+            ${voters.includes(m)
+              ? '<span class="voted-badge">✓ Voted</span>'
+              : '<span class="pending-badge">Pending</span>'}
+          </div>`).join('');
+
+    updatePhaseUI();
+    if (votingOpen) renderVoteCards();
+    else if (isCreator) renderDestCards();
+
+  } catch(e) { console.error('loadGroup:', e); }
+}
+
+function updatePhaseUI() {
+  const add     = document.getElementById('addDestSection');
+  const voting  = document.getElementById('votingSection');
+  const waiting = document.getElementById('waitingSection');
+  const title   = document.getElementById('phaseTitle');
+  const sub     = document.getElementById('phaseSub');
+  const badge   = document.getElementById('phaseBadge');
+
+  add.style.display     = 'none';
+  voting.style.display  = 'none';
+  waiting.style.display = 'none';
+
+  if (!votingOpen && isCreator) {
+    add.style.display = 'block';
+    title.textContent = 'Phase 1 — Add destinations';
+    sub.textContent   = 'Add all destinations your group wants to consider, then open voting.';
+    badge.textContent = 'Creator';
+  } else if (!votingOpen && !isCreator) {
+    waiting.style.display = 'block';
+    title.textContent     = 'Waiting for creator to add destinations...';
+    sub.textContent       = 'You will be able to vote once the creator opens voting.';
+    badge.textContent     = 'Stand by';
+    if (pollTimer) clearInterval(pollTimer);
+    pollTimer = setInterval(loadGroup, 5000);
+  } else {
+    if (pollTimer) clearInterval(pollTimer);
+    voting.style.display = 'block';
+    title.textContent    = 'Phase 2 — Cast your vote';
+    sub.textContent      = `${destinations.length} destinations to vote on.`;
+    badge.textContent    = 'Voting open';
+  }
+}
+
+function renderDestCards() {
+  const list = document.getElementById('destCardList');
+  const btn  = document.getElementById('openVotingBtn');
+  if (!list) return;
+  if (destinations.length === 0) {
+    list.innerHTML = `<div class="empty-dest"><div style="font-size:2.5rem;margin-bottom:10px;">🗺️</div><div style="font-weight:700;">No destinations yet</div><div style="font-size:0.83rem;margin-top:4px;">Add the first destination above!</div></div>`;
+    if (btn) btn.style.display = 'none';
+    return;
+  }
+  if (btn) btn.style.display = destinations.length >= 2 ? 'flex' : 'none';
+  list.innerHTML = destinations.map((d, i) => `
+    <div class="dest-card">
+      <img class="dest-card-img" src="${getDestImage(d.name)}" alt="${d.name}"/>
+      <div class="dest-card-info">
+        <div class="dest-card-name">${d.name}</div>
+        <div class="dest-card-desc">${getDestDesc(d.name)}</div>
+      </div>
+      <button class="dest-card-delete" onclick="removeDestination(${i})">✕</button>
+    </div>`).join('');
+}
+
+function renderVoteCards() {
+  const list = document.getElementById('voteCardList');
+  if (!list) return;
+  list.innerHTML = destinations.map(d => {
+    const mv  = myVotes[d.name] || null;
+    const up  = d.up_votes   || 0;
+    const all = up + (d.down_votes || 0);
+    const pct = all > 0 ? Math.round((up / all) * 100) : 0;
+    return `
+      <div class="dest-card">
+        <img class="dest-card-img" src="${getDestImage(d.name)}" alt="${d.name}"/>
+        <div class="dest-card-info">
+          <div class="dest-card-name">${d.name}</div>
+          <div class="dest-card-desc">${getDestDesc(d.name)}</div>
+          <div style="font-size:0.73rem;color:var(--text-muted);margin-top:4px;">${up} 👍 · ${pct}% approval</div>
+          <div class="vote-bar"><div class="vote-bar-fill" style="width:${pct}%"></div></div>
+        </div>
+        <div class="dest-card-votes">
+          <button class="vote-btn up ${mv==='up'?'voted':''}" onclick="castVote('${d.name}','up')">👍</button>
+          <span class="vote-count">${up}</span>
+          <button class="vote-btn down ${mv==='down'?'voted':''}" onclick="castVote('${d.name}','down')">👎</button>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+async function addDestination() {
+  const input = document.getElementById('newDestInput');
+  const name  = input.value.trim();
+  if (!name) { showToast('Enter a destination name', 'error'); return; }
+  if (destinations.find(d => d.name.toLowerCase() === name.toLowerCase())) {
+    showToast('Already added!', 'error'); return;
+  }
+  try {
+    const res  = await fetch(`${API_BASE}/group/${groupId}/destinations/add`, {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ name, added_by: currentUser?.name || 'Creator' })
     });
+    const data = await res.json();
+    if (data.success) { destinations = data.destinations; input.value = ''; renderDestCards(); showToast(`${name} added! ✈`); }
+    else showToast(data.error || 'Failed to add', 'error');
+  } catch(e) { showToast('Cannot connect to server', 'error'); }
+}
 
-    async function loadGroup() {
-      try {
-        const res  = await fetch(`${API_BASE}/group/${groupId}`);
-        const data = await res.json();
-        if (data.error) return;
-        isCreator  = data.created_by === currentUser?.user_id;
-        votingOpen = data.voting_open || false;
-        destinations = data.destinations || [];
+async function removeDestination(index) {
+  const dest = destinations[index];
+  if (!dest) return;
+  try {
+    const res  = await fetch(`${API_BASE}/group/${groupId}/destinations/remove`, {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ name: dest.name })
+    });
+    const data = await res.json();
+    if (data.success) { destinations = data.destinations; renderDestCards(); showToast(`${dest.name} removed`); }
+  } catch(e) { showToast('Cannot connect to server', 'error'); }
+}
 
-        document.getElementById('groupInfoBox').innerHTML = `
-          <div style="font-weight:700;margin-bottom:2px;">${data.name}</div>
-          <div style="font-size:0.78rem;color:var(--text-muted);">ID: ${groupId}</div>
-          <div style="font-size:0.78rem;margin-top:4px;color:${votingOpen?'var(--accent-3)':'var(--accent-gold)'};">
-            ● ${votingOpen ? 'Voting is open' : 'Adding destinations'}
-          </div>`;
-
-        const members = data.members || [];
-        const voters  = data.voters  || [];
-        document.getElementById('memberVoteList').innerHTML = members.length === 0
-          ? '<div style="font-size:0.8rem;color:var(--text-muted);">No members yet</div>'
-          : members.map(m => `
-              <div class="member-vote-row">
-                <div style="display:flex;align-items:center;gap:7px;">
-                  <div class="member-avatar" style="width:24px;height:24px;font-size:0.65rem;">${m[0].toUpperCase()}</div>
-                  ${m}
-                </div>
-                ${voters.includes(m)
-                  ? '<span class="voted-badge">✓ Voted</span>'
-                  : '<span class="pending-badge">Pending</span>'}
-              </div>`).join('');
-
-        updatePhaseUI();
-        if (votingOpen) renderVoteCards();
-        else if (isCreator) renderDestCards();
-
-      } catch(e) { console.error('loadGroup:', e); }
-    }
-
-    function updatePhaseUI() {
-      const add     = document.getElementById('addDestSection');
-      const voting  = document.getElementById('votingSection');
-      const waiting = document.getElementById('waitingSection');
-      const title   = document.getElementById('phaseTitle');
-      const sub     = document.getElementById('phaseSub');
-      const badge   = document.getElementById('phaseBadge');
-
-      add.style.display     = 'none';
-      voting.style.display  = 'none';
-      waiting.style.display = 'none';
-
-      if (!votingOpen && isCreator) {
-        add.style.display = 'block';
-        title.textContent = 'Phase 1 — Add destinations';
-        sub.textContent   = 'Add all destinations your group wants to consider, then open voting.';
-        badge.textContent = 'Creator';
-      } else if (!votingOpen && !isCreator) {
-        waiting.style.display = 'block';
-        title.textContent     = 'Waiting for creator to add destinations...';
-        sub.textContent       = 'You will be able to vote once the creator opens voting.';
-        badge.textContent     = 'Stand by';
-        if (pollTimer) clearInterval(pollTimer);
-        pollTimer = setInterval(loadGroup, 5000);
-      } else {
-        if (pollTimer) clearInterval(pollTimer);
-        voting.style.display = 'block';
-        title.textContent    = 'Phase 2 — Cast your vote';
-        sub.textContent      = `${destinations.length} destinations to vote on.`;
-        badge.textContent    = 'Voting open';
-      }
-    }
-
-    function renderDestCards() {
-      const list = document.getElementById('destCardList');
-      const btn  = document.getElementById('openVotingBtn');
-      if (!list) return;
-      if (destinations.length === 0) {
-        list.innerHTML = `<div class="empty-dest"><div style="font-size:2.5rem;margin-bottom:10px;">🗺️</div><div style="font-weight:700;">No destinations yet</div><div style="font-size:0.83rem;margin-top:4px;">Add the first destination above!</div></div>`;
-        if (btn) btn.style.display = 'none';
-        return;
-      }
-      if (btn) btn.style.display = destinations.length >= 2 ? 'flex' : 'none';
-      list.innerHTML = destinations.map((d, i) => `
-        <div class="dest-card">
-          <img class="dest-card-img" src="${getDestImage(d.name)}" alt="${d.name}" onerror="this.src='${getDestImage('default')}'"/>
-          <div class="dest-card-info">
-            <div class="dest-card-name">${d.name}</div>
-            <div class="dest-card-desc">${getDestDesc(d.name)}</div>
-          </div>
-          <button class="dest-card-delete" onclick="removeDestination(${i})">✕</button>
-        </div>`).join('');
-    }
-
-    function renderVoteCards() {
-      const list = document.getElementById('voteCardList');
-      if (!list) return;
-      list.innerHTML = destinations.map(d => {
-        const mv  = myVotes[d.name] || null;
-        const up  = d.up_votes   || 0;
-        const all = up + (d.down_votes || 0);
-        const pct = all > 0 ? Math.round((up / all) * 100) : 0;
-        return `
-          <div class="dest-card">
-            <img class="dest-card-img" src="${getDestImage(d.name)}" alt="${d.name}" onerror="this.src='${getDestImage('default')}'"/>
-            <div class="dest-card-info">
-              <div class="dest-card-name">${d.name}</div>
-              <div class="dest-card-desc">${getDestDesc(d.name)}</div>
-              <div style="font-size:0.73rem;color:var(--text-muted);margin-top:4px;">${up} 👍 · ${pct}% approval</div>
-              <div class="vote-bar"><div class="vote-bar-fill" style="width:${pct}%"></div></div>
-            </div>
-            <div class="dest-card-votes">
-              <button class="vote-btn up ${mv==='up'?'voted':''}" onclick="castVote('${d.name}','up')">👍</button>
-              <span class="vote-count">${up}</span>
-              <button class="vote-btn down ${mv==='down'?'voted':''}" onclick="castVote('${d.name}','down')">👎</button>
-            </div>
-          </div>`;
-      }).join('');
-    }
-
-    async function addDestination() {
-      const input = document.getElementById('newDestInput');
-      const name  = input.value.trim();
-      if (!name) { showToast('Enter a destination name', 'error'); return; }
-      if (destinations.find(d => d.name.toLowerCase() === name.toLowerCase())) {
-        showToast('Already added!', 'error'); return;
-      }
-      try {
-        const res  = await fetch(`${API_BASE}/group/${groupId}/destinations/add`, {
-          method: 'POST', headers: {'Content-Type':'application/json'},
-          body: JSON.stringify({ name, added_by: currentUser?.name || 'Creator' })
-        });
-        const data = await res.json();
-        if (data.success) { destinations = data.destinations; input.value = ''; renderDestCards(); showToast(`${name} added! ✈`); }
-        else showToast(data.error || 'Failed to add', 'error');
-      } catch(e) { showToast('Cannot connect to server', 'error'); }
-    }
-
-    async function removeDestination(index) {
-      const dest = destinations[index];
-      if (!dest) return;
-      try {
-        const res  = await fetch(`${API_BASE}/group/${groupId}/destinations/remove`, {
-          method: 'POST', headers: {'Content-Type':'application/json'},
-          body: JSON.stringify({ name: dest.name })
-        });
-        const data = await res.json();
-        if (data.success) { destinations = data.destinations; renderDestCards(); showToast(`${dest.name} removed`); }
-      } catch(e) { showToast('Cannot connect to server', 'error'); }
-    }
-
-    async function openVoting() {
-      if (destinations.length < 2) { showToast('Add at least 2 destinations', 'error'); return; }
-      try {
-        const res  = await fetch(`${API_BASE}/group/${groupId}/open-voting`, {
-          method: 'POST', headers: {'Content-Type':'application/json'}
-        });
-        const data = await res.json();
-        if (data.success) {
-          votingOpen = true;
-          showToast('Voting is now open! 🎉 Members have been notified by email.');
-          updatePhaseUI();
-          renderVoteCards();
-        }
-      } catch(e) { showToast('Cannot connect to server', 'error'); }
-    }
-
-    function castVote(name, dir) {
-      myVotes[name] = myVotes[name] === dir ? null : dir;
-      if (!myVotes[name]) delete myVotes[name];
+async function openVoting() {
+  if (destinations.length < 2) { showToast('Add at least 2 destinations', 'error'); return; }
+  try {
+    const res  = await fetch(`${API_BASE}/group/${groupId}/open-voting`, {
+      method: 'POST', headers: {'Content-Type':'application/json'}
+    });
+    const data = await res.json();
+    if (data.success) {
+      votingOpen = true;
+      showToast('Voting is now open! 🎉');
+      updatePhaseUI();
       renderVoteCards();
     }
+  } catch(e) { showToast('Cannot connect to server', 'error'); }
+}
 
-    function toggleVoteStyle(el) {
-      el.classList.toggle('selected');
-      const s = el.dataset.style;
-      if (el.classList.contains('selected')) { if (!voteStyles.includes(s)) voteStyles.push(s); }
-      else voteStyles = voteStyles.filter(x => x !== s);
-    }
+function castVote(name, dir) {
+  myVotes[name] = myVotes[name] === dir ? null : dir;
+  if (!myVotes[name]) delete myVotes[name];
+  renderVoteCards();
+}
 
-    async function submitVote() {
-      const name     = document.getElementById('voterName').value.trim();
-      const budget   = document.getElementById('voteBudget').value;
-      const duration = parseInt(document.getElementById('voteDuration').value || '7');
-      const month    = document.getElementById('voteMonth').value;
-      if (!name) { showToast('Enter your name', 'error'); return; }
-      const liked = destinations.filter(d => myVotes[d.name] === 'up').map(d => d.name);
-      if (liked.length === 0) { showToast('Please 👍 at least one destination', 'error'); return; }
-      const btn = document.getElementById('submitVoteBtn');
-      btn.disabled = true; btn.textContent = 'Submitting...';
-      try {
-        const res  = await fetch(`${API_BASE}/vote/submit`, {
-          method: 'POST', headers: {'Content-Type':'application/json'},
-          body: JSON.stringify({
-            group_id: groupId, user_name: name,
-            email: currentUser?.email || '',
-            preferences: { destinations: liked, budget, travel_style: voteStyles.length > 0 ? voteStyles : ['culture'], duration, month, raw_votes: myVotes }
-          })
-        });
-        const data = await res.json();
-        if (data.success) {
-          localStorage.setItem('PackVote_group_id', groupId);
-          localStorage.setItem('PackVote_voter_name', name);
-          showToast('Vote submitted! 🎉 Redirecting...');
-          setTimeout(() => window.location.href = 'results.html', 1500);
-        } else {
-          showToast(data.error || 'Error submitting', 'error');
-          btn.disabled = false; btn.textContent = 'Submit My Vote ✈';
-        }
-      } catch(e) {
-        showToast('Cannot connect to server', 'error');
-        btn.disabled = false; btn.textContent = 'Submit My Vote ✈';
-      }
+async function submitVote() {
+  const name     = document.getElementById('voterName').value.trim();
+  const budget   = document.getElementById('voteBudget').value;
+  const duration = parseInt(document.getElementById('voteDuration').value || '7');
+  const month    = document.getElementById('voteMonth').value;
+  if (!name) { showToast('Enter your name', 'error'); return; }
+  const liked = destinations.filter(d => myVotes[d.name] === 'up').map(d => d.name);
+  if (liked.length === 0) { showToast('Please 👍 at least one destination', 'error'); return; }
+  const btn = document.getElementById('submitVoteBtn');
+  btn.disabled = true; btn.textContent = 'Submitting...';
+  try {
+    const res  = await fetch(`${API_BASE}/vote/submit`, {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({
+        group_id: groupId, user_name: name,
+        preferences: { destinations: liked, budget, travel_style: voteStyles.length > 0 ? voteStyles : ['culture'], duration, month, raw_votes: myVotes }
+      })
+    });
+    const data = await res.json();
+    if (data.success) {
+      showToast('Vote submitted! 🎉 Redirecting...');
+      setTimeout(() => window.location.href = 'results.html', 1500);
+    } else {
+      showToast(data.error || 'Error submitting', 'error');
+      btn.disabled = false; btn.textContent = 'Submit My Vote ✈';
     }
-  </script>
+  } catch(e) {
+    showToast('Cannot connect to server', 'error');
+    btn.disabled = false; btn.textContent = 'Submit My Vote ✈';
+  }
+}
+
+function openJoinModal() {
+  var gid = prompt('Enter Group ID to join:');
+  if (!gid) return;
+  window.location.href = 'dashboard.html';
+}
+
+document.addEventListener('DOMContentLoaded', initVote);
+</script>
+
 </body>
 </html>

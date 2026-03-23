@@ -129,12 +129,15 @@
   <div class="container">
     <a href="index.html" class="logo">PackVote ✈</a>
     <ul class="nav-links">
+      <li><a href="index.html#how">How it works</a></li>
+      <li><a href="index.html#destinations">Destinations</a></li>
       <li><a href="vote.html">Vote</a></li>
       <li><a href="results.html">Results</a></li>
       <li><a href="planner.html">Planner</a></li>
       <li><a href="expenses.html">Expenses</a></li>
     </ul>
-    <button class="btn btn-secondary btn-sm" onclick="handleLogout()">Sign Out</button>
+    <a href="dashboard.html" class="btn btn-primary btn-sm">Dashboard ✈</a>
+    <button class="btn btn-secondary btn-sm" onclick="openJoinModal()">Join a Group</button>
   </div>
 </nav>
 
@@ -519,28 +522,7 @@ function showTab(name) {
 
 async function loadDashboard() {
   await loadActiveGroup();
-  try {
-  var allRes    = await fetch(API + '/auth/user/' + user.user_id + '/groups');
-  var allData   = await allRes.json();
-  var allGroups = allData.groups || [];
-  var tripsSection = document.getElementById('myTripsSection');
-  var tripsList    = document.getElementById('tripsList');
-  if (allGroups.length > 0) {
-    tripsSection.style.display = 'block';
-    tripsList.innerHTML = allGroups.map(function(g) {
-      var isActive = g.group_id === groupId;
-      return '<div onclick="switchTrip(\'' + g.group_id + '\',\'' + g.group_name + '\')" style="cursor:pointer;padding:14px 18px;border-radius:var(--radius-md);border:2px solid ' + (isActive ? 'var(--accent-1)' : 'var(--border)') + ';background:' + (isActive ? 'rgba(108,99,255,0.15)' : 'var(--bg-card)') + ';min-width:200px;">'
-        + '<div style="font-weight:800;font-size:0.95rem;color:' + (isActive ? 'var(--accent-1)' : 'var(--text-primary)') + ';margin-bottom:6px;">' + g.group_name + '</div>'
-        + '<div style="display:flex;align-items:center;gap:6px;background:rgba(0,0,0,0.3);border-radius:4px;padding:4px 8px;">'
-        + '<span style="font-size:0.65rem;color:var(--text-muted);">ID:</span>'
-        + '<span style="font-size:0.72rem;color:var(--accent-1);font-family:monospace;font-weight:600;">' + g.group_id + '</span>'
-        + '<span onclick="event.stopPropagation();navigator.clipboard.writeText(\'' + g.group_id + '\').then(function(){showToast(\'ID Copied! 📋\')})" style="cursor:pointer;font-size:0.65rem;color:var(--text-muted);margin-left:4px;padding:1px 5px;border:1px solid var(--border);border-radius:3px;">Copy</span>'
-        + '</div>'
-        + (isActive ? '<div style="font-size:0.68rem;color:var(--accent-3);margin-top:6px;font-weight:700;">● Active</div>' : '<div style="font-size:0.68rem;color:var(--text-muted);margin-top:6px;">Click to switch</div>')
-        + '</div>';
-    }).join('');
-  }
-} catch(e) {}
+  
   if (!groupId) {
     document.getElementById('noGroupState').style.display  = 'block';
     document.getElementById('hasGroupState').style.display = 'none';
@@ -760,6 +742,14 @@ async function saveProfile() {
 }
 
 function handleLogout() { localStorage.clear(); window.location.href='login.html'; }
+function openJoinModal() {
+  // Join from dashboard — use joinGroupFromDash
+  var gid = prompt('Enter Group ID to join:');
+  if (!gid) return;
+  document.getElementById('joinIdInput').value = gid;
+  showTab('dashboard');
+  joinGroupFromDash();
+}
 
 loadDashboard();
 </script>

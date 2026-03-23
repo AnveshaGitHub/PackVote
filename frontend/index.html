@@ -14,106 +14,37 @@
     }
     .hero { position: relative; min-height: 100vh; display: flex; align-items: center; }
     .hero .container { position: relative; z-index: 2; }
-    .dest-img-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
-      margin-top: 48px;
-    }
-    .dest-img-card {
-      position: relative;
-      border-radius: var(--radius-lg);
-      overflow: hidden;
-      height: 200px;
-      cursor: pointer;
-      transition: var(--transition);
-    }
+    .dest-img-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 48px; }
+    .dest-img-card { position: relative; border-radius: var(--radius-lg); overflow: hidden; height: 200px; cursor: pointer; transition: var(--transition); }
     .dest-img-card:first-child { grid-column: span 2; height: 260px; }
-    .dest-img-card img {
-      width: 100%; height: 100%;
-      object-fit: cover;
-      transition: transform 0.5s ease;
-      filter: brightness(0.7);
-    }
+    .dest-img-card img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; filter: brightness(0.7); }
     .dest-img-card:hover img { transform: scale(1.06); filter: brightness(0.85); }
-    .dest-img-info {
-      position: absolute; bottom: 0; left: 0; right: 0;
-      padding: 20px;
-      background: linear-gradient(transparent, rgba(0,0,0,0.85));
-    }
+    .dest-img-info { position: absolute; bottom: 0; left: 0; right: 0; padding: 20px; background: linear-gradient(transparent, rgba(0,0,0,0.85)); }
     .dest-img-name { font-family: var(--font-display); font-size: 1.3rem; font-weight: 800; }
     .dest-img-sub  { font-size: 0.8rem; color: #ccc; margin-top: 2px; }
-    .dest-img-badge {
-      position: absolute; top: 12px; right: 12px;
-      background: rgba(108,99,255,0.85);
-      border-radius: 50px;
-      padding: 4px 12px;
-      font-size: 0.7rem;
-      font-weight: 700;
-      color: white;
-    }
+    .dest-img-badge { position: absolute; top: 12px; right: 12px; background: rgba(108,99,255,0.85); border-radius: 50px; padding: 4px 12px; font-size: 0.7rem; font-weight: 700; color: white; }
     .how-section { padding: 100px 0; }
-    .how-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 24px;
-      margin-top: 48px;
-    }
-    .how-step {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 32px;
-      transition: var(--transition);
-    }
-    .how-step:hover {
-      border-color: var(--border-hover);
-      transform: translateY(-6px);
-      box-shadow: var(--shadow-glow);
-    }
-    .how-number {
-      font-family: var(--font-display);
-      font-size: 4rem;
-      font-weight: 800;
-      color: rgba(108,99,255,0.15);
-      line-height: 1;
-      margin-bottom: 16px;
-    }
+    .how-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 48px; }
+    .how-step { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 32px; transition: var(--transition); }
+    .how-step:hover { border-color: var(--border-hover); transform: translateY(-6px); box-shadow: var(--shadow-glow); }
+    .how-number { font-family: var(--font-display); font-size: 4rem; font-weight: 800; color: rgba(108,99,255,0.15); line-height: 1; margin-bottom: 16px; }
     .how-step h3 { font-family: var(--font-display); font-size: 1.2rem; font-weight: 700; margin-bottom: 10px; }
     .how-step p  { font-size: 0.9rem; color: var(--text-secondary); line-height: 1.7; }
-    .group-form-wrap {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 48px;
-      align-items: center;
-    }
-    .group-form-img { border-radius: var(--radius-xl); overflow: hidden; height: 500px; }
-    .group-form-img img { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.7); }
-    .members-list { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; min-height: 40px; }
-    .footer {
-      border-top: 1px solid var(--border);
-      padding: 40px 0;
-      text-align: center;
-      color: var(--text-muted);
-      font-size: 0.85rem;
-    }
+    .cta-section { padding: 100px 0; text-align: center; }
+    .cta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; max-width: 700px; margin: 40px auto 0; }
+    .cta-card { background: var(--bg-card); border: 2px dashed var(--border); border-radius: var(--radius-lg); padding: 40px 32px; text-align: center; transition: var(--transition); cursor: pointer; }
+    .cta-card:hover { border-color: var(--accent-1); box-shadow: var(--shadow-glow); transform: translateY(-4px); }
+    .cta-card-icon { font-size: 2.8rem; margin-bottom: 16px; }
+    .cta-card h3 { font-family: var(--font-display); font-size: 1.1rem; font-weight: 800; margin-bottom: 8px; }
+    .cta-card p { font-size: 0.85rem; color: var(--text-secondary); line-height: 1.6; margin-bottom: 20px; }
+    .footer { border-top: 1px solid var(--border); padding: 40px 0; text-align: center; color: var(--text-muted); font-size: 0.85rem; }
     .footer .logo { font-size: 1.4rem; margin-bottom: 8px; display: block; }
-    .trending-badge {
-      display: inline-flex; align-items: center; gap: 6px;
-      background: rgba(255,215,0,0.1);
-      border: 1px solid rgba(255,215,0,0.3);
-      border-radius: 50px;
-      padding: 4px 12px;
-      font-size: 0.7rem;
-      color: var(--accent-gold);
-      font-weight: 700;
-    }
+    .trending-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(255,215,0,0.1); border: 1px solid rgba(255,215,0,0.3); border-radius: 50px; padding: 4px 12px; font-size: 0.7rem; color: var(--accent-gold); font-weight: 700; }
   </style>
 </head>
 <body>
   <div class="bg-grid"></div>
 
-  <!-- NAVBAR -->
   <nav class="navbar">
     <div class="container">
       <a href="index.html" class="logo">PackVote ✈</a>
@@ -137,14 +68,11 @@
     <div class="container">
       <div class="hero-content">
         <div class="hero-badge">AI-Powered Group Travel</div>
-        <h1>
-          Travel together,<br/>
-          <span class="gradient-text">decide smarter.</span>
-        </h1>
+        <h1>Travel together,<br/><span class="gradient-text">decide smarter.</span></h1>
         <p>PackVote uses AI and group voting to find the perfect destination everyone actually wants. No more endless WhatsApp debates.</p>
         <div class="hero-buttons">
-          <a href="#create-group" class="btn btn-primary btn-lg">Start a Trip ✈</a>
-          <a href="dashboard.html" class="btn btn-secondary btn-lg">Go to Dashboard</a>
+          <a href="dashboard.html" class="btn btn-primary btn-lg">Start a Trip ✈</a>
+          <a href="#how" class="btn btn-secondary btn-lg">How it works</a>
         </div>
       </div>
     </div>
@@ -160,45 +88,27 @@
         <div class="dest-img-card" onclick="window.location.href='vote.html'">
           <img src="https://images.unsplash.com/photo-1477587458883-47145ed94245?w=800&q=80" alt="Jaipur"/>
           <div class="dest-img-badge">No 1 Voted</div>
-          <div class="dest-img-info">
-            <div class="dest-img-name">Jaipur, Rajasthan</div>
-            <div class="dest-img-sub">History · Culture · Food · Rs 3,500/day</div>
-          </div>
+          <div class="dest-img-info"><div class="dest-img-name">Jaipur, Rajasthan</div><div class="dest-img-sub">History · Culture · Food · Rs 3,500/day</div></div>
         </div>
         <div class="dest-img-card" onclick="window.location.href='vote.html'">
           <img src="https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?w=600&q=80" alt="Kerala"/>
-          <div class="dest-img-info">
-            <div class="dest-img-name">Kerala</div>
-            <div class="dest-img-sub">Nature · Wellness · Rs 4,000/day</div>
-          </div>
+          <div class="dest-img-info"><div class="dest-img-name">Kerala</div><div class="dest-img-sub">Nature · Wellness · Rs 4,000/day</div></div>
         </div>
         <div class="dest-img-card" onclick="window.location.href='vote.html'">
           <img src="https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?w=1600&q=80" alt="Goa"/>
-          <div class="dest-img-info">
-            <div class="dest-img-name">Goa</div>
-            <div class="dest-img-sub">Beach · Nightlife · Rs 5,000/day</div>
-          </div>
+          <div class="dest-img-info"><div class="dest-img-name">Goa</div><div class="dest-img-sub">Beach · Nightlife · Rs 5,000/day</div></div>
         </div>
         <div class="dest-img-card" onclick="window.location.href='vote.html'">
           <img src="https://images.unsplash.com/photo-1587474260584-136574528ed5?w=600&q=80" alt="Delhi"/>
-          <div class="dest-img-info">
-            <div class="dest-img-name">Delhi</div>
-            <div class="dest-img-sub">History · Food · Rs 3,000/day</div>
-          </div>
+          <div class="dest-img-info"><div class="dest-img-name">Delhi</div><div class="dest-img-sub">History · Food · Rs 3,000/day</div></div>
         </div>
         <div class="dest-img-card" onclick="window.location.href='vote.html'">
           <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&q=80" alt="Manali"/>
-          <div class="dest-img-info">
-            <div class="dest-img-name">Manali</div>
-            <div class="dest-img-sub">Adventure · Nature · Rs 4,500/day</div>
-          </div>
+          <div class="dest-img-info"><div class="dest-img-name">Manali</div><div class="dest-img-sub">Adventure · Nature · Rs 4,500/day</div></div>
         </div>
         <div class="dest-img-card" onclick="window.location.href='vote.html'">
           <img src="https://images.unsplash.com/photo-1548013146-72479768bada?w=600&q=80" alt="Agra"/>
-          <div class="dest-img-info">
-            <div class="dest-img-name">Agra</div>
-            <div class="dest-img-sub">History · Romance · Rs 2,500/day</div>
-          </div>
+          <div class="dest-img-info"><div class="dest-img-name">Agra</div><div class="dest-img-sub">History · Romance · Rs 2,500/day</div></div>
         </div>
       </div>
     </div>
@@ -214,7 +124,7 @@
         <div class="how-step">
           <div class="how-number">01</div>
           <h3>Create your group</h3>
-          <p>Add your travel crew, set a group name, and share the link. Everyone joins and submits their dream destinations.</p>
+          <p>Add your travel crew, set a group name, and share the Group ID. Everyone joins and fills the survey.</p>
         </div>
         <div class="how-step">
           <div class="how-number">02</div>
@@ -230,34 +140,24 @@
     </div>
   </section>
 
-  <!-- CREATE GROUP -->
-  <section style="padding: 80px 0;" id="create-group">
+  <!-- CTA SECTION — replaces old create group form -->
+  <section class="cta-section" id="create-group">
     <div class="container">
-      <div class="group-form-wrap">
-        <div class="group-form-img">
-          <img src="https://images.unsplash.com/photo-1539635278303-d4002c07eae3?w=800&q=80" alt="travel group"/>
+      <div class="hero-badge" style="display:inline-flex;">Get Started</div>
+      <h2 class="section-title mt-16">Ready to plan your trip?</h2>
+      <p class="section-subtitle">Create a group or join your friends — everything happens on the dashboard.</p>
+      <div class="cta-grid">
+        <div class="cta-card" onclick="window.location.href='dashboard.html'">
+          <div class="cta-card-icon">🏕️</div>
+          <h3>Create a Group</h3>
+          <p>You are the organizer. Set trip details and share the Group ID with your crew.</p>
+          <a href="dashboard.html" class="btn btn-primary w-full" style="justify-content:center;">Go to Dashboard</a>
         </div>
-        <div>
-          <div class="hero-badge">Step 1</div>
-          <h2 class="section-title mt-16">Create your<br/>travel group</h2>
-          <p class="section-subtitle">Start here — add your group name and members.</p>
-          <div class="card" style="margin-top: 32px;">
-            <div class="form-group">
-              <label class="form-label">Group Name</label>
-              <input type="text" id="groupName" class="form-input" placeholder="e.g. Squad Trip"/>
-            </div>
-            <div class="form-group">
-              <label class="form-label">Add Members</label>
-              <div style="display: flex; gap: 8px;">
-                <input type="text" id="memberInput" class="form-input" placeholder="Enter name and press Enter"/>
-                <button class="btn btn-secondary" onclick="addMember()">Add</button>
-              </div>
-              <div class="members-list" id="membersList"></div>
-            </div>
-            <button class="btn btn-primary w-full mt-16" onclick="createGroup()" style="justify-content: center;">
-              Create Group and Start Voting
-            </button>
-          </div>
+        <div class="cta-card" onclick="openJoinModal()">
+          <div class="cta-card-icon">🔗</div>
+          <h3>Join a Group</h3>
+          <p>Got a Group ID from your organizer? Enter it here to join the trip.</p>
+          <button class="btn btn-secondary w-full" onclick="openJoinModal()" style="justify-content:center;">Join with Group ID</button>
         </div>
       </div>
     </div>
@@ -278,7 +178,7 @@
   <!-- JOIN MODAL -->
   <div id="joinModal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.75);backdrop-filter:blur(4px);align-items:center;justify-content:center;">
     <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-xl);padding:40px;width:100%;max-width:440px;margin:20px;position:relative;">
-      <button onclick="closeJoinModal()" style="position:absolute;top:16px;right:16px;background:none;border:none;color:var(--text-muted);font-size:1.3rem;cursor:pointer;">x</button>
+      <button onclick="closeJoinModal()" style="position:absolute;top:16px;right:16px;background:none;border:none;color:var(--text-muted);font-size:1.3rem;cursor:pointer;">✕</button>
       <div style="font-size:2rem;margin-bottom:12px;">✈</div>
       <h2 style="font-family:var(--font-display);font-size:1.5rem;font-weight:800;margin-bottom:6px;">Join a Travel Group</h2>
       <p style="color:var(--text-secondary);font-size:0.88rem;margin-bottom:28px;">Enter the Group ID shared by your group creator.</p>
@@ -294,17 +194,45 @@
         <label class="form-label">Your Email</label>
         <input type="email" id="joinEmail" class="form-input" placeholder="you@email.com"/>
       </div>
-      <button class="btn btn-primary w-full mt-8" id="joinBtn" onclick="joinGroup()" style="justify-content:center;">
-        Join Group
-      </button>
+      <button class="btn btn-primary w-full mt-8" id="joinBtn" onclick="joinGroup()" style="justify-content:center;">Join Group</button>
     </div>
   </div>
 
   <script src="app.js"></script>
   <script>
-    document.getElementById('memberInput').addEventListener('keypress', function(e) {
-      if (e.key === 'Enter') addMember();
-    });
+    // ✅ joinGroup function — was missing, now added
+    async function joinGroup() {
+      var gid    = document.getElementById('joinGroupId').value.trim();
+      var name   = document.getElementById('joinMemberName').value.trim();
+      var email  = document.getElementById('joinEmail').value.trim();
+      var btn    = document.getElementById('joinBtn');
+
+      if (!gid)   { showToast('Enter a Group ID','error'); return; }
+      if (!name)  { showToast('Enter your name','error'); return; }
+      if (!email) { showToast('Enter your email','error'); return; }
+
+      btn.disabled = true; btn.textContent = 'Joining...';
+
+      try {
+        var res = await fetch('http://127.0.0.1:5000/api/group/join', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({group_id: gid, member_name: name, email: email})
+        });
+        var d = await res.json();
+        if (d.success) {
+          showToast('Joined ' + d.group_name + '! Redirecting to dashboard... 🎉');
+          closeJoinModal();
+          setTimeout(function(){ window.location.href = 'dashboard.html'; }, 1500);
+        } else {
+          showToast(d.error || 'Could not join group', 'error');
+          btn.disabled = false; btn.textContent = 'Join Group';
+        }
+      } catch(e) {
+        showToast('Cannot connect to server. Is Flask running?', 'error');
+        btn.disabled = false; btn.textContent = 'Join Group';
+      }
+    }
 
     function openJoinModal() {
       var modal = document.getElementById('joinModal');
@@ -337,7 +265,7 @@
       });
     }, { threshold: 0.1 });
 
-    document.querySelectorAll('.how-step, .dest-img-card').forEach(function(el) {
+    document.querySelectorAll('.how-step, .dest-img-card, .cta-card').forEach(function(el) {
       el.style.opacity    = '0';
       el.style.transform  = 'translateY(30px)';
       el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';

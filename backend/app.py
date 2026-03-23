@@ -30,8 +30,6 @@ travel_api    = TravelAPI()
 
 init_db()
 
-# ── helpers ──────────────────────────────────────────────────────────────
-
 def load_json(filepath, default):
     if os.path.exists(filepath):
         with open(filepath, 'r') as f:
@@ -42,8 +40,6 @@ def save_json(filepath, data):
     os.makedirs(os.path.dirname(filepath), exist_ok=True)
     with open(filepath, 'w') as f:
         json.dump(data, f, indent=2)
-
-# ── frontend routes ───────────────────────────────────────────────────────
 
 @app.route('/frontend/<path:filename>')
 def serve_static(filename):
@@ -72,8 +68,6 @@ def vote_page():
 @app.route('/results')
 def results_page():
     return send_from_directory(FRONTEND_DIR, 'results.html')
-
-# ── status ────────────────────────────────────────────────────────────────
 
 @app.route('/api/status', methods=['GET'])
 def status():
@@ -131,7 +125,6 @@ def get_user_profile(user_id):
     return jsonify(user)
 
 
-# ✅ FIXED: removed COUNT(DISTINCT m2.id) and COUNT(DISTINCT v.id)
 @app.route('/api/auth/user/<user_id>/groups', methods=['GET'])
 def get_user_groups(user_id):
     try:
@@ -142,7 +135,6 @@ def get_user_groups(user_id):
             if not user_row:
                 return jsonify({'groups': []}), 404
             user_name = user_row['name']
-
             cur.execute("""
                 SELECT g.group_id, g.name as group_name, g.created_at
                 FROM members m
@@ -152,15 +144,12 @@ def get_user_groups(user_id):
             """, (user_name,))
             rows = cur.fetchall() or []
         conn.close()
-
         groups = [{
             'group_id':   r['group_id'],
             'group_name': r['group_name'],
             'created_at': str(r['created_at']),
         } for r in rows]
-
         return jsonify({'groups': groups})
-
     except Exception as e:
         print(f"get_user_groups error: {e}")
         return jsonify({'groups': [], 'error': str(e)}), 500
@@ -183,10 +172,9 @@ def create_group():
     members    = data.get('members', [])
     user_id    = data.get('user_id', '')
     group_id   = f"group_{datetime.now().strftime('%Y%m%d%H%M%S')}"
-
     try:
         conn = get_connection()
-        with conn.cursor() as cur:
+        with conn.cursor(dictionary=True) as cur:
             cur.execute(
                 "INSERT INTO groups_table (group_id, name, created_by) VALUES (%s, %s, %s)",
                 (group_id, group_name, user_id or None)
@@ -198,12 +186,9 @@ def create_group():
                 )
         conn.commit()
         conn.close()
-
         if user_id:
             add_group_to_user(user_id, group_id, group_name)
-
         return jsonify({'success': True, 'group_id': group_id, 'group_name': group_name})
-
     except Exception as e:
         print(f"create_group error: {e}")
         return jsonify({'success': False, 'error': str(e)}), 500
@@ -221,7 +206,7 @@ def join_group():
 
     try:
         conn = get_connection()
-        with conn.cursor() as cur:
+        with conn.cursor(dictionary=True) as cur:
             cur.execute("SELECT * FROM groups_table WHERE group_id = %s", (group_id,))
             group = cur.fetchone()
             if not group:
@@ -252,7 +237,6 @@ def join_group():
             'group_name': group['name'],
             'message':    f'Welcome to {group["name"]}!'
         })
-
     except Exception as e:
         print(f"join_group error: {e}")
         return jsonify({'success': False, 'error': str(e)}), 500
@@ -262,7 +246,8 @@ def join_group():
 def get_group(group_id):
     try:
         conn = get_connection()
-        with conn.cursor() as cur:
+        # ✅ FIXED: dictionary=True added
+        with conn.cursor(dictionary=True) as cur:
             cur.execute("SELECT * FROM groups_table WHERE group_id = %s", (group_id,))
             group = cur.fetchone()
             if not group:
@@ -299,7 +284,7 @@ def get_group(group_id):
 def get_destinations(group_id):
     try:
         conn = get_connection()
-        with conn.cursor() as cur:
+        with conn.cursor(dictionary=True) as cur:
             cur.execute("SELECT * FROM destinations WHERE group_id = %s ORDER BY created_at ASC", (group_id,))
             rows = cur.fetchall()
         conn.close()
@@ -317,7 +302,7 @@ def add_destination(group_id):
         return jsonify({'success': False, 'error': 'Destination name required'}), 400
     try:
         conn = get_connection()
-        with conn.cursor() as cur:
+        with conn.cursor(dictionary=True) as cur:
             cur.execute("SELECT id FROM destinations WHERE group_id = %s AND LOWER(name) = LOWER(%s)", (group_id, name))
             if cur.fetchone():
                 return jsonify({'success': False, 'error': 'Already added'}), 400
@@ -336,7 +321,7 @@ def remove_destination(group_id):
     name = request.json.get('name', '').strip()
     try:
         conn = get_connection()
-        with conn.cursor() as cur:
+        with conn.cursor(dictionary=True) as cur:
             cur.execute("DELETE FROM destinations WHERE group_id = %s AND name = %s", (group_id, name))
             cur.execute("SELECT * FROM destinations WHERE group_id = %s ORDER BY created_at ASC", (group_id,))
             destinations = cur.fetchall()
@@ -351,7 +336,7 @@ def remove_destination(group_id):
 def open_voting(group_id):
     try:
         conn = get_connection()
-        with conn.cursor() as cur:
+        with conn.cursor(dictionary=True) as cur:
             cur.execute("UPDATE groups_table SET voting_open = TRUE WHERE group_id = %s", (group_id,))
             cur.execute("SELECT name FROM destinations WHERE group_id = %s", (group_id,))
             dest_names = [r['name'] for r in cur.fetchall()]
@@ -383,10 +368,9 @@ def submit_vote():
     group_id    = data.get('group_id')
     user_name   = data.get('user_name')
     preferences = data.get('preferences', {})
-
     try:
         conn = get_connection()
-        with conn.cursor() as cur:
+        with conn.cursor(dictionary=True) as cur:
             cur.execute("SELECT group_id FROM groups_table WHERE group_id = %s", (group_id,))
             if not cur.fetchone():
                 return jsonify({'error': 'Group not found'}), 404
@@ -411,7 +395,7 @@ def get_results(group_id):
     import json as json_lib
     try:
         conn = get_connection()
-        with conn.cursor() as cur:
+        with conn.cursor(dictionary=True) as cur:
             cur.execute("SELECT * FROM groups_table WHERE group_id = %s", (group_id,))
             group = cur.fetchone()
             if not group:
@@ -496,7 +480,6 @@ def generate_itinerary():
     itineraries = load_json(ITINERARIES_FILE, {'itineraries': []})
     itineraries['itineraries'].append(itinerary)
     save_json(ITINERARIES_FILE, itineraries)
-
     return jsonify({'success': True, 'itinerary': itinerary})
 
 
